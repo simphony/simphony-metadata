@@ -94,7 +94,7 @@ CUDS_KEYS:
     parent: CUBA.COMPUTATIONAL_MODEL
  
   MODEL_EQUATION:
-    definition: SimPhoNy Model Equation = PE + MRs according to the RoMM V4. 
+    definition: SimPhoNy Model Equation = PE + MRs according to the RoMM
     models: []
     parent: CUBA.CUDS_COMPONENT
     physics_variables: []
@@ -170,7 +170,7 @@ CUDS_KEYS:
     definition: Classical Atomistic Molecular Dynamics using Newtons equations of motion
     parent: CUBA.PHYSICS_EQUATION
     models: [CUBA.ATOMISTIC]
-    physics_variables: [CUBA.POSITION, CUBA.VELOCITY, CUBA.MOMENTUM, CUBA.ACCELERATION, CUBA.FORCEÃ¤]  
+    physics_variables: [CUBA.POSITION, CUBA.VELOCITY, CUBA.MOMENTUM, CUBA.ACCELERATION, CUBA.FORCE]  
 
   MOLECULAR_STATICS:
     definition: Classical Atomistic static molecular model
@@ -225,7 +225,7 @@ CUDS_KEYS:
   # note:GRAVITY and CUBA.ELECROSTATIC_FIELD are defined in cuba.yml. 
 
   ISOTHERMAL_MODEL:
-    definition: Isothermal heat transport model, no transport of heat is assumed. 
+    definition: Isothermal heat transport model, no transport of heat is assumed
     parent: CUBA.PHYSICS_EQUATION
     models: [CUBA.CONTINUUM]
     physics_quantities: []
@@ -239,7 +239,7 @@ CUDS_KEYS:
   INCOMPRESSIBLE_FLUID_MODEL:
     parent: CUBA.PHYSICS_EQUATION
     models: [CUBA.CONTINUUM]
-    definition: Incompressible fluid model.
+    definition: Incompressible fluid model
     physics_quantities: [CUBA.VELOCITY, CUBA.POSITION, CUBA.DENSITY, CUBA.VICOSITY]
     
   LAMINAR_FLOW_MODEL:
@@ -253,13 +253,13 @@ CUDS_KEYS:
     models: [CUBA.CONTINUUM]
 
   FREE_SURFACE_MODEL:
-    definition: Free surface model. 
+    definition: Free surface model
     parent: CUBA.PHYSICS_EQUATION
     models: [CUBA.CONTINUUM]
     physics_quantities: [CUBA.SURFACE_TENSION]
     
   MIXTURE_MODEL:
-    definition: mixture (drift flux) model.
+    definition: mixture (drift flux) model
     parent: CUBA.PHYSICS_EQUATION
     models: [CUBA.CONTINUUM]
 
@@ -270,12 +270,12 @@ CUDS_KEYS:
     default: CUBA.NEWTONIAN_FLUID_MODEL
 
   NEWTONIAN_FLUID_MODEL:
-    definition: Newtonian ﬂuid model assuming the viscous stresses are proportional to the rates of deformation. 
+    definition: Newtonian ﬂuid model assuming the viscous stresses are proportional to the rates of deformation
     parent: CUBA.RHEOLOGY_MODEL
     models: [CUBA.CONTINUUM]
   
   POWER_LAW_VISCOSITY_MODEL:
-    definition: Power Law model for a variable viscosity function that is limited by minimum and maximum values. 
+    definition: Power Law model for a variable viscosity function that is limited by minimum and maximum values 
     parent: CUBA.RHEOLOGY_MODEL
     models: [CUBA.CONTINUUM]
     CUBA.MAXIMUM_VISCOSITY: 
@@ -288,7 +288,7 @@ CUDS_KEYS:
       default: 1
       
   HERSCHEL_BULKLEY_MODEL:
-    definition: Herschel-Bulkley model combines the effects of Bingham plastic and power-law behavior in a fluid.
+    definition: Herschel-Bulkley model combines the effects of Bingham plastic and power-law behavior in a fluid
     parent: CUBA.RHEOLOGY_MODEL
     models: [CUBA.CONTINUUM]
     CUBA.INITIAL_VISCOSITY: 
@@ -338,7 +338,7 @@ CUDS_KEYS:
       shape: [2]
 
   DIRICHLET_BOUNDARY_CONDITION:
-    definition: Dirichlet boundary condition.
+    definition: Dirichlet boundary condition
     parent: CUBA.CONDITION    
     models: [CUBA.CONTINUUM]
     CUBA.PHYSICS_VARIABLE: 
@@ -347,7 +347,7 @@ CUDS_KEYS:
       shape: [1,]
 
   NEUMANN_BOUNDARY_CONDITION:
-    definition: Neumann boundary condition.
+    definition: Neumann boundary condition
     parent: CUBA.CONDITION
     models: [CUBA.CONTINUUM]
     CUBA.PHYSICS_VARIABLE: 
@@ -357,7 +357,7 @@ CUDS_KEYS:
 
   EMPTY_BOUNDARY_CONDITION:
     parent: CUBA.CONDITION
-    definition: Empty boundary condition.
+    definition: Empty boundary condition
     models: [CUBA.CONTINUUM]
     CUBA.PHYSICS_VARIABLE: 
       shape: [1,]
@@ -376,7 +376,7 @@ CUDS_KEYS:
   
   LENNARD_JONNES_6_12:
     parent: CUBA.PAIR_POTENTIAL
-    definition: A Lennard Jonnes 6-12 Potential. 
+    definition: A Lennard Jonnes 6-12 Potential 
     models: [CUBA.ATOMISTIC]
     physics_variables: [CUBA.POSITION, CUBA.POTENTIAL_ENERGY]
     CUBA.CUTOFF_DISTANCE:
@@ -388,7 +388,7 @@ CUDS_KEYS:
 
   COULOMB:
     parent: CUBA.PAIR_POTENTIAL
-    definition: The standard electrostatic Coulombic interaction potential between a pair of point charges.
+    definition: The standard electrostatic Coulombic interaction potential between a pair of point charges
     models: [CUBA.ATOMISTIC]
     CUBA.DIELECTRIC_CONSTANT:
       default: 1.0
