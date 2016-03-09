@@ -186,7 +186,7 @@ CUDS_KEYS:
     
   CFD:
     definition: Computational fluid dynamics general (set of ) equations for momentum, mass and energy
-    parent": CUBA.PHYSICS_EQUATION
+    parent: CUBA.PHYSICS_EQUATION
     models: [CUBA.CONTINUUM]
     physics_variables: 
       [CUBA.POSITION, CUBA.VELOCITY, CUBA.MOMENTUM, 
@@ -205,7 +205,7 @@ CUDS_KEYS:
       default: CUBA.NEWTONIAN_MODEL
     CUBA.GRAVITY_MODEL:
     CUBA.ELECTROSTATIC_MODEL:
-      defualt: CUBA.CONSTANT_ELECTROSTATIC_FIELD_MODEL
+      default: CUBA.CONSTANT_ELECTROSTATIC_FIELD_MODEL
       
   GRAVITY_MODEL:
     definition: a simple gravity model 
@@ -221,7 +221,7 @@ CUDS_KEYS:
     models: [CUBA.MESOSCOPIC, CUBA.CONTINUUM]
     physics_variables: [CUBA.ELECTRIC_FIELD, CUBA.CHARGE]
     CUBA.ELECTROSTATIC_FIELD:
-      default: [0, 0, 0.0]
+      default: [0, 0, 0]
   # note:GRAVITY and CUBA.ELECROSTATIC_FIELD are defined in cuba.yml. 
 
   ISOTHERMAL_MODEL:
@@ -240,11 +240,11 @@ CUDS_KEYS:
     parent: CUBA.PHYSICS_EQUATION
     models: [CUBA.CONTINUUM]
     definition: Incompressible fluid model
-    physics_quantities: [CUBA.VELOCITY, CUBA.POSITION, CUBA.DENSITY, CUBA.VICOSITY]
+    physics_quantities: [CUBA.VELOCITY, CUBA.POSITION, CUBA.DENSITY, CUBA.VISCOSITY]
     
   LAMINAR_FLOW_MODEL:
     parent: CUBA.PHYSICS_EQUATION
-    definition: Laminar model.
+    definition: Laminar model
     models: [CUBA.CONTINUUM]
     
   SINGLE_PHASE_MODEL:
@@ -281,7 +281,7 @@ CUDS_KEYS:
     CUBA.MAXIMUM_VISCOSITY: 
       default: 1e-3
     CUBA.MINIMUM_VISCOSITY:
-      DEFAULT:1E-5
+      default: 1E-5
     CUBA.LINEAR_CONSTANT:
       default: 1e-5
     CUBA.POWER_LAW_INDEX:
@@ -294,7 +294,7 @@ CUDS_KEYS:
     CUBA.INITIAL_VISCOSITY: 
       default: 1e-3
     CUBA.RELAXATION_TIME: 
-      default:1
+      default: 1
     CUBA.LINEAR_CONSTANT:
       default: 1e-5
     CUBA.POWER_LAW_INDEX:
@@ -307,7 +307,7 @@ CUDS_KEYS:
     CUBA.INITIAL_VISCOSITY: 
       default: 1e-3
     CUBA.MAXIMUM_VISCOSITY: 
-      DEFAULT:1E-5   # nu_infiniy
+      default: 1E-5   # nu_infiniy
     CUBA.LINEAR_CONSTANT: 
       default: 1
     CUBA.POWER_LAW_INDEX: 
@@ -320,7 +320,7 @@ CUDS_KEYS:
     CUBA.INITIAL_VISCOSITY: 
       default: 1e-3
     CUBA.MAXIMUM_VISCOSITY: 
-      DEFAULT:1E-5
+      default: 1E-5
     CUBA.LINEAR_CONSTANT:
       default: 1
     CUBA.POWER_LAW_INDEX:
@@ -341,28 +341,28 @@ CUDS_KEYS:
     definition: Dirichlet boundary condition
     parent: CUBA.CONDITION    
     models: [CUBA.CONTINUUM]
-    CUBA.PHYSICS_VARIABLE: 
-      shape: [1,]
+    CUBA.PHYSICS_VARIABLES: 
+      shape: [1:]
     CUBA.MATERIAL: 
-      shape: [1,]
+      shape: [1:]
 
   NEUMANN_BOUNDARY_CONDITION:
     definition: Neumann boundary condition
     parent: CUBA.CONDITION
     models: [CUBA.CONTINUUM]
     CUBA.PHYSICS_VARIABLE: 
-      shape: [1,]
+      shape: [1:]
     CUBA.MATERIALS: 
-      shape: [1,]
+      shape: [1:]
 
   EMPTY_BOUNDARY_CONDITION:
     parent: CUBA.CONDITION
     definition: Empty boundary condition
     models: [CUBA.CONTINUUM]
     CUBA.PHYSICS_VARIABLE: 
-      shape: [1,]
+      shape: [1:]
     CUBA.MATERIALs: 
-      shape: [1,]
+      shape: [1:]
 
   INTERATOMIC_POTENTIAL:
     definition: SimPhoNy Interatomic Potentials Category
