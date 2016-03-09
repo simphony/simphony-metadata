@@ -204,7 +204,7 @@ CUDS_KEYS:
     CUBA.THERMAL_MODEL:
       default: CUBA.ISOTHERMAL_MODEL
       scope: CUBA.USER
-    CUBA.TURBULANCE_MODEL:
+    CUBA.TURBULENCE_MODEL:
       default: CUBA.LAMINAR_FLOW_MODEL
     CUBA.MULTIPHASE_MODEL: 
       default: CUBA.SINGLE_PHASE_MODEL
@@ -212,7 +212,7 @@ CUDS_KEYS:
       default: CUBA.NEWTONIAN_MODEL
     CUBA.GRAVITY_MODEL:
     CUBA.ELECTROSTATIC_MODEL:
-      defualt: CUBA.CONSTAN_ELECTROSTATIC_FIELD_MODEL
+      defualt: CUBA.CONSTANT_ELECTROSTATIC_FIELD_MODEL
       
   GRAVITY_MODEL:
     definition: a simple gravity model 
@@ -220,14 +220,14 @@ CUDS_KEYS:
     models: [CUBA.MESOSCOPIC, CUBA.CONTINUUM]
     physics_variables: [CUBA.ACCELERATION]
     CUBA.ACCELERATION:
-      default: [0, 0, -9.8]
+      default: [0, 0, 0]
 
-  CONSTAN_ELECTROSTATIC_FIELD_MODEL:
-    definition: A constant elecrostatic model 
+  CONSTANT_ELECTROSTATIC_FIELD_MODEL:
+    definition: A constant elecrostatic field model 
     parent: CUBA.PHYSICS_EQUATION
     models: [CUBA.MESOSCOPIC, CUBA.CONTINUUM]
     physics_variables: [CUBA.ELECTRIC_FIELD, CUBA.CHARGE]
-    CUBA.ELECTRIC_FIELD:
+    CUBA.ELECTROSTATIC_FIELD:
       default: [0, 0, 0.0]
 
   # note:GRAVITY and CUBA.ELECROSTATIC_FIELD are defined in cuba.yml. 
@@ -239,12 +239,10 @@ CUDS_KEYS:
     physics_quantities: []
 
   THERMAL_MODEL:
-    definition: Non Isothermal heat transport model, Fourier model
+    definition: Non Isothermal heat transport model
     parent: CUBA.PHYSICS_EQUATION
     models: [CUBA.CONTINUUM]
     physics_quantities: [CUBA.TEMPERATURE, CUBA.HEAT_CONDUCTIVITY]
-    CUBA.HEAT_CONDUCTIVITY:
-      default: [0.0, 0.0, 0.0]
       
   INCOMPRESSIBLE_FLUID_MODEL:
     parent: CUBA.PHYSICS_EQUATION
@@ -252,7 +250,7 @@ CUDS_KEYS:
     definition: Incompressible fluid model.
     physics_quantities: [CUBA.VELOCITY, CUBA.POSITION, CUBA.DENSITY, CUBA.VICOSITY]
     
-  LAMINAR_MODEL:
+  LAMINAR_FLOW_MODEL:
     parent: CUBA.PHYSICS_EQUATION
     definition: Laminar model.
     models: [CUBA.CONTINUUM]
@@ -281,12 +279,12 @@ CUDS_KEYS:
 
 
   NEWTONIAN_FLUID_MODEL:
-    definition: Newtonian model assuming constant viscosity. This indicates that the Navier Stokes equations should be used instrad of the general one. No parameters are required.  
+    definition: Newtonian ﬂuid model assuming the viscous stresses are proportional to the rates of deformation. 
     parent: CUBA.RHEOLOGY_MODEL
     models: [CUBA.CONTINUUM]
   
   POWER_LAW_VISCOSITY_MODEL:
-    definition: Power Law model for a vaiable viscosity function that is limited by minimum and maximum values. 
+    definition: Power Law model for a variable viscosity function that is limited by minimum and maximum values. 
     parent: CUBA.RHEOLOGY_MODEL
     models: [CUBA.CONTINUUM]
     CUBA.MAXIMUM_VISCOSITY: 
@@ -313,7 +311,7 @@ CUDS_KEYS:
       default: 1
 
   CROSS_POWER_LAW_MODEL:
-    definitoin: Viscosity cross power law model
+    definitoin: Viscosity Cross power law model
     parent: CUBA.RHEOLOGY_MODEL
     models: [CUBA.CONTINUUM]
     CUBA.INITIAL_VISCOSITY: 
