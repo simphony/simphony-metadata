@@ -10,12 +10,11 @@ Resources:
  CUDS Mailing List: simphony-ssb@fraunhofer.de
  CUDS Reference Parser: https://github.com/simphony/simphony-metadata/cparser #?
 
-
 # Any all caps entity that has a "CUBA." prefix is assumed to be
 # defined and it is being used.  Any all caps entity without the
 # "CUBA." prefix, is being defined.
 
-# The PARENT relation is an explicit inheritence of data! It defines
+# The PARENT relation is an explicit inheritance of data! It defines
 # specific first order relations between data entities.  parent is
 # used in the same context as type in OO programming, however, parent
 # indicates a directional first order relation.
@@ -31,7 +30,7 @@ Resources:
 
 # default: a default value, when absent, no default is implied and the
 # user has to eventually supply a value (not necessarily upon
-# instanciation, implementation dependent).
+# instantiation, implementation dependent).
  
 # If omitted, no default is assumed, and the user has to supply a
 # value.
@@ -41,19 +40,16 @@ Resources:
 
 # shape: as [i,j,] specifying that it is a sequence of entities of its
 # own type.  [i, j] means an array of i*j types.  [i, ] means the
-# squence or array can have minimum of i elements. [, i] the array can
+# sequence or array can have minimum of i elements. [, i] the array can
 # have any, maximum j elements. If omitted, a shape of [1] is assumed.
 
 # The YAML is a hierarchical, without lists, to be easily transformed
-# into Python dictionary structrure without lists.
-
-
+# into Python dictionary structure without lists.
 
 CUDS_KEYS:
 
-
 # basic metadata item, has a UUID and a data container. a data
-# container is a lower level syntacitc and semantic metadata schema
+# container is a lower level syntactic and semantic metadata schema
 # that defines cross domain entities that are common basic universal
 # attributes CUBA.
 
@@ -135,14 +131,13 @@ CUDS_KEYS:
     definition: SimPhoNy solver parameter and metadata 
     parent: CUBA.CUDS_COMPONENT
 
-
 #  PARTICLE:
-#    definition: A SimPhoNy Particle (used to descretize electronic, atomistic and mesoscopic system)
+#    definition: A SimPhoNy Particle (used to discretize electronic, atomistic and mesoscopic system)
 #    parent: CUBA.CUDS_ITEM
 #    CUBA.POSITION:
       
 #  PARTICLES:
-#    definition: A SimPhoNy Particle data set (used to descretize electronic, atomistic and mesoscopic system)
+#    definition: A SimPhoNy Particle data set (used to discretize electronic, atomistic and mesoscopic system)
 #    parent: CUBA.PARTICLE
 #    shape: [0, ]
 
@@ -163,8 +158,7 @@ CUDS_KEYS:
 #    parent: CUBA.CUDS_ITEM
 #    CUBA.INDEX:
 # same for the mesh elements etc. These are currently defined in CUDS_ITEM.yml 
-    
-  #----------------------------------------------
+#----------------------------------------------
 
   KS_DFT:
     parent: CUBA.PHYSICS_EQUATION
@@ -189,7 +183,6 @@ CUDS_KEYS:
     parent: CUBA.PHYSICS_EQUATION    
     models: [CUBA.MESCOCOPIC]
     physics_variables: [CUBA.POSITION, CUBA.VELOCITY, CUBA.MOMENTUM, CUBA.ACCELERATION, CUBA.MOMENT_INERTIA, CUBA.TORQUE, CUBA.ANGULAR_VELOCITY]  
-    
     
   CFD:
     definition: Computational fluid dynamics general (set of ) equations for momentum, mass and energy
@@ -229,7 +222,6 @@ CUDS_KEYS:
     physics_variables: [CUBA.ELECTRIC_FIELD, CUBA.CHARGE]
     CUBA.ELECTROSTATIC_FIELD:
       default: [0, 0, 0.0]
-
   # note:GRAVITY and CUBA.ELECROSTATIC_FIELD are defined in cuba.yml. 
 
   ISOTHERMAL_MODEL:
@@ -277,7 +269,6 @@ CUDS_KEYS:
     models: [CUBA.CONTINUUM]
     default: CUBA.NEWTONIAN_FLUID_MODEL
 
-
   NEWTONIAN_FLUID_MODEL:
     definition: Newtonian ﬂuid model assuming the viscous stresses are proportional to the rates of deformation. 
     parent: CUBA.RHEOLOGY_MODEL
@@ -295,7 +286,6 @@ CUDS_KEYS:
       default: 1e-5
     CUBA.POWER_LAW_INDEX:
       default: 1
-
       
   HERSCHEL_BULKLEY_MODEL:
     definition: Herschel-Bulkley model combines the effects of Bingham plastic and power-law behavior in a fluid.
@@ -311,7 +301,7 @@ CUDS_KEYS:
       default: 1
 
   CROSS_POWER_LAW_MODEL:
-    definitoin: Viscosity Cross power law model
+    definition: Viscosity Cross power law model
     parent: CUBA.RHEOLOGY_MODEL
     models: [CUBA.CONTINUUM]
     CUBA.INITIAL_VISCOSITY: 
@@ -324,7 +314,7 @@ CUDS_KEYS:
       default: 0.5
 
   BIRD_CARREAU_MODEL:
-    definitoin: The Bird-Carreau model
+    definition: The Bird-Carreau model
     parent: CUBA.RHEOLOGY_MODEL
     models: [CUBA.CONTINUUM]
     CUBA.INITIAL_VISCOSITY: 
@@ -346,7 +336,6 @@ CUDS_KEYS:
       shape: [2]
     CUBA.MATERIALS:
       shape: [2]
-    
 
   DIRICHLET_BOUNDARY_CONDITION:
     definition: Dirichlet boundary condition.
@@ -356,7 +345,6 @@ CUDS_KEYS:
       shape: [1,]
     CUBA.MATERIAL: 
       shape: [1,]
-
 
   NEUMANN_BOUNDARY_CONDITION:
     definition: Neumann boundary condition.
@@ -376,7 +364,6 @@ CUDS_KEYS:
     CUBA.MATERIALs: 
       shape: [1,]
 
-
   INTERATOMIC_POTENTIAL:
     definition: SimPhoNy Interatomic Potentials Category
     parent: [CUBA.MATERIAL_RELATION]
@@ -386,7 +373,6 @@ CUDS_KEYS:
     definition: SimPhoNy Pair Interatomic Potentials Category
     parent: CUBA.INTERATOMIC_POTENTIAL  
     models: [CUBA.ATOMISTIC]
-
   
   LENNARD_JONNES_6_12:
     parent: CUBA.PAIR_POTENTIAL
@@ -401,12 +387,12 @@ CUDS_KEYS:
       default: 1.0
 
   COULOMB:
-  parent: CUBA.PAIR_POTENTIAL
-  definition: The standard electrostatic Coulombic interaction potential between a pair of point charges.
-  models: [CUBA.ATOMISTIC]
-  CUBA.DIELECTRIC_CONSTANT:
-    default: 1.0
-  CUBA.CUTOFF_DISTANCE:
-    default: 1.0
-  CUBA.MATERIALS_LIST:
-    default: []
+    parent: CUBA.PAIR_POTENTIAL
+    definition: The standard electrostatic Coulombic interaction potential between a pair of point charges.
+    models: [CUBA.ATOMISTIC]
+    CUBA.DIELECTRIC_CONSTANT:
+      default: 1.0
+    CUBA.CUTOFF_DISTANCE:
+      default: 1.0
+    CUBA.MATERIALS_LIST:
+      default: []
