@@ -15,11 +15,11 @@ Resources:
 # "CUBA." prefix, is being defined.
 
 # The PARENT relation is an explicit inheritance of data! It defines
-# specific first order relations between data entities.  parent is
+# specific first order relations between data entities. The parent is
 # used in the same context as type in OO programming, however, parent
 # indicates a directional first order relation.
 
-# CUBA.KEY (KEY can be any data key) are attributes intrinsic to the
+# CUBA.KEY (KEY can be any CUBA key) are attributes intrinsic to the
 # data entity defined.
 
 # Each CUBA.KEY has its own definition as an entity, which defines its
@@ -38,12 +38,18 @@ Resources:
 # scope: CUBA.USER or CUBA.SYSTEM.  if omitted, the CUBA.USER is
 # assumed by default
 
-# shape: as [i,j,] specifying that it is a sequence of entities of its
-# own type.  [i, j] means an array of i*j types.  [i, ] means the
-# sequence or array can have minimum of i elements. [, i] the array can
-# have any, maximum j elements. If omitted, a shape of [1] is assumed.
+# shape: [i_min:i_max,j_min:j_max] specifying that it is a multidimensional 
+# sequence of entities of its own type.  In each dimension, the first index
+# is the minimum while the second the maximum number of items allowed. 
+# An empty [] means no bounds are imposed but the value of the entity 
+# is an array, i.e., a sequence.
+# Omitting lower or upper index means there is no corresponding limit. 
+# e.g., [:10] it can have zero and up to a maximum of 10 allowed items.
+# e.g., [2] means exactly 2 elements are allowed, equivalent to [2:2].
+# e.g., [2:] means minimum of 2 elements are allowed. 
 
-# The YAML is a hierarchical, without lists, to be easily transformed
+
+# The YAML is hierarchical, to be easily transformed
 # into Python dictionary structure without lists.
 
 CUDS_KEYS:
@@ -54,7 +60,7 @@ CUDS_KEYS:
 # attributes CUBA.
 
   CUDS_ITEM:
-    parent: ""
+    parent: 
     CUBA.UUID:
       scope: CUBA.SYSTEM
     CUBA.DATA:  
@@ -66,98 +72,108 @@ CUDS_KEYS:
     definition: Base data type for the CUDS components
     parent: CUBA.CUDS_ITEM
     CUBA.DESCRIPTION:
-      default: "" 
+      default:  
       scope: CUBA.USER
     CUBA.NAME:
-      default: ""
+      default: 
       scope: CUBA.USER
 
 # define a top level computational model of SimPhoNy
   COMPUTATIONAL_MODEL: 
-    definition: SimPhoNy model category according to the RoMM
+    definition:  model category according to the RoMM
     parent: CUBA.CUDS_COMPONENT
 
   ELECTRONIC:
-    definition: SimPhoNy electronic model category according to the RoMM
+    definition:  electronic model category according to the RoMM
     parent: CUBA.COMPUTATIONAL_MODEL
 
   ATOMISTIC:
-    definition: SimPhoNy atomistic model category according to the RoMM
+    definition:  atomistic model category according to the RoMM
     parent: CUBA.COMPUTATIONAL_MODEL
 
   MESOSCOPIC:
-    definition: SimPhoNy mesoscopic model category according to the RoMM
+    definition:  mesoscopic model category according to the RoMM
     parent: CUBA.COMPUTATIONAL_MODEL
 
   CONTINUUM:
-    definition: SimPhoNy continuum model category according to the RoMM
+    definition:  continuum model category according to the RoMM
     parent: CUBA.COMPUTATIONAL_MODEL
  
   MODEL_EQUATION:
-    definition: SimPhoNy Model Equation = PE + MRs according to the RoMM
+    definition: The model equations are represented by all physics equations and material relations according to the RoMM
     models: []
     parent: CUBA.CUDS_COMPONENT
     physics_variables: []
 
   PHYSICS_EQUATION:
-   definition: SimPhoNy Physics Equation
+   definition:  Physics Equation
    parent: CUBA.MODEL_EQUATION
 
-  MATERIAL_RELATION_EQUATION:
-    definition: SimPhoNy Material Relation
+  MATERIAL_RELATION:
+    definition:  Material Relation
     parent: CUBA.MODEL_EQUATION
     CUBA.MATERIAL:
       scope: CUBA.USER
-      shape: [1,]
+      shape: [1:]
       
   MATERIAL:
-    definition: SimPhoNy Materials
+    definition: definition of a material and its parameters
     parent: CUBA.CUDS_COMPONENT
          
+         
   BOUNDARY:
-    definition: SimPhoNy System Boundary
+    definition:  System Boundary
     parent: CUBA.CUDS_COMPONENT
 
   CONDITION:
-    definition: SimPhoNy Condition on boundaries or model entities 
+    definition:  Condition on boundaries or model entities 
     parent: CUBA.CUDS_COMPONENT
     
   DATA_SET:
-    definition: SimPhoNy data set
+    definition:  data set
     parent: CUBA.CUDS_COMPONENT
     models: []
         
   SOLVER_PARAMETER:
-    definition: SimPhoNy solver parameter and metadata 
+    definition:  solver parameter and metadata 
     parent: CUBA.CUDS_COMPONENT
 
 #  PARTICLE:
-#    definition: A SimPhoNy Particle (used to discretize electronic, atomistic and mesoscopic system)
+#    definition: A  Particle (used to discretize electronic, atomistic or mesoscopic systems)
 #    parent: CUBA.CUDS_ITEM
 #    CUBA.POSITION:
       
 #  PARTICLES:
-#    definition: A SimPhoNy Particle data set (used to discretize electronic, atomistic and mesoscopic system)
+#    definition: A  Particle data set (used to discretize electronic, atomistic or mesoscopic systems)
 #    parent: CUBA.PARTICLE
-#    shape: [0, ]
+#    shape: [0:]
 
 #  BOND:
-#    definition: A SimPhoNy BOND between Particles
+#    definition: A  BOND between Particles
 #    parent: CUBA.CUDS_ITEM
 #    CUBA.PARTICLES:
 #      scope: CUBA.USER
 #      default: CUBA.NONE
 
 #  POINT:
-#    definition: a SimPhoNy point having UUID and DATA CONTAINER
+#    definition: a  point having UUID and DATA CONTAINER
 #    parent: CUDS_ITEM
 #    CUBA.POSITION:
 
 #  NODE: 
-#    definition: A SimPhoNy LATTICE or MESH node, a point
+#    definition: A  LATTICE or MESH node, a point
 #    parent: CUBA.CUDS_ITEM
 #    CUBA.INDEX:
 # same for the mesh elements etc. These are currently defined in CUDS_ITEM.yml 
+
+#  PHYSICS_VARIABLES:
+#    definition: a CUBA defining a collection/sequence/list of physics variables. 
+#    parent: CUBA.VARIABLE
+#    shape: [0:]
+## Note: VARIABLE is in cuba.yml
+
+
+
 #----------------------------------------------
 
   KS_DFT:
@@ -228,19 +244,19 @@ CUDS_KEYS:
     definition: Isothermal heat transport model, no transport of heat is assumed
     parent: CUBA.PHYSICS_EQUATION
     models: [CUBA.CONTINUUM]
-    physics_quantities: []
+    physics_variables: []
 
   THERMAL_MODEL:
     definition: Non Isothermal heat transport model
     parent: CUBA.PHYSICS_EQUATION
     models: [CUBA.CONTINUUM]
-    physics_quantities: [CUBA.TEMPERATURE, CUBA.HEAT_CONDUCTIVITY]
+    physics_variables: [CUBA.TEMPERATURE, CUBA.HEAT_CONDUCTIVITY]
       
   INCOMPRESSIBLE_FLUID_MODEL:
     parent: CUBA.PHYSICS_EQUATION
     models: [CUBA.CONTINUUM]
     definition: Incompressible fluid model
-    physics_quantities: [CUBA.VELOCITY, CUBA.POSITION, CUBA.DENSITY, CUBA.VISCOSITY]
+    physics_variables: [CUBA.VELOCITY, CUBA.POSITION, CUBA.DENSITY, CUBA.VISCOSITY]
     
   LAMINAR_FLOW_MODEL:
     parent: CUBA.PHYSICS_EQUATION
@@ -256,7 +272,7 @@ CUDS_KEYS:
     definition: Free surface model
     parent: CUBA.PHYSICS_EQUATION
     models: [CUBA.CONTINUUM]
-    physics_quantities: [CUBA.SURFACE_TENSION]
+    physics_variables: [CUBA.SURFACE_TENSION]
     
   MIXTURE_MODEL:
     definition: mixture (drift flux) model
@@ -334,7 +350,7 @@ CUDS_KEYS:
       default: 0.07
       scope: CUBA.USER
       shape: [2]
-    CUBA.MATERIALS:
+    CUBA.MATERIAL:
       shape: [2]
 
   DIRICHLET_BOUNDARY_CONDITION:
@@ -342,37 +358,40 @@ CUDS_KEYS:
     parent: CUBA.CONDITION    
     models: [CUBA.CONTINUUM]
     CUBA.PHYSICS_VARIABLES: 
-      shape: [1:]
+      shape: [0:]
     CUBA.MATERIAL: 
-      shape: [1:]
+      shape: [0:]
 
   NEUMANN_BOUNDARY_CONDITION:
     definition: Neumann boundary condition
     parent: CUBA.CONDITION
     models: [CUBA.CONTINUUM]
-    CUBA.PHYSICS_VARIABLE: 
-      shape: [1:]
-    CUBA.MATERIALS: 
-      shape: [1:]
-
+    CUBA.PHYSICS_VARIABLES: 
+      shape: [0:]
+    CUBA.MATERIAL: 
+      shape: [0:]
+     
   EMPTY_BOUNDARY_CONDITION:
     parent: CUBA.CONDITION
     definition: Empty boundary condition
     models: [CUBA.CONTINUUM]
-    CUBA.PHYSICS_VARIABLE: 
-      shape: [1:]
-    CUBA.MATERIALs: 
-      shape: [1:]
+    CUBA.PHYSICS_VARIABLES: 
+      shape: [0:]
+    CUBA.MATERIAL: 
+      shape: [0:]
 
   INTERATOMIC_POTENTIAL:
-    definition: SimPhoNy Interatomic Potentials Category
+    definition: Interatomic Potentials Category
     parent: [CUBA.MATERIAL_RELATION]
     models: [CUBA.ATOMISTIC]
 
   PAIR_POTENTIAL:
-    definition: SimPhoNy Pair Interatomic Potentials Category
+    definition: Pair Interatomic Potentials Category
     parent: CUBA.INTERATOMIC_POTENTIAL  
     models: [CUBA.ATOMISTIC]
+    CUBA.MATERIAL:
+      default: []
+      shape: [2]
   
   LENNARD_JONNES_6_12:
     parent: CUBA.PAIR_POTENTIAL
@@ -394,5 +413,3 @@ CUDS_KEYS:
       default: 1.0
     CUBA.CUTOFF_DISTANCE:
       default: 1.0
-    CUBA.MATERIALS_LIST:
-      default: []
