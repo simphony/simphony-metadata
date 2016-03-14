@@ -10,54 +10,8 @@ Resources:
  CUDS Mailing List: simphony-ssb@fraunhofer.de
  CUDS Reference Parser: https://github.com/simphony/simphony-metadata/cparser #?
 
-# Any all caps entity that has a "CUBA." prefix is assumed to be
-# defined and it is being used.  Any all caps entity without the
-# "CUBA." prefix, is being defined.
-
-# The PARENT relation is an explicit inheritance of data! It defines
-# specific first order relations between data entities. The parent is
-# used in the same context as type in OO programming, however, parent
-# indicates a directional first order relation.
-
-# CUBA.KEY (KEY can be any CUBA key) are attributes intrinsic to the
-# data entity defined.
-
-# Each CUBA.KEY has its own definition as an entity, which defines its
-# type (parent) in a unique universal manner.
-
-# Each CUBA.KEY can have additional implementation-related metadata,
-# these metadata are the following:
-
-# default: a default value, when absent, no default is implied and the
-# user has to eventually supply a value (not necessarily upon
-# instantiation, implementation dependent).
- 
-# If omitted, no default is assumed, and the user has to supply a
-# value.
-
-# scope: CUBA.USER or CUBA.SYSTEM.  if omitted, the CUBA.USER is
-# assumed by default
-
-# shape: [i_min:i_max,j_min:j_max] specifying that it is a multidimensional 
-# sequence of entities of its own type.  In each dimension, the first index
-# is the minimum while the second the maximum number of items allowed. 
-# An empty [] means no bounds are imposed but the value of the entity 
-# is an array, i.e., a sequence.
-# Omitting lower or upper index means there is no corresponding limit. 
-# e.g., [:10] it can have zero and up to a maximum of 10 allowed items.
-# e.g., [2] means exactly 2 elements are allowed, equivalent to [2:2].
-# e.g., [2:] means minimum of 2 elements are allowed. 
-
-
-# The YAML is hierarchical, to be easily transformed
-# into Python dictionary structure without lists.
 
 CUDS_KEYS:
-
-# basic metadata item, has a UUID and a data container. a data
-# container is a lower level syntactic and semantic metadata schema
-# that defines cross domain entities that are common basic universal
-# attributes CUBA.
 
   CUDS_ITEM:
     parent: 
@@ -65,9 +19,6 @@ CUDS_KEYS:
       scope: CUBA.SYSTEM
     CUBA.DATA:  
       
-# basic cuds component, basis for all CUDS components as prescribed in
-# the SimPhoNy D1.6 specifications.
-
   CUDS_COMPONENT:
     definition: Base data type for the CUDS components
     parent: CUBA.CUDS_ITEM
@@ -78,7 +29,6 @@ CUDS_KEYS:
       default: 
       scope: CUBA.USER
 
-# define a top level computational model of SimPhoNy
   COMPUTATIONAL_MODEL: 
     definition:  model category according to the RoMM
     parent: CUBA.CUDS_COMPONENT
@@ -119,8 +69,7 @@ CUDS_KEYS:
   MATERIAL:
     definition: definition of a material and its parameters
     parent: CUBA.CUDS_COMPONENT
-         
-         
+           
   BOUNDARY:
     definition:  System Boundary
     parent: CUBA.CUDS_COMPONENT
@@ -137,44 +86,6 @@ CUDS_KEYS:
   SOLVER_PARAMETER:
     definition:  solver parameter and metadata 
     parent: CUBA.CUDS_COMPONENT
-
-#  PARTICLE:
-#    definition: A  Particle (used to discretize electronic, atomistic or mesoscopic systems)
-#    parent: CUBA.CUDS_ITEM
-#    CUBA.POSITION:
-      
-#  PARTICLES:
-#    definition: A  Particle data set (used to discretize electronic, atomistic or mesoscopic systems)
-#    parent: CUBA.PARTICLE
-#    shape: [0:]
-
-#  BOND:
-#    definition: A  BOND between Particles
-#    parent: CUBA.CUDS_ITEM
-#    CUBA.PARTICLES:
-#      scope: CUBA.USER
-#      default: CUBA.NONE
-
-#  POINT:
-#    definition: a  point having UUID and DATA CONTAINER
-#    parent: CUDS_ITEM
-#    CUBA.POSITION:
-
-#  NODE: 
-#    definition: A  LATTICE or MESH node, a point
-#    parent: CUBA.CUDS_ITEM
-#    CUBA.INDEX:
-# same for the mesh elements etc. These are currently defined in CUDS_ITEM.yml 
-
-#  PHYSICS_VARIABLES:
-#    definition: a CUBA defining a collection/sequence/list of physics variables. 
-#    parent: CUBA.VARIABLE
-#    shape: [0:]
-## Note: VARIABLE is in cuba.yml
-
-
-
-#----------------------------------------------
 
   KS_DFT:
     parent: CUBA.PHYSICS_EQUATION
