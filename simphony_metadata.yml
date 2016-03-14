@@ -1,0 +1,325 @@
+VERSION: 1.0
+
+CUDS: Common Universal Data Structure
+
+Purpose: CUDS provides a semantic layer for the SimPhoNy metadata schema 
+
+Resources:
+ CUDS 1.0 (1st Edition): http://simphony.eu/cuds/1.0/ # does not exist
+ CUDS Issues Page: https://github.com/simphony/simphony-metadata/issues
+ CUDS Mailing List: simphony-ssb@fraunhofer.de
+ CUDS Reference Parser: https://github.com/simphony/simphony-metadata/cparser #?
+
+CUDS_KEYS:
+
+  CUDS_ITEM:
+    parent: 
+    CUBA.UUID:
+      scope: CUBA.SYSTEM
+    CUBA.DATA:  
+      
+  CUDS_COMPONENT:
+    definition: Base data type for the CUDS components
+    parent: CUBA.CUDS_ITEM
+    CUBA.DESCRIPTION:
+      default:  
+      scope: CUBA.USER
+    CUBA.NAME:
+      default: 
+      scope: CUBA.USER
+
+  COMPUTATIONAL_MODEL: 
+    definition:  model category according to the RoMM
+    parent: CUBA.CUDS_COMPONENT
+
+  ELECTRONIC:
+    definition:  electronic model category according to the RoMM
+    parent: CUBA.COMPUTATIONAL_MODEL
+
+  ATOMISTIC:
+    definition:  atomistic model category according to the RoMM
+    parent: CUBA.COMPUTATIONAL_MODEL
+
+  MESOSCOPIC:
+    definition:  mesoscopic model category according to the RoMM
+    parent: CUBA.COMPUTATIONAL_MODEL
+
+  CONTINUUM:
+    definition:  continuum model category according to the RoMM
+    parent: CUBA.COMPUTATIONAL_MODEL
+ 
+  MODEL_EQUATION:
+    definition: The model equations are represented by all physics equations and material relations according to the RoMM
+    models: []
+    parent: CUBA.CUDS_COMPONENT
+    physics_variables: []
+
+  PHYSICS_EQUATION:
+   definition:  Physics Equation
+   parent: CUBA.MODEL_EQUATION
+
+  MATERIAL_RELATION:
+    definition:  Material Relation
+    parent: CUBA.MODEL_EQUATION
+    CUBA.MATERIAL:
+      scope: CUBA.USER
+      shape: [1:]
+      
+  MATERIAL:
+    definition: definition of a material and its parameters
+    parent: CUBA.CUDS_COMPONENT
+           
+  BOUNDARY:
+    definition:  System Boundary
+    parent: CUBA.CUDS_COMPONENT
+
+  CONDITION:
+    definition:  Condition on boundaries or model entities 
+    parent: CUBA.CUDS_COMPONENT
+    
+  DATA_SET:
+    definition:  data set
+    parent: CUBA.CUDS_COMPONENT
+    models: []
+        
+  SOLVER_PARAMETER:
+    definition:  solver parameter and metadata 
+    parent: CUBA.CUDS_COMPONENT
+
+  KS_DFT:
+    parent: CUBA.PHYSICS_EQUATION
+    definition: Kohn-Sham DFT equations
+    models: [CUBA.ELECTRONIC]
+    physics_variables: [CUBA.POSITION, CUBA.CHEMICAL_SPECIE, CUBA.ELECRON_MASS, CUBA.CHARGE_DENSITY, CUBA.ENERGY]
+    
+  MOLECULAR_DYNAMICS:
+    definition: Classical Atomistic Molecular Dynamics using Newtons equations of motion
+    parent: CUBA.PHYSICS_EQUATION
+    models: [CUBA.ATOMISTIC]
+    physics_variables: [CUBA.POSITION, CUBA.VELOCITY, CUBA.MOMENTUM, CUBA.ACCELERATION, CUBA.FORCE]  
+
+  MOLECULAR_STATICS:
+    definition: Classical Atomistic static molecular model
+    parent: CUBA.PHYSICS_EQUATION
+    models: [CUBA.ATOMISTIC]
+    physics_variables: [CUBA.POSITION, CUBA.FORCE]  
+
+  GRANULAR_DYNAMICS:
+    definition: Granular dynamics of spherical particles using DEM
+    parent: CUBA.PHYSICS_EQUATION    
+    models: [CUBA.MESCOCOPIC]
+    physics_variables: [CUBA.POSITION, CUBA.VELOCITY, CUBA.MOMENTUM, CUBA.ACCELERATION, CUBA.MOMENT_INERTIA, CUBA.TORQUE, CUBA.ANGULAR_VELOCITY]  
+    
+  CFD:
+    definition: Computational fluid dynamics general (set of ) equations for momentum, mass and energy
+    parent: CUBA.PHYSICS_EQUATION
+    models: [CUBA.CONTINUUM]
+    physics_variables: 
+      [CUBA.POSITION, CUBA.VELOCITY, CUBA.MOMENTUM, 
+      CUBA.DENSITY, CUBA.VISCOSITY, CUBA.TIME, CUBA.STRESS_TENSOR, 
+      CUBA.PRESSURE, CUBA.DYNAMIC_PRESSURE, CUBA.VOLUME_FRACTION] 
+    CUBA.COMPRESSIBILITY_MODEL: 
+      default: CUBA.INCOMPRESSIBLE_MODEL
+    CUBA.THERMAL_MODEL:
+      default: CUBA.ISOTHERMAL_MODEL
+      scope: CUBA.USER
+    CUBA.TURBULENCE_MODEL:
+      default: CUBA.LAMINAR_FLOW_MODEL
+    CUBA.MULTIPHASE_MODEL: 
+      default: CUBA.SINGLE_PHASE_MODEL
+    CUBA.RHEOLOGY_MODEL:
+      default: CUBA.NEWTONIAN_MODEL
+    CUBA.GRAVITY_MODEL:
+    CUBA.ELECTROSTATIC_MODEL:
+      default: CUBA.CONSTANT_ELECTROSTATIC_FIELD_MODEL
+      
+  GRAVITY_MODEL:
+    definition: a simple gravity model 
+    parent: CUBA.PHYSICS_EQUATION
+    models: [CUBA.MESOSCOPIC, CUBA.CONTINUUM]
+    physics_variables: [CUBA.ACCELERATION]
+    CUBA.ACCELERATION:
+      default: [0., 0., 0.]
+
+  CONSTANT_ELECTROSTATIC_FIELD_MODEL:
+    definition: A constant elecrostatic field model 
+    parent: CUBA.PHYSICS_EQUATION
+    models: [CUBA.MESOSCOPIC, CUBA.CONTINUUM]
+    physics_variables: [CUBA.ELECTRIC_FIELD, CUBA.CHARGE]
+    CUBA.ELECTROSTATIC_FIELD:
+      default: [0., 0., 0.]
+  # note:GRAVITY and CUBA.ELECROSTATIC_FIELD are defined in cuba.yml. 
+
+  ISOTHERMAL_MODEL:
+    definition: Isothermal heat transport model, no transport of heat is assumed
+    parent: CUBA.PHYSICS_EQUATION
+    models: [CUBA.CONTINUUM]
+    physics_variables: []
+
+  THERMAL_MODEL:
+    definition: Non Isothermal heat transport model
+    parent: CUBA.PHYSICS_EQUATION
+    models: [CUBA.CONTINUUM]
+    physics_variables: [CUBA.TEMPERATURE, CUBA.HEAT_CONDUCTIVITY]
+      
+  INCOMPRESSIBLE_FLUID_MODEL:
+    parent: CUBA.PHYSICS_EQUATION
+    models: [CUBA.CONTINUUM]
+    definition: Incompressible fluid model
+    physics_variables: [CUBA.VELOCITY, CUBA.POSITION, CUBA.DENSITY, CUBA.VISCOSITY]
+    
+  LAMINAR_FLOW_MODEL:
+    parent: CUBA.PHYSICS_EQUATION
+    definition: Laminar model
+    models: [CUBA.CONTINUUM]
+    
+  SINGLE_PHASE_MODEL:
+    parent: CUBA.PHYSICS_EQUATION
+    definition: a single phase fluid model
+    models: [CUBA.CONTINUUM]
+
+  FREE_SURFACE_MODEL:
+    definition: Free surface model
+    parent: CUBA.PHYSICS_EQUATION
+    models: [CUBA.CONTINUUM]
+    physics_variables: [CUBA.SURFACE_TENSION]
+    
+  MIXTURE_MODEL:
+    definition: mixture (drift flux) model
+    parent: CUBA.PHYSICS_EQUATION
+    models: [CUBA.CONTINUUM]
+
+  RHEOLOGY_MODEL:
+    definition: Rheology model of a CFD fluid
+    parent: CUBA.PHYSICS_EQUATION
+    models: [CUBA.CONTINUUM]
+    default: CUBA.NEWTONIAN_FLUID_MODEL
+
+  NEWTONIAN_FLUID_MODEL:
+    definition: Newtonian ﬂuid model assuming the viscous stresses are proportional to the rates of deformation
+    parent: CUBA.RHEOLOGY_MODEL
+    models: [CUBA.CONTINUUM]
+  
+  POWER_LAW_VISCOSITY_MODEL:
+    definition: Power Law model for a variable viscosity function that is limited by minimum and maximum values 
+    parent: CUBA.RHEOLOGY_MODEL
+    models: [CUBA.CONTINUUM]
+    CUBA.MAXIMUM_VISCOSITY: 
+      default: 1e-3
+    CUBA.MINIMUM_VISCOSITY:
+      default: 1e-5
+    CUBA.LINEAR_CONSTANT:
+      default: 1e-5
+    CUBA.POWER_LAW_INDEX:
+      default: 1
+      
+  HERSCHEL_BULKLEY_MODEL:
+    definition: Herschel-Bulkley model combines the effects of Bingham plastic and power-law behavior in a fluid
+    parent: CUBA.RHEOLOGY_MODEL
+    models: [CUBA.CONTINUUM]
+    CUBA.INITIAL_VISCOSITY: 
+      default: 1e-3
+    CUBA.RELAXATION_TIME: 
+      default: 1.0
+    CUBA.LINEAR_CONSTANT:
+      default: 1e-5
+    CUBA.POWER_LAW_INDEX:
+      default: 1
+
+  CROSS_POWER_LAW_MODEL:
+    definition: Viscosity Cross power law model
+    parent: CUBA.RHEOLOGY_MODEL
+    models: [CUBA.CONTINUUM]
+    CUBA.INITIAL_VISCOSITY: 
+      default: 1e-3
+    CUBA.MAXIMUM_VISCOSITY: 
+      default: 1e-5   # nu_infiniy
+    CUBA.LINEAR_CONSTANT: 
+      default: 1.0
+    CUBA.POWER_LAW_INDEX: 
+      default: 0.5
+
+  BIRD_CARREAU_MODEL:
+    definition: The Bird-Carreau model
+    parent: CUBA.RHEOLOGY_MODEL
+    models: [CUBA.CONTINUUM]
+    CUBA.INITIAL_VISCOSITY: 
+      default: 1e-3
+    CUBA.MAXIMUM_VISCOSITY: 
+      default: 1e-5
+    CUBA.LINEAR_CONSTANT:
+      default: 1.0
+    CUBA.POWER_LAW_INDEX:
+      default: 0.5
+
+  SURFACE_TENSION_RELATION:
+    parent: CUBA.MATERIAL_RELATION
+    definition: Surface tension relation between two fluids
+    models: [CUBA.CONTINUUM]
+    CUBA.SURFACE_TENSION:
+      default: 0.07
+      scope: CUBA.USER
+      shape: [2]
+    CUBA.MATERIAL:
+      shape: [2]
+
+  DIRICHLET_BOUNDARY_CONDITION:
+    definition: Dirichlet boundary condition
+    parent: CUBA.CONDITION    
+    models: [CUBA.CONTINUUM]
+    CUBA.PHYSICS_VARIABLES: 
+      shape: [0:]
+    CUBA.MATERIAL: 
+      shape: [0:]
+
+  NEUMANN_BOUNDARY_CONDITION:
+    definition: Neumann boundary condition
+    parent: CUBA.CONDITION
+    models: [CUBA.CONTINUUM]
+    CUBA.PHYSICS_VARIABLES: 
+      shape: [0:]
+    CUBA.MATERIAL: 
+      shape: [0:]
+     
+  EMPTY_BOUNDARY_CONDITION:
+    parent: CUBA.CONDITION
+    definition: Empty boundary condition
+    models: [CUBA.CONTINUUM]
+    CUBA.PHYSICS_VARIABLES: 
+      shape: [0:]
+    CUBA.MATERIAL: 
+      shape: [0:]
+
+  INTERATOMIC_POTENTIAL:
+    definition: Interatomic Potentials Category
+    parent: [CUBA.MATERIAL_RELATION]
+    models: [CUBA.ATOMISTIC]
+
+  PAIR_POTENTIAL:
+    definition: Pair Interatomic Potentials Category
+    parent: CUBA.INTERATOMIC_POTENTIAL  
+    models: [CUBA.ATOMISTIC]
+    CUBA.MATERIAL:
+      default: []
+      shape: [2]
+  
+  LENNARD_JONNES_6_12:
+    parent: CUBA.PAIR_POTENTIAL
+    definition: A Lennard Jonnes 6-12 Potential 
+    models: [CUBA.ATOMISTIC]
+    physics_variables: [CUBA.POSITION, CUBA.POTENTIAL_ENERGY]
+    CUBA.CUTOFF_DISTANCE:
+      default: 1.0
+    CUBA.ENERGY_WELL_DEPTH:
+      default: 1.0
+    CUBA.VAN_DER_WAALS_RADIUS:
+      default: 1.0
+
+  COULOMB:
+    parent: CUBA.PAIR_POTENTIAL
+    definition: The standard electrostatic Coulombic interaction potential between a pair of point charges
+    models: [CUBA.ATOMISTIC]
+    CUBA.DIELECTRIC_CONSTANT:
+      default: 1.0
+    CUBA.CUTOFF_DISTANCE:
+      default: 1.0
