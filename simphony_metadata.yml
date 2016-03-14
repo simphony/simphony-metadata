@@ -139,7 +139,7 @@ CUDS_KEYS:
     models: [CUBA.MESOSCOPIC, CUBA.CONTINUUM]
     physics_variables: [CUBA.ACCELERATION]
     CUBA.ACCELERATION:
-      default: [0, 0, 0]
+      default: [0., 0., 0.]
 
   CONSTANT_ELECTROSTATIC_FIELD_MODEL:
     definition: A constant elecrostatic field model 
@@ -147,7 +147,7 @@ CUDS_KEYS:
     models: [CUBA.MESOSCOPIC, CUBA.CONTINUUM]
     physics_variables: [CUBA.ELECTRIC_FIELD, CUBA.CHARGE]
     CUBA.ELECTROSTATIC_FIELD:
-      default: [0, 0, 0]
+      default: [0., 0., 0.]
   # note:GRAVITY and CUBA.ELECROSTATIC_FIELD are defined in cuba.yml. 
 
   ISOTHERMAL_MODEL:
@@ -207,7 +207,7 @@ CUDS_KEYS:
     CUBA.MAXIMUM_VISCOSITY: 
       default: 1e-3
     CUBA.MINIMUM_VISCOSITY:
-      default: 1E-5
+      default: 1e-5
     CUBA.LINEAR_CONSTANT:
       default: 1e-5
     CUBA.POWER_LAW_INDEX:
@@ -220,7 +220,7 @@ CUDS_KEYS:
     CUBA.INITIAL_VISCOSITY: 
       default: 1e-3
     CUBA.RELAXATION_TIME: 
-      default: 1
+      default: 1.0
     CUBA.LINEAR_CONSTANT:
       default: 1e-5
     CUBA.POWER_LAW_INDEX:
@@ -233,9 +233,9 @@ CUDS_KEYS:
     CUBA.INITIAL_VISCOSITY: 
       default: 1e-3
     CUBA.MAXIMUM_VISCOSITY: 
-      default: 1E-5   # nu_infiniy
+      default: 1e-5   # nu_infiniy
     CUBA.LINEAR_CONSTANT: 
-      default: 1
+      default: 1.0
     CUBA.POWER_LAW_INDEX: 
       default: 0.5
 
@@ -246,9 +246,9 @@ CUDS_KEYS:
     CUBA.INITIAL_VISCOSITY: 
       default: 1e-3
     CUBA.MAXIMUM_VISCOSITY: 
-      default: 1E-5
+      default: 1e-5
     CUBA.LINEAR_CONSTANT:
-      default: 1
+      default: 1.0
     CUBA.POWER_LAW_INDEX:
       default: 0.5
 

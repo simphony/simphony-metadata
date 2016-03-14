@@ -1,9 +1,12 @@
 # simphony-metadata
-This repository contains the metadata schema defnition used in SimPhoNy project a casted in YAML Syntax.
+
+This repository contains the metadata schema defnition of the SimPhoNy project  casted in YAML Syntax.
 
 
 Repository
+----------
 
 Simphony-metadata is hosted on github: https://github.com/simphony/simphony-metadata
+
 
 
