@@ -196,7 +196,7 @@ CUDS_KEYS:
     default: CUBA.NEWTONIAN_FLUID_MODEL
 
   NEWTONIAN_FLUID_MODEL:
-    definition: Newtonian ﬂuid model assuming the viscous stresses are proportional to the rates of deformation
+    definition: Newtonian fluid model assuming the viscous stresses are proportional to the rates of deformation
     parent: CUBA.RHEOLOGY_MODEL
     models: [CUBA.CONTINUUM]
 
@@ -292,7 +292,7 @@ CUDS_KEYS:
 
   INTERATOMIC_POTENTIAL:
     definition: Interatomic Potentials Category
-    parent: [CUBA.MATERIAL_RELATION]
+    parent: CUBA.MATERIAL_RELATION
     models: [CUBA.ATOMISTIC]
 
   PAIR_POTENTIAL:
