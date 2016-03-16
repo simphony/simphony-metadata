@@ -17,6 +17,8 @@ def to_camel_case(text):
     return re.sub(r'(_?[a-zA-Z]+)', replace_func, text)
 
 
+# FIXME: shape syntax is not finalised
+# https://github.com/simphony/simphony-metadata/issues/9
 def decode_shape(shape_code):
     """ Decode the 'shape' attribute in the metadata schema
 
@@ -39,6 +41,8 @@ def decode_shape(shape_code):
     return shapes
 
 
+# FIXME: shape syntax is not finalised
+# https://github.com/simphony/simphony-metadata/issues/9
 def check_shape(value, shape):
     """ Check if `value` is a sequence that comply with shape """
     # FIXME: this docstring please ^^^
@@ -56,22 +60,26 @@ class CodeGenerator(object):
     def __init__(self, name, **kwargs):
         self.name = to_camel_case(name)
 
+        # This collects import statements
+        self.imports = []
+
         # parent is for class inheritance so it is handled separately
+        # self.parent = ""; kwargs.pop("parent")    # for testing
         self.parent = kwargs.pop("parent")
 
         if self.parent is None or self.parent == "":
             self.parent = "object"
 
         elif self.parent.startswith("CUBA."):
-            self.parent = to_camel_case(self.parent[5:])
-
+            parent_name = self.parent[5:].lower()
+            self.parent = to_camel_case(parent_name)
+            self.imports.append("from simphony.meta.{0} import {1}".format(
+                parent_name, self.parent))
         else:
             message = "'parent' should be either empty or a CUBA value, got {}"
             raise ValueError(message.format(self.parent))
 
-        # This collects import statements
-        self.imports = []
-
+        
         # This collects required __init__ arguments
         self.required_user_defined = []
 
@@ -86,10 +94,12 @@ class CodeGenerator(object):
         self.methods = []
 
         # All CUBA keys that the code depends on
+        # FIXME: So far it is not used anywhere except for book-keeping
         self.cuba_dependencies = []
 
         for key, contents in kwargs.items():
-            # Book keeping what CUBA key the class depends on
+            # FIXME: Is there anything special that we need to do if
+            # a property is a CUBA key (e.g. CUBA.DESCRIPTION in CUDS_COMPONENT
             if key.startswith("CUBA."):
                 self.cuba_dependencies.append(key)            
                 key = key[5:].lower()
@@ -105,42 +115,62 @@ class CodeGenerator(object):
 
     def gen_attribute(self, key, contents):
         """ Dispatcher for populating code"""
-        # If there is default value, those attributes are optional,
-        # otherwise, they are required
-        if isinstance(contents, dict) and contents.get("default", ""):
-            self.optional_user_defined.update({key: contents["default"]})
+
+        if not isinstance(contents, dict):
+            # FIXME: the key has a single value, so is it read-only?
+            if isinstance(contents, str) and " " in contents:
+                # then it is likely to be a sentence
+                contents = '"{}"'.format(contents)
+
+            self.print_getter(key, value=contents)
+
+        elif contents.get("default", ""):
+            # the contents is a dict and has a default value
+            # it is a property which user definition is optional
             value = contents["default"]
+
+            # FIXME: Because some CUBA values are not defined
+            # default values being a CUBA key is converted to a str for
+            # testing
+            if isinstance(value, str) and value.startswith("CUBA."):
+                value = "'{}'".format(value[5:])
+
+            # append it so that the __init__ signature contains the key
+            self.optional_user_defined.update({key: value})
+
+            # __init__ body
+            self.init_body.append("self._{key} = {key}".format(key=key))
+
+            # property getter
+            self.print_getter(key)
+
+            # property setter
+            if isinstance(contents, dict) and "shape" in contents:
+                shape = contents["shape"]
+                check_statements = "check_shape(value, {shape})".format(shape=shape)
+                self.print_setter(key, check_statements)
+            else:
+                self.print_setter(key)
+
         else:
+            # the property definition in the yaml is a dict and it has
+            # no default value.  Unless the scope is CUBA.SYSTEM,
+            # it should require user definition
             self.required_user_defined.append(key)
-            value = key
 
-        if isinstance(value, str) and " " in value:
-            # then it is likely to be a sentence
-            value = '"{}"'.format(value)
+            # __init__ body
+            self.init_body.append("self._{key} = {key}".format(key=key))
 
-        # __init__ body
-        # FIXME: do all attributes require descriptor methods?
-        self.init_body.append("self._{key} = {value}".format(key=key,
-                                                             value=value))
-        # property getter
-        self.methods.append('''
-    @property
-    def {key}(self):
-        return self._key'''.format(key=key))
+            # property getter
+            self.print_getter(key)
 
-        # property setter
-        if isinstance(contents, dict) and "shape" in contents:
-            shape = contents["shape"]
-            self.methods.append('''
-    @data.setter
-    def {key}(self, value):
-            check_shape(value, {shape})
-        self._{key} = value'''.format(shape=decode_shape(str(shape)), key=key))
-        else:
-            self.methods.append('''
-    @data.setter
-    def {key}(self, value):
-        self._{key} = value'''.format(key=key))
+            # property setter
+            if isinstance(contents, dict) and "shape" in contents:
+                shape = contents["shape"]
+                check_statements = "check_shape(value, {shape})".format(shape=shape)
+                self.print_setter(key, check_statements)
+            else:
+                self.print_setter(key)
 
     def gen_uuid(self, contents):
         """Populate code for CUBA.UUID"""
@@ -150,6 +180,25 @@ class CodeGenerator(object):
     @property
     def uuid(self):
         return uuid.uuid4()''')
+
+    def print_getter(self, key, value=None):
+        # default property getter
+        if value is None:
+            value = "self._{key}".format(key=key)
+
+        self.methods.append('''
+    @property
+    def {key}(self):
+        return {value}'''.format(key=key, value=value))
+
+    def print_setter(self, key, check_statements=""):
+        # default property setter
+        self.methods.append('''
+    @{key}.setter
+    def {key}(self, value):
+        {check_statements}
+        self._{key} = value'''.format(key=key,
+                                      check_statements=check_statements))
 
     def gen_data(self, contents):
         """Populate code for CUBA.DATA"""
@@ -174,11 +223,15 @@ class CodeGenerator(object):
         self._data = DataContainer(new_data)''')
 
     def generate(self, file=sys.stdout):
+        """ This is the main function for generating the code """
+        # import statements
+        print(*self.imports, sep="\n", file=file)
+
         # class header
         print('''
 
 class {name}({parent}):'''.format(name=self.name,
-                                                   parent=self.parent),
+                                  parent=self.parent),
               file=file)
 
         # __init__ signature
@@ -191,6 +244,8 @@ class {name}({parent}):'''.format(name=self.name,
                 signature=", ".join(signature)), file=file)
 
         # __init__ body
+        if self.init_body == [""]:
+            self.init_body.append("pass")
         print(*self.init_body, sep="\n        ", file=file)
 
         # methods (including descriptors)
@@ -200,16 +255,24 @@ class {name}({parent}):'''.format(name=self.name,
 
 if __name__ == "__main__":
     import yaml
+    import os
+
     with open("simphony_metadata.yml", "rb") as yaml_file:
         yaml_data = yaml.safe_load(yaml_file)
 
-    all_import_statements = []
+
+    # create a "generated" directory if it does not already exist
+    dirname = "generated"
+    if not os.path.exists(dirname):
+        os.mkdir(dirname)
 
     for key, value in yaml_data["CUDS_KEYS"].items():
         try:
-            gen = CodeGenerator(key, **value)
-            gen.generate()
+            filename = os.path.join(dirname, "{}.py".format(key.lower()))
+            with open(filename, "wb") as output_file:
+                gen = CodeGenerator(key, **value)
+                gen.generate(file=output_file)
         except:
             print(key, value)
             raise
-        all_import_statements.extend(gen.imports)
+
