@@ -52,7 +52,7 @@ CUDS_KEYS:
     definition: The model equations are represented by all physics equations and material relations according to the RoMM
     models: []
     parent: CUBA.CUDS_COMPONENT
-    physics_variables: []
+    variables: []
 
   PHYSICS_EQUATION:
    definition: Physics equation
@@ -63,7 +63,7 @@ CUDS_KEYS:
     parent: CUBA.MODEL_EQUATION
     CUBA.MATERIAL:
       scope: CUBA.USER
-      shape: [1:]
+      shape: []
 
   MATERIAL:
     definition: Definition of a material and its parameters
@@ -90,36 +90,36 @@ CUDS_KEYS:
     parent: CUBA.PHYSICS_EQUATION
     definition: Kohn-Sham DFT equations
     models: [CUBA.ELECTRONIC]
-    physics_variables: [CUBA.POSITION, CUBA.CHEMICAL_SPECIE, CUBA.ELECRON_MASS, CUBA.CHARGE_DENSITY, CUBA.ENERGY]
+    variables: [CUBA.POSITION, CUBA.CHEMICAL_SPECIE, CUBA.ELECTRON_MASS, CUBA.CHARGE_DENSITY, CUBA.ENERGY]
 
   MOLECULAR_DYNAMICS:
     definition: Classical atomistic molecular dynamics using Newtons equations of motion
     parent: CUBA.PHYSICS_EQUATION
     models: [CUBA.ATOMISTIC]
-    physics_variables: [CUBA.POSITION, CUBA.VELOCITY, CUBA.MOMENTUM, CUBA.ACCELERATION, CUBA.FORCE]
+    variables: [CUBA.POSITION, CUBA.VELOCITY, CUBA.MOMENTUM, CUBA.ACCELERATION, CUBA.FORCE]
 
   MOLECULAR_STATICS:
     definition: Classical atomistic static molecular model
     parent: CUBA.PHYSICS_EQUATION
     models: [CUBA.ATOMISTIC]
-    physics_variables: [CUBA.POSITION, CUBA.FORCE]
+    variables: [CUBA.POSITION, CUBA.FORCE]
 
   GRANULAR_DYNAMICS:
     definition: Granular dynamics of spherical particles using DEM
     parent: CUBA.PHYSICS_EQUATION
-    models: [CUBA.MESCOCOPIC]
-    physics_variables: [CUBA.POSITION, CUBA.VELOCITY, CUBA.MOMENTUM, CUBA.ACCELERATION, CUBA.MOMENT_INERTIA, CUBA.TORQUE, CUBA.ANGULAR_VELOCITY]
+    models: [CUBA.MESOSCOPIC]
+    variables: [CUBA.POSITION, CUBA.VELOCITY, CUBA.MOMENTUM, CUBA.ACCELERATION, CUBA.MOMENT_INERTIA, CUBA.TORQUE, CUBA.ANGULAR_VELOCITY]
 
   CFD:
     definition: Computational fluid dynamics general (set of ) equations for momentum, mass and energy
     parent: CUBA.PHYSICS_EQUATION
     models: [CUBA.CONTINUUM]
-    physics_variables:
+    variables:
       [CUBA.POSITION, CUBA.VELOCITY, CUBA.MOMENTUM,
       CUBA.DENSITY, CUBA.VISCOSITY, CUBA.TIME, CUBA.STRESS_TENSOR,
       CUBA.PRESSURE, CUBA.DYNAMIC_PRESSURE, CUBA.VOLUME_FRACTION]
     CUBA.COMPRESSIBILITY_MODEL:
-      default: CUBA.INCOMPRESSIBLE_MODEL
+      default: CUBA.INCOMPRESSIBLE_FLUID_MODEL
     CUBA.THERMAL_MODEL:
       default: CUBA.ISOTHERMAL_MODEL
       scope: CUBA.USER
@@ -137,36 +137,36 @@ CUDS_KEYS:
     definition: A simple gravity model
     parent: CUBA.PHYSICS_EQUATION
     models: [CUBA.MESOSCOPIC, CUBA.CONTINUUM]
-    physics_variables: [CUBA.ACCELERATION]
+    variables: [CUBA.ACCELERATION]
     CUBA.ACCELERATION:
       default: [0., 0., 0.]
 
   CONSTANT_ELECTROSTATIC_FIELD_MODEL:
-    definition: A constant elecrostatic field model
+    definition: A constant electrostatic field model
     parent: CUBA.PHYSICS_EQUATION
     models: [CUBA.MESOSCOPIC, CUBA.CONTINUUM]
-    physics_variables: [CUBA.ELECTRIC_FIELD, CUBA.CHARGE]
+    variables: [CUBA.ELECTRIC_FIELD, CUBA.CHARGE]
     CUBA.ELECTROSTATIC_FIELD:
       default: [0., 0., 0.]
-  # note:GRAVITY and CUBA.ELECROSTATIC_FIELD are defined in cuba.yml.
+  # note:GRAVITY and CUBA.ELECTROSTATIC_FIELD are defined in cuba.yml.
 
   ISOTHERMAL_MODEL:
     definition: Isothermal heat transport model, no transport of heat is assumed
     parent: CUBA.PHYSICS_EQUATION
     models: [CUBA.CONTINUUM]
-    physics_variables: []
+    variables: []
 
   THERMAL_MODEL:
     definition: Non-isothermal heat transport model
     parent: CUBA.PHYSICS_EQUATION
     models: [CUBA.CONTINUUM]
-    physics_variables: [CUBA.TEMPERATURE, CUBA.HEAT_CONDUCTIVITY]
+    variables: [CUBA.TEMPERATURE, CUBA.HEAT_CONDUCTIVITY]
 
   INCOMPRESSIBLE_FLUID_MODEL:
     parent: CUBA.PHYSICS_EQUATION
     models: [CUBA.CONTINUUM]
     definition: Incompressible fluid model
-    physics_variables: [CUBA.VELOCITY, CUBA.POSITION, CUBA.DENSITY, CUBA.VISCOSITY]
+    variables: [CUBA.VELOCITY, CUBA.POSITION, CUBA.DENSITY, CUBA.VISCOSITY]
 
   LAMINAR_FLOW_MODEL:
     parent: CUBA.PHYSICS_EQUATION
@@ -182,7 +182,7 @@ CUDS_KEYS:
     definition: Free surface model
     parent: CUBA.PHYSICS_EQUATION
     models: [CUBA.CONTINUUM]
-    physics_variables: [CUBA.SURFACE_TENSION]
+    variables: [CUBA.SURFACE_TENSION]
 
   MIXTURE_MODEL:
     definition: Mixture (drift flux) model
@@ -267,28 +267,28 @@ CUDS_KEYS:
     definition: Dirichlet boundary condition
     parent: CUBA.CONDITION
     models: [CUBA.CONTINUUM]
-    CUBA.PHYSICS_VARIABLES:
-      shape: [0:]
+    CUBA.VARIABLES:
+      shape: []
     CUBA.MATERIAL:
-      shape: [0:]
+      shape: []
 
   NEUMANN_BOUNDARY_CONDITION:
     definition: Neumann boundary condition
     parent: CUBA.CONDITION
     models: [CUBA.CONTINUUM]
-    CUBA.PHYSICS_VARIABLES:
-      shape: [0:]
+    CUBA.VARIABLES:
+      shape: []
     CUBA.MATERIAL:
-      shape: [0:]
+      shape: []
 
   EMPTY_BOUNDARY_CONDITION:
     parent: CUBA.CONDITION
     definition: Empty boundary condition
     models: [CUBA.CONTINUUM]
-    CUBA.PHYSICS_VARIABLES:
-      shape: [0:]
+    CUBA.VARIABLES:
+      shape: []
     CUBA.MATERIAL:
-      shape: [0:]
+      shape: []
 
   INTERATOMIC_POTENTIAL:
     definition: Interatomic Potentials Category
@@ -307,7 +307,7 @@ CUDS_KEYS:
     parent: CUBA.PAIR_POTENTIAL
     definition: A Lennard-Jones 6-12 Potential
     models: [CUBA.ATOMISTIC]
-    physics_variables: [CUBA.POSITION, CUBA.POTENTIAL_ENERGY]
+    variables: [CUBA.POSITION, CUBA.POTENTIAL_ENERGY]
     CUBA.CUTOFF_DISTANCE:
       default: 1.0
     CUBA.ENERGY_WELL_DEPTH:
@@ -333,14 +333,14 @@ CUDS_KEYS:
 
   DISSIPATION_FORCE:
     parent: CUBA.FORCE
-    description: Viscous normal force describing the inelasticity of particle collisions
+    definition: Viscous normal force describing the inelasticity of particle collisions
     models: [CUBA.ATOMISTIC]
     CUBA.RESTITUTION_COEFFICIENT:
       default: 1.0
 
   SJKR_COHESION_FORCE:
     parent: CUBA.FORCE
-    description: Additional normal force tending to maintain the contact
+    definition: Additional normal force tending to maintain the contact
     models: [CUBA.ATOMISTIC]
     CUBA.COHESION_ENERGY_DENSITY:
       default: 0.0
