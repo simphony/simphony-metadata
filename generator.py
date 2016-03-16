@@ -129,11 +129,9 @@ class CodeGenerator(object):
             # it is a property which user definition is optional
             value = contents["default"]
 
-            # FIXME: Because some CUBA values are not defined
-            # default values being a CUBA key is converted to a str for
-            # testing
+            # FIXME: if default value is a CUBA key, do we keep it as is?
             if isinstance(value, str) and value.startswith("CUBA."):
-                value = "'{}'".format(value[5:])
+                self.imports.append("from simphony.core.cuba import CUBA")
 
             # append it so that the __init__ signature contains the key
             self.optional_user_defined.update({key: value})
@@ -147,6 +145,7 @@ class CodeGenerator(object):
             # property setter
             if isinstance(contents, dict) and "shape" in contents:
                 shape = contents["shape"]
+                # FIXME: will need to import the check_shape function from somewhere!
                 check_statements = "check_shape(value, {shape})".format(shape=shape)
                 self.print_setter(key, check_statements)
             else:
@@ -225,7 +224,7 @@ class CodeGenerator(object):
     def generate(self, file=sys.stdout):
         """ This is the main function for generating the code """
         # import statements
-        print(*self.imports, sep="\n", file=file)
+        print(*set(self.imports), sep="\n", file=file)
 
         # class header
         print('''
@@ -276,6 +275,6 @@ if __name__ == "__main__":
                 gen = CodeGenerator(key, **value)
                 gen.generate(file=output_file)
             except:
-                # Testing.  Excuse for this ugliness
+                # FIXME: Testing.  Excuse for this ugliness
                 print(key, value)
                 raise
