@@ -267,12 +267,15 @@ if __name__ == "__main__":
         os.mkdir(dirname)
 
     for key, value in yaml_data["CUDS_KEYS"].items():
-        try:
-            filename = os.path.join(dirname, "{}.py".format(key.lower()))
-            with open(filename, "wb") as output_file:
+        # for each CUDS_KEYS, the code is written to `dirname`/
+        # e.g. "generated/atomistic.py"
+        filename = os.path.join(dirname, "{}.py".format(key.lower()))
+
+        with open(filename, "wb") as output_file:
+            try:
                 gen = CodeGenerator(key, **value)
                 gen.generate(file=output_file)
-        except:
-            print(key, value)
-            raise
-
+            except:
+                # Testing.  Excuse for this ugliness
+                print(key, value)
+                raise
