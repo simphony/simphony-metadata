@@ -36,10 +36,12 @@ def decode_shape(shape_code):
     >>> decode_shape("(:, :10)")
     ((None, None), (None, 10))
     """
-    matched = re.finditer(r'([0-9+]):([0-9]+)|([0-9]+):|:([0-9]+)|([0-9]+)|[^0-9](:)[^0-9]',
-                         shape_code)
+    matched = re.finditer(
+        r'([0-9+]):([0-9]+)|([0-9]+):|:([0-9]+)|([0-9]+)|[^0-9](:)[^0-9]',
+        shape_code)
+
     shapes = []
-    
+
     for code in matched:
         min_size = code.group(1) or code.group(3) or code.group(5)
         min_size = int(min_size) if min_size else min_size
@@ -70,8 +72,8 @@ def check_shape(value, shape):
     if len(decoded_shape) == 1:
         min_size, max_size = decoded_shape[0]
         size = len(value)
-        is_valid =  ((size >= int(min_size) if min_size else True) and
-                     (size <= int(max_size) if max_size else True))
+        is_valid = ((size >= int(min_size) if min_size else True) and
+                    (size <= int(max_size) if max_size else True))
     else:
         # FIXME:
         raise NotImplemented("Not dealing with multidimension yet")
@@ -106,7 +108,6 @@ class CodeGenerator(object):
             message = "'parent' should be either empty or a CUBA value, got {}"
             raise ValueError(message.format(self.parent))
 
-        
         # This collects required __init__ arguments
         self.required_user_defined = []
 
@@ -128,7 +129,7 @@ class CodeGenerator(object):
             # FIXME: Is there anything special that we need to do if
             # a property is a CUBA key (e.g. CUBA.DESCRIPTION in CUDS_COMPONENT
             if key.startswith("CUBA."):
-                self.cuba_dependencies.append(key)            
+                self.cuba_dependencies.append(key)
                 key = key[5:].lower()
 
             # If special generator method is defined, call it instead
@@ -172,9 +173,9 @@ class CodeGenerator(object):
             # property setter
             if isinstance(contents, dict) and "shape" in contents:
                 shape = contents["shape"]
-                # FIXME: will need to import the check_shape function from somewhere!
-                check_statements = "check_shape(value, '{shape}')".format(shape=shape)
-                self.print_setter(key, check_statements)
+                # FIXME: need to import the check_shape function from somewhere
+                check_statements = "check_shape(value, '{shape}')"
+                self.print_setter(key, check_statements.format(shape=shape))
             else:
                 self.print_setter(key)
 
@@ -193,8 +194,8 @@ class CodeGenerator(object):
             # property setter
             if isinstance(contents, dict) and "shape" in contents:
                 shape = contents["shape"]
-                check_statements = "check_shape(value, '{shape}')".format(shape=shape)
-                self.print_setter(key, check_statements)
+                check_statements = "check_shape(value, '{shape}')"
+                self.print_setter(key, check_statements.format(shape=shape))
             else:
                 self.print_setter(key)
 
@@ -278,14 +279,12 @@ class {name}({parent}):'''.format(name=self.name,
         print(*self.methods, sep="\n", file=file)
 
 
-
 if __name__ == "__main__":
     import yaml
     import os
 
     with open("simphony_metadata.yml", "rb") as yaml_file:
         yaml_data = yaml.safe_load(yaml_file)
-
 
     # create a "generated" directory if it does not already exist
     dirname = "generated"
