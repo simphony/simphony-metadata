@@ -7,12 +7,15 @@ import sys
 logger = logging
 
 
-def to_camel_case(text):
-    """ Convert text to CamelCase (for class name)"""
+def to_camel_case(text, exceptions=("CUDS",)):
+    """ Convert text to CamelCase (for class name)
+    """
     def replace_func(matched):
-        word = matched.group(0).strip("_").lower()
-        prefix = word[0].upper()
-        return prefix+word[1:]
+        word = matched.group(0).strip("_")
+        if word in exceptions:
+            return word
+        else:
+            return word[0].upper()+word[1:].lower()
 
     return re.sub(r'(_?[a-zA-Z]+)', replace_func, text)
 
