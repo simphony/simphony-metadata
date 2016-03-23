@@ -87,6 +87,13 @@ def check_shape(value, shape):
         raise ValueError(error_message.format(value=value, shape=shape))
 
 
+
+# FIXME: "description" and "name" are required user arguments for CUDSItem
+# and should be included in the subclasses' __init__ function.
+# Likewise the "data" attribute needs to be either initialised in __init__
+# This may be achieved by walking up the MRO through the `parent` attribute
+# and collect all the `required_user_defined` of the corresponding CodeGenerator
+# instance.
 class CodeGenerator(object):
 
     def __init__(self, name, **kwargs):
