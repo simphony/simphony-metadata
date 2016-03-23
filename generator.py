@@ -17,8 +17,6 @@ def to_camel_case(text):
     return re.sub(r'(_?[a-zA-Z]+)', replace_func, text)
 
 
-# FIXME: shape syntax is not finalised
-# https://github.com/simphony/simphony-metadata/issues/9
 def decode_shape(shape_code):
     """ Decode the 'shape' attribute in the metadata schema
 
@@ -29,30 +27,59 @@ def decode_shape(shape_code):
     Returns
     -------
     tuple
+
+    Examples
+    --------
+    >>> decode_shape("(1:)")
+    ((1, None),)
+
+    >>> decode_shape("(:, :10)")
+    ((None, None), (None, 10))
     """
-    matched = re.finditer(r'([0-9+]):([0-9]+)|([0-9]+):|:([0-9]+)|([0-9]+)',
+    matched = re.finditer(r'([0-9+]):([0-9]+)|([0-9]+):|:([0-9]+)|([0-9]+)|[^0-9](:)[^0-9]',
                          shape_code)
     shapes = []
     
     for code in matched:
         min_size = code.group(1) or code.group(3) or code.group(5)
+        min_size = int(min_size) if min_size else min_size
         max_size = code.group(2) or code.group(4) or code.group(5)
+        max_size = int(max_size) if max_size else max_size
         shapes.append((min_size, max_size))
-    return shapes
+    return tuple(shapes)
 
 
-# FIXME: shape syntax is not finalised
-# https://github.com/simphony/simphony-metadata/issues/9
 def check_shape(value, shape):
-    """ Check if `value` is a sequence that comply with shape """
-    # FIXME: this docstring please ^^^
-    if len(shape) == 1:
-        min_size, max_size = shape[0]
-        return ((size >= int(min_size) if min_size else True) and
-                (size <= int(max_size) if max_size else True))
+    """ Check if `value` is a sequence that comply with `shape`
+
+    Parameters
+    ----------
+    shape : str
+
+    Returns
+    -------
+    None
+
+    Raises
+    ------
+    ValueError
+        if the `value` does not comply with the required `shape`
+    """
+    decoded_shape = decode_shape(shape)
+
+    if len(decoded_shape) == 1:
+        min_size, max_size = decoded_shape[0]
+        size = len(value)
+        is_valid =  ((size >= int(min_size) if min_size else True) and
+                     (size <= int(max_size) if max_size else True))
     else:
         # FIXME:
         raise NotImplemented("Not dealing with multidimension yet")
+
+    error_message = "{value} does not comply with shape: '{shape}'"
+
+    if not is_valid:
+        raise ValueError(error_message.format(value=value, shape=shape))
 
 
 class CodeGenerator(object):
@@ -137,7 +164,7 @@ class CodeGenerator(object):
             self.optional_user_defined.update({key: value})
 
             # __init__ body
-            self.init_body.append("self._{key} = {key}".format(key=key))
+            self.init_body.append("self.{key} = {key}".format(key=key))
 
             # property getter
             self.print_getter(key)
@@ -146,7 +173,7 @@ class CodeGenerator(object):
             if isinstance(contents, dict) and "shape" in contents:
                 shape = contents["shape"]
                 # FIXME: will need to import the check_shape function from somewhere!
-                check_statements = "check_shape(value, {shape})".format(shape=shape)
+                check_statements = "check_shape(value, '{shape}')".format(shape=shape)
                 self.print_setter(key, check_statements)
             else:
                 self.print_setter(key)
@@ -158,7 +185,7 @@ class CodeGenerator(object):
             self.required_user_defined.append(key)
 
             # __init__ body
-            self.init_body.append("self._{key} = {key}".format(key=key))
+            self.init_body.append("self.{key} = {key}".format(key=key))
 
             # property getter
             self.print_getter(key)
@@ -166,7 +193,7 @@ class CodeGenerator(object):
             # property setter
             if isinstance(contents, dict) and "shape" in contents:
                 shape = contents["shape"]
-                check_statements = "check_shape(value, {shape})".format(shape=shape)
+                check_statements = "check_shape(value, '{shape}')".format(shape=shape)
                 self.print_setter(key, check_statements)
             else:
                 self.print_setter(key)
