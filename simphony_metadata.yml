@@ -63,7 +63,7 @@ CUDS_KEYS:
     parent: CUBA.MODEL_EQUATION
     CUBA.MATERIAL:
       scope: CUBA.USER
-      shape: []
+      shape: (:)
 
   MATERIAL:
     definition: Definition of a material and its parameters
@@ -259,36 +259,36 @@ CUDS_KEYS:
     CUBA.SURFACE_TENSION:
       default: 0.07
       scope: CUBA.USER
-      shape: [2]
+      shape: (2)
     CUBA.MATERIAL:
-      shape: [2]
+      shape: (2)
 
   DIRICHLET_BOUNDARY_CONDITION:
     definition: Dirichlet boundary condition
     parent: CUBA.CONDITION
     models: [CUBA.CONTINUUM]
     CUBA.VARIABLES:
-      shape: []
+      shape: (:)
     CUBA.MATERIAL:
-      shape: []
+      shape: (:)
 
   NEUMANN_BOUNDARY_CONDITION:
     definition: Neumann boundary condition
     parent: CUBA.CONDITION
     models: [CUBA.CONTINUUM]
     CUBA.VARIABLES:
-      shape: []
+      shape: (:)
     CUBA.MATERIAL:
-      shape: []
+      shape: (:)
 
   EMPTY_BOUNDARY_CONDITION:
     parent: CUBA.CONDITION
     definition: Empty boundary condition
     models: [CUBA.CONTINUUM]
     CUBA.VARIABLES:
-      shape: []
+      shape: (:)
     CUBA.MATERIAL:
-      shape: []
+      shape: (:)
 
   INTERATOMIC_POTENTIAL:
     definition: Interatomic Potentials Category
@@ -301,7 +301,7 @@ CUDS_KEYS:
     models: [CUBA.ATOMISTIC]
     CUBA.MATERIAL:
       default: []
-      shape: [2]
+      shape: (2)
 
   LENNARD_JONES_6_12:
     parent: CUBA.PAIR_POTENTIAL
