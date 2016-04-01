@@ -344,3 +344,77 @@ CUDS_KEYS:
     models: [CUBA.ATOMISTIC]
     CUBA.COHESION_ENERGY_DENSITY:
       default: 0.0
+
+  SOFTWARE_TOOL:
+    parent: CUBA.CUDS_COMPONENT
+    definition: Represents a software tool which is used to solve the model or in pre/post processing
+    CUBA.VERSION:
+      scope: CUBA.USER
+
+  PRE_PROCESSOR:
+    parent: CUBA.SOFTWARE_TOOL
+
+  POST_PROCESSOR:
+    parent: CUBA.SOFTWARE_TOOL
+
+  ENGINE:
+    parent: CUBA.SOFTWARE_TOOL
+    definition: Represents a software tool which is used to solve the model
+    models: []
+
+  SIMPARTIX:
+    parent: CUBA.ENGINE
+    definition: Represents simpartix engine
+
+  OPENFOAM
+    parent: CUBA.ENGINE
+    definition: Represents openfoam engine
+
+  LAMMPS:
+    parent: CUBA.ENGINE
+    definition: Represents lammps engine
+    models: [MD, DEM]
+
+  KRATOS:
+    parent: CUBA.ENGINE
+    defnition: Represents Kratos engine
+
+  JYULB:
+    parent: CUBA.ENGINE
+    definition: Represents JYU-LB engine
+
+  NFLUID:
+    parent: CUBA.ENGINE
+    definition: Represents nfluid engine
+
+  ESPRESSO_DFT:
+    parent: CUBA.ENGINE
+    definition: Represents espresso-dft engine
+
+  NUMERRIN:
+    parent: CUBA.ENGINE
+    definition: Represents Numerrin engine
+
+  PALABOS:
+    parent: CUBA.ENGINE
+    definition: Represents Palabos LB library
+
+  NCAD:
+    parent: CUBA.ENGINE
+    definition: Represents nCAD engine
+
+  VISUALISER:
+    parent: CUBA.SOFTWARE_TOOL
+    definition: Represent a software tool which visualises one or a series of CUDS
+
+  PARAVIEW:
+    parent: CUBA.VISUALISER
+    definition: Represents Paraview visualiser
+
+  MAYAVI:
+    parent: CUBA.VISUALISER
+    definition: Represents Mayavi visualiser
+
+  AVIZ:
+    parent: CUBA.VISUALISER
+    definition: Represents Aviz visualiser

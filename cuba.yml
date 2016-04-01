@@ -16,6 +16,11 @@ CUBA_KEYS:
     shape: [20]
     type: string
 
+  VERSION:
+    definition: Version of a software tool used in a simulation
+    shape: [255]
+    type: string
+
   POSITION:
     definition: Position of a point or node or atom
     shape: [3]
