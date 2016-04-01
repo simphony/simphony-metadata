@@ -353,9 +353,11 @@ CUDS_KEYS:
 
   PRE_PROCESSOR:
     parent: CUBA.SOFTWARE_TOOL
+    definition: A software tool used in pre-processing
 
   POST_PROCESSOR:
     parent: CUBA.SOFTWARE_TOOL
+    definition: A software tool used in post-processing
 
   ENGINE:
     parent: CUBA.SOFTWARE_TOOL
@@ -366,7 +368,7 @@ CUDS_KEYS:
     parent: CUBA.ENGINE
     definition: Represents simpartix engine
 
-  OPENFOAM
+  OPENFOAM:
     parent: CUBA.ENGINE
     definition: Represents openfoam engine
 
