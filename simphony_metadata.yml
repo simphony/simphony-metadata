@@ -346,77 +346,62 @@ CUDS_KEYS:
       default: 0.0
 
   SOFTWARE_TOOL:
-    parent: CUBA.CUDS_COMPONENT
+    parent: CUBA.CUDS_ITEM
     definition: Represents a software tool which is used to solve the model or in pre/post processing
     CUBA.VERSION:
-      scope: CUBA.USER
-
-  PRE_PROCESSOR:
-    parent: CUBA.SOFTWARE_TOOL
-    definition: A software tool used in pre-processing
-
-  POST_PROCESSOR:
-    parent: CUBA.SOFTWARE_TOOL
-    definition: A software tool used in post-processing
+      default:
 
   ENGINE:
     parent: CUBA.SOFTWARE_TOOL
-    definition: Represents a software tool which is used to solve the model
-    models: []
+    definition: Represents a software tool which is used to solve the physics equation
+    CUBA.ENGINE_FEATURE:
+      shape: (:)
+      scope: CUBA.SYSTEM
 
-  SIMPARTIX:
-    parent: CUBA.ENGINE
-    definition: Represents simpartix engine
+  ENGINE_FEATURE:
+    parent: CUBA.CUDS_ITEM
+    definition: Provides a physics equation and methods that engines provides to solve them
+    CUBA.PHYSICS_EQUATION:
+      shape: (1)
+      scope: CUBA.SYSTEM
+    CUBA.COMPUTATIONAL_METHOD:
+      shape: (:)
+      scope: CUBA.SYSTEM
 
-  OPENFOAM:
-    parent: CUBA.ENGINE
-    definition: Represents openfoam engine
+  VERSION:
+    parent: CUBA.CUDS_ITEM
+    definition: Version of a software tool used in a simulation
+    CUBA.MINOR:
+    CUBA.MAJOR:
+    CUBA.PATCH:
+    CUBA.FULL:
 
-  LAMMPS:
-    parent: CUBA.ENGINE
-    definition: Represents lammps engine
-    models: [MD, DEM]
+  COMPUTATIONAL_METHOD:
+    parent: CUBA.CUDS_COMPONENT
+    definition: A computational method according to the RoMM
+    physics_equation: []
 
-  KRATOS:
-    parent: CUBA.ENGINE
-    defnition: Represents Kratos engine
+  DEM:
+    parent: CUBA.COMPUTATIONAL_METHOD
+    definition: Discrete element method
+    physics_equation: [GRANULAR_DYNAMICS]
 
-  JYULB:
-    parent: CUBA.ENGINE
-    definition: Represents JYU-LB engine
+  FVM:
+    parent: CUBA.COMPUTATIONAL_METHOD
+    definition: Finite volume method
+    physics_equation: [CFD]
 
-  NFLUID:
-    parent: CUBA.ENGINE
-    definition: Represents nfluid engine
+  FEM:
+    parent: CUBA.COMPUTATIONAL_METHOD
+    definition: Finite element method
+    physics_equation: [CFD]
 
-  ESPRESSO_DFT:
-    parent: CUBA.ENGINE
-    definition: Represents espresso-dft engine
+  SPH:
+    parent: CUBA.COMPUTATIONAL_METHOD
+    definition: Smooth particle hydrodynamics
+    physics_equation: [CFD]
 
-  NUMERRIN:
-    parent: CUBA.ENGINE
-    definition: Represents Numerrin engine
-
-  PALABOS:
-    parent: CUBA.ENGINE
-    definition: Represents Palabos LB library
-
-  NCAD:
-    parent: CUBA.ENGINE
-    definition: Represents nCAD engine
-
-  VISUALISER:
-    parent: CUBA.SOFTWARE_TOOL
-    definition: Represent a software tool which visualises one or a series of CUDS
-
-  PARAVIEW:
-    parent: CUBA.VISUALISER
-    definition: Represents Paraview visualiser
-
-  MAYAVI:
-    parent: CUBA.VISUALISER
-    definition: Represents Mayavi visualiser
-
-  AVIZ:
-    parent: CUBA.VISUALISER
-    definition: Represents Aviz visualiser
+  VERLET:
+    parent: CUBA.COMPUTATIONAL_METHOD
+    definition: Newtonian dynamics integration using verlet algorithm
+    physics_equation: [MOLECULAR_DYNAMICS]

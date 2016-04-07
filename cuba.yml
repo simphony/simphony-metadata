@@ -16,11 +16,6 @@ CUBA_KEYS:
     shape: [20]
     type: string
 
-  VERSION:
-    definition: Version of a software tool used in a simulation
-    shape: [255]
-    type: string
-
   POSITION:
     definition: Position of a point or node or atom
     shape: [3]
@@ -410,3 +405,23 @@ CUBA_KEYS:
     definition: Work of adhesion per unit contact area
     shape: [1]
     type: double
+
+  MAJOR:
+    definition: Major attribute of an entity.
+    shape: [8]
+    type: string
+
+  MINOR:
+    definition: Minor version of a software tool with semantic versioning.
+    shape: [8]
+    type: string
+
+  PATCH:
+    definition: Patch version of a software tool with semantic versioning.
+    shape: [8]
+    type: string
+
+  FULL:
+    definition: Full version of a software tool with any versioning scheme.
+    shape: [128]
+    type: string
