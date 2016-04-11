@@ -412,16 +412,16 @@ CUBA_KEYS:
     type: string
 
   MINOR:
-    definition: Minor version of a software tool with semantic versioning.
+    definition: Minor attribute of an entity.
     shape: [8]
     type: string
 
   PATCH:
-    definition: Patch version of a software tool with semantic versioning.
+    definition: Patch attribute of an entity.
     shape: [8]
     type: string
 
   FULL:
-    definition: Full version of a software tool with any versioning scheme.
+    definition: Full attribute of an entity.
     shape: [128]
     type: string
