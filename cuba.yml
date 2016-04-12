@@ -405,3 +405,23 @@ CUBA_KEYS:
     definition: Work of adhesion per unit contact area
     shape: [1]
     type: double
+
+  MAJOR:
+    definition: Major attribute of an entity.
+    shape: [8]
+    type: string
+
+  MINOR:
+    definition: Minor attribute of an entity.
+    shape: [8]
+    type: string
+
+  PATCH:
+    definition: Patch attribute of an entity.
+    shape: [8]
+    type: string
+
+  FULL:
+    definition: Full attribute of an entity.
+    shape: [128]
+    type: string
