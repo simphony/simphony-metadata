@@ -123,6 +123,8 @@ def generate_initializer(className, classData, allowPythonInheritance=True):
         name = classData['name']
 
     lines = []
+    body_lines = []
+
     lines += [
         '\tdef __init__(\n',
         '\t\tself',
@@ -148,10 +150,17 @@ def generate_initializer(className, classData, allowPythonInheritance=True):
     ]
 
     if 'parent' in classData.keys() and classData['parent'] and allowPythonInheritance:
-        lines += [
+        body_lines += [
             "\t\tsuper({NAME}, self).__init__()\n".format(
                 NAME=className
             ),
+        ]
+
+    if len(body_lines):
+        lines += body_lines
+    else:
+        lines += [
+            '\t\tpass\n'
         ]
 
     return lines
