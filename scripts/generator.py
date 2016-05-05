@@ -309,14 +309,6 @@ def generate_initializer(className, classData, allowPythonInheritance=True):
     cubaAttributeKeys = getAtrributeKeys(classData)
     protectedAttribute = getProtectedAtrributes(classData)
 
-    description = ''
-    if 'description' in classData.keys():
-        description = classData['description']
-
-    name = ''
-    if 'name' in classData.keys():
-        name = classData['name']
-
     lines = []
     body_lines = []
 
