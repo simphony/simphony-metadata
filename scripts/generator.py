@@ -72,8 +72,7 @@ def getCubaKeyWordName(str, firstLower=False):
 def getAtrributeKeys(classData):
     ''' Return a list of attribute keys from a yalm descriptor.
 
-    The list of attribute keys are all those entryies not listed in 'commonAtrributes' that also
-    start by 'CUBA.'
+    The list of attribute keys are all those entries that start by 'CUBA.'
 
     Input
     -----
@@ -91,6 +90,33 @@ def getAtrributeKeys(classData):
 
     cubaAttributeKeys = dict((cak, classData[cak]) for cak in classData if cak and cak.split('.') and cak.split('.')[0] == 'CUBA')
     return cubaAttributeKeys
+
+
+# TODO: It appears that I don't fully understand the behavior of the level class atrributes.
+# Excluded now
+def getProtectedAtrributes(classData):
+    ''' Return a list of protected attributes from a yalm descriptor.
+
+    The list of protected attributes (metadata level attribute) are all those entries that are not capitalized
+    excluding the ones in 'excludeKeys'.
+
+    Input
+    -----
+
+    classData: dictionary
+        a dictionaty with the contents of a simphony-metadata KEY
+
+
+    Return
+    ------
+
+    A list of attribute keys matching the rules in the description.
+
+    '''
+
+    excludeKeys = ['models', 'parent', 'variables', 'physics_equation']
+    protectedAttributes = dict((cak, classData[cak]) for cak in classData if cak not in excludeKeys and cak.split('.') and cak.split('.')[0] != 'CUBA')
+    return protectedAttributes
 
 
 def generate_class_import(className, classData, allowPythonInheritance=True):
@@ -281,6 +307,7 @@ def generate_initializer(className, classData, allowPythonInheritance=True):
     '''
 
     cubaAttributeKeys = getAtrributeKeys(classData)
+    protectedAttribute = getProtectedAtrributes(classData)
 
     description = ''
     if 'description' in classData.keys():
@@ -324,7 +351,14 @@ def generate_initializer(className, classData, allowPythonInheritance=True):
             ),
         ]
 
+    for p, val in protectedAttribute.items():
+        # TODO: Probably this will depend on the value. Stored as a string for now.
+        body_lines += [
+            '\n\t\tself._' + p + ' = "' + val + '"',
+        ]
+
     if len(body_lines):
+        body_lines += ['\n']
         lines += body_lines
     else:
         lines += [
@@ -358,6 +392,7 @@ def generate_property_get_set(className, classData):
     '''
 
     cubaAttributeKeys = getAtrributeKeys(classData)
+    protectedAttribute = getProtectedAtrributes(classData)
 
     getter = (
         "\t@property\n"
@@ -369,6 +404,12 @@ def generate_property_get_set(className, classData):
         "\t@{PROP_NAME}.setter\n"
         "\tdef {PROP_NAME}(self, value):\n"
         "\t\tself._parameters[{CUBA_KEY}] = value\n"
+    )
+
+    prop = (
+        "\t@property\n"
+        "\tdef {NAME}(self):\n"
+        "\t\treturn self._{VALUE}\n"
     )
 
     get_set_block = getter + "\n" + setter
@@ -383,6 +424,14 @@ def generate_property_get_set(className, classData):
                 PROP_NAME=getCubaKeyWordName(cak, firstLower=True),
                 CUBA_KEY=cak
             ))
+
+    # Add protected attributes (read only)
+    for p, value in protectedAttribute.items():
+        lines.append("\n")
+        lines.extend(prop.format(
+            NAME=getKeyWordName(p, firstLower=True),
+            VALUE=p
+        ))
 
     return lines
 
