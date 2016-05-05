@@ -188,7 +188,7 @@ def generate_class_header(className, classData, allowPythonInheritance=True):
     inheritance = 'object'
 
     if 'parent' in classData.keys() and classData['parent'] and allowPythonInheritance:
-        inheritance += getCubaKeyWordName(classData['parent'])
+        inheritance = getCubaKeyWordName(classData['parent'])
 
     return [
         "class {NAME}({INHERIT}):\n".format(
@@ -556,12 +556,13 @@ def python(input, outpath):
     """
     yml_descriptior = yaml.safe_load(input)
 
-    for className, classData in yml_descriptior['CUDS_KEYS'].items():
+    for key, classData in yml_descriptior['CUDS_KEYS'].items():
 
-        className = getKeyWordName(className, firstLower=True)
+        className = getKeyWordName(key)
+        fileName = getKeyWordName(key, firstLower=True)
         # print className
 
-        with open(outpath+className+'.py', 'w+') as generatedFile:
+        with open(outpath+fileName+'.py', 'w+') as generatedFile:
             lines = []
 
             lines += generate_class_import(className, classData)
