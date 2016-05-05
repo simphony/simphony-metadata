@@ -89,8 +89,7 @@ def getAtrributeKeys(classData):
 
     '''
 
-    commonAtrributes = ['definition', 'parent', 'models', 'variables', 'physics_equation', 'default']
-    cubaAttributeKeys = dict((cak, classData[cak]) for cak in classData if cak not in commonAtrributes and cak.split('.') and cak.split('.')[0] == 'CUBA')
+    cubaAttributeKeys = dict((cak, classData[cak]) for cak in classData if cak and cak.split('.') and cak.split('.')[0] == 'CUBA')
     return cubaAttributeKeys
 
 
