@@ -325,20 +325,21 @@ def generate_initializer(className, classData, allowPythonInheritance=True):
         '\t\tself',
     ]
 
-    if 'parent' in classData.keys() and classData['parent'] and classData['parent'] == 'CUBA.CUDS_COMPONENT':
-        lines += [
-            ',\n\t\tdescription' + '="' + description + '"',
-            ',\n\t\tname' + '="' + name + '"',
-        ]
+    # TODO: Is this still valid?
+    # if 'parent' in classData.keys() and classData['parent'] and classData['parent'] == 'CUBA.CUDS_COMPONENT':
+    #     lines += [
+    #         ',\n\t\tdescription' + '="' + description + '"',
+    #         ',\n\t\tname' + '="' + name + '"',
+    #     ]
 
-    for cak, val in cubaAttributeKeys.items():
-        defaultVal = 'None'
-        if val and 'default' in val:
-            defaultVal = val['default']
-
-        lines += [
-            ',\n\t\t' + getCubaKeyWordName(cak, firstLower=True) + '=' + str(defaultVal),
-        ]
+    # for cak, val in cubaAttributeKeys.items():
+    #     defaultVal = 'None'
+    #     if val and 'default' in val:
+    #         defaultVal = val['default']
+    #
+    #     lines += [
+    #         ',\n\t\t' + getCubaKeyWordName(cak, firstLower=True) + '=' + str(defaultVal),
+    #     ]
 
     lines += [
         "\n\t):\n",
@@ -356,6 +357,17 @@ def generate_initializer(className, classData, allowPythonInheritance=True):
         body_lines += [
             '\n\t\tself._' + p + ' = "' + val + '"',
         ]
+
+    # Add 'system' attribute keys
+    for cak, val in cubaAttributeKeys.items():
+        defaultVal = 'None'
+        if val and 'default' in val:
+            defaultVal = val['default']
+
+        if val and (('scope' in val.keys() and val['scope'] == 'CUBA.USER') or ('scope' not in val.keys())):
+            body_lines += [
+                '\n\t\tself.' + getCubaKeyWordName(cak, firstLower=True) + ' = ' + str(defaultVal) + '',
+            ]
 
     if len(body_lines):
         body_lines += ['\n']
