@@ -6,8 +6,22 @@ from collections import namedtuple
 # from simphony.core.keywords import KEYWORDS
 
 
-def getClassName(a):
-    return a.title().replace('_', '')
+def getKeyWordName(str, firstLower=False):
+    s = str.title().replace('_', '')
+    if firstLower:
+        return s[0].lower() + s[1:]
+    else:
+        return s
+
+
+def getCubaKeyWordName(str, firstLower=False):
+    return getKeyWordName(str.split('.')[1], firstLower)
+
+
+def getAtrributeKeys(classData):
+    commonAtrributes = ['definition', 'parent', 'models', 'variables', 'physics_equation', 'default']
+    cubaAttributeKeys = dict((cak, classData[cak]) for cak in classData if cak not in commonAtrributes and cak.split('.') and cak.split('.')[0] == 'CUBA')
+    return cubaAttributeKeys
 
 
 def generate_class_import():
@@ -28,7 +42,7 @@ def generate_class_header(className, classData, allowPythonInheritance=True):
     inheritanceList = ''
 
     if classData['parent'] and allowPythonInheritance:
-        inheritanceList += getClassName(classData['parent'])
+        inheritanceList += getCubaKeyWordName(classData['parent'])
 
     return [
         "class {NAME}({INHERIT}):\n".format(
@@ -39,171 +53,99 @@ def generate_class_header(className, classData, allowPythonInheritance=True):
     ]
 
 
-def generate_description_block(mr):
-    return [
-        "\t\"\"\" A {MR_NAME} material-relation\n".format(
-            MR_NAME=mr['class_name']
+def generate_description_block(className, classData):
+
+    definition = 'Missing definition'
+    if 'definition' in classData.keys():
+        definition = classData['definition']
+
+    lines = [
+        "\t\"\"\" A {NAME} class\n".format(
+            NAME=className
         ),
+        "\tThis class has been automatically generated."
         "\n",
-        "\t{MR_DOC_DESCRIPTION}\n\n".format(
-            MR_DOC_DESCRIPTION=mr['doc_description']
+        "\t{DOC_DESCRIPTION}\n\n".format(
+            DOC_DESCRIPTION=definition
         ),
         "\tAttributes\n",
         "\t----------\n",
     ]
 
+    return lines
 
-def generate_attributes_description(mr):
 
-    code = []
+def generate_attributes_description(className, classData):
 
-    for param in mr['supported_parameters']:
+    cubaAttributeKeys = getAtrributeKeys(classData)
 
-        key = param['cuba'].split('.')[1]
+    lines = []
 
-        code += [
-            "\t{ATT_NAME} : {ATT_TYPE}\n".format(
-                ATT_NAME=param['cuba'].split('.')[1].lower(),
-                ATT_TYPE=KEYWORDS[key].dtype
-            ),
-            "\t\t{ATT_DESC}\n".format(
-                ATT_DESC=KEYWORDS[key].description
-            ),
+    for cak in cubaAttributeKeys:
+        lines += [
+            "\t" + getCubaKeyWordName(cak) + ': instance of ' + cak + '\n',
+            "\t\tnot sure yet what to put here, maybe the definition of the object\n",
+            "\n",
         ]
 
-    return code
-
-
-def generate_initializer_with_inehritance(classData):
-
-    code = []
-
-    sub_param_cuba = ""
-
-    code += [
-        "\n\t\"\"\"  # noqa\n",
-        "\n",
-        "\tdef __init__(\n",
-        "\t\tself,\n",
-        "\t\tname,\n",
-        "\t\tmaterials,\n",
-        "\t\tdescription=\"\"",
-
+    lines += [
+        '\t"""\n',
+        '\n'
     ]
 
-    for param in mr['supported_parameters']:
-
-        sub_param_cuba += "\n\t\t\t\t"+param['cuba']+","
-
-        code += [
-            ",\n",
-            "\t\t{ATT_NAME}={ATT_DEF}".format(
-                ATT_NAME=param['cuba'].split('.')[1].lower(),
-                ATT_DEF=param['default']
-            ),
-        ]
-
-    code += [
-        "\n\t):\n",
-        "\t\tsuper({MR_NAME}, self).__init__(\n".format(
-            MR_NAME=mr['class_name']
-        ),
-        "\t\t\tname=name,\n",
-        "\t\t\tdescription=description,\n",
-        "\t\t\tkind=CUDSMaterialRelation.{MR_KEY},\n".format(MR_KEY=mr['key']),
-        "\t\t\tmaterials=materials,\n",
-        "\t\t\tparameters=DataContainer({\n"
-    ]
-
-    for param in mr['supported_parameters']:
-        code += "\t\t\t\t{CUBA_KEY}: {ATT_NAME},\n".format(
-            CUBA_KEY=param['cuba'],
-            ATT_NAME=param['cuba'].split('.')[1].lower()
-        )
-
-    code += "\t\t\t})\n"
-    code += "\t\t)\n"
-
-    return code
+    return lines
 
 
-def generate_initializer(className, classData):
+def generate_initializer(className, classData, allowPythonInheritance=True):
 
-    code = []
+    cubaAttributeKeys = getAtrributeKeys(classData)
 
-    commonAtrributes = ['definition', 'parent', 'models', 'variables']
-    cubaAttributeKeys = dict((cak, classData[cak]) for cak in classData if cak not in commonAtrributes)
+    description = ''
+    if 'description' in classData.keys():
+        description = classData['description']
 
-    # This piece of code is common
-    code += [
+    name = ''
+    if 'name' in classData.keys():
+        name = classData['name']
+
+    lines = []
+    lines += [
         '\tdef __init__(\n',
         '\t\tself',
     ]
 
-    # Components have names and descriptions. A default value is set.
-    # Description -> "A generic className"
-    # Name -> "My className"
-
-    if classData['parent'] and 'CUBA.CUDS_COMPONENT' in classData['parent']:
-        code += [
-            ',\n\t\tdescription="A Generic {}"'.format(className),
-            ',\n\t\tname="My {}"'.format(className)
+    if 'parent' in classData.keys() and classData['parent'] and classData['parent'] == 'CUBA.CUDS_COMPONENT':
+        lines += [
+            ',\n\t\tdescription' + '="' + description + '"',
+            ',\n\t\tname' + '="' + name + '"',
         ]
 
-    # If there are attribute keys, add them with their default constructor
-    for key, val in cubaAttributeKeys.items():
+    for cak, val in cubaAttributeKeys.items():
+        defaultVal = 'None'
         if val and 'default' in val:
-            code += [
-                ',\n\t\t{}={}'.format(key, val['default'])
-            ]
-        else:
-            code += [
-                ',\n\t\t{}={}'.format(key, 'None')
-            ]
+            defaultVal = val['default']
 
-    code += [
-        '\n\t)\n'
+        lines += [
+            ',\n\t\t' + getCubaKeyWordName(cak, firstLower=True) + '=' + str(defaultVal),
+        ]
+
+    lines += [
+        "\n\t):\n",
     ]
 
-    return code
+    if 'parent' in classData.keys() and classData['parent'] and allowPythonInheritance:
+        lines += [
+            "\t\tsuper({NAME}, self).__init__()\n".format(
+                NAME=className
+            ),
+        ]
 
-    # for param in mr['supported_parameters']:
-    #
-    #     sub_param_cuba += "\n\t\t\t\t"+param['cuba']+","
-    #
-    #     code += [
-    #         ",\n",
-    #         "\t\t{ATT_NAME}={ATT_DEF}".format(
-    #             ATT_NAME=param['cuba'].split('.')[1].lower(),
-    #             ATT_DEF=param['default']
-    #         ),
-    #     ]
-    #
-    # code += [
-    #     "\n\t):\n",
-    #     "\t\tsuper({MR_NAME}, self).__init__(\n".format(
-    #         MR_NAME=mr['class_name']
-    #     ),
-    #     "\t\t\tname=name,\n",
-    #     "\t\t\tdescription=description,\n",
-    #     "\t\t\tkind=CUDSMaterialRelation.{MR_KEY},\n".format(MR_KEY=mr['key']),
-    #     "\t\t\tmaterials=materials,\n",
-    #     "\t\t\tparameters=DataContainer({\n"
-    # ]
-    #
-    # for param in mr['supported_parameters']:
-    #     code += "\t\t\t\t{CUBA_KEY}: {ATT_NAME},\n".format(
-    #         CUBA_KEY=param['cuba'],
-    #         ATT_NAME=param['cuba'].split('.')[1].lower()
-    #     )
-    #
-    # code += "\t\t\t})\n"
-    # code += "\t\t)\n"
-    #
-    # return code
+    return lines
 
 
-def generate_property_get_set(mr):
+def generate_property_get_set(className, classData):
+
+    cubaAttributeKeys = getAtrributeKeys(classData)
 
     getter = (
         "\t@property\n"
@@ -221,24 +163,26 @@ def generate_property_get_set(mr):
 
     lines = []
 
-    for param in mr['supported_parameters']:
-        lines.append("\n")
-        lines.extend(get_set_block.format(
-            PROP_NAME=param['cuba'].split('.')[1].lower(),
-            CUBA_KEY=param['cuba']
-        ))
+    # Add 'system' attribute keys
+    for cak, value in cubaAttributeKeys.items():
+        if value and 'scope' in value.keys() and value['scope'] == 'CUBA.SYSTEM':
+            lines.append("\n")
+            lines.extend(get_set_block.format(
+                PROP_NAME=getCubaKeyWordName(cak, firstLower=True),
+                CUBA_KEY=cak
+            ))
 
     return lines
 
 
-def generate_test_import(mr):
+def generate_test_import(className, classData):
     lines = [
         "import unittest\n",
         "import uuid\n",
         "\n",
         "from simphony.cuds.material_relations.{} import (\n".format(
-            mr['key'].lower()),
-        "\t{})\n".format(mr['class_name']),
+            classData['key'].lower()),
+        "\t{})\n".format(classData['class_name']),
         "from simphony.testing.abc_check_material_relation import (\n",
         "\tCheckMaterialRelation)\n",
         "\n",
@@ -248,10 +192,10 @@ def generate_test_import(mr):
     return lines
 
 
-def generate_test_header(mr):
+def generate_test_header(className, classData):
     lines = [
         "class Test{MR_NAME}MaterialRelation(\n".format(
-            MR_NAME=mr['class_name']
+            MR_NAME=classData['class_name']
         ),
         "\tCheckMaterialRelation,\n",
         "\tunittest.TestCase\n",
@@ -259,14 +203,14 @@ def generate_test_header(mr):
         "\tdef container_factory(\n",
         "\t\tself,\n",
         "\t\t\tname=\"{MR_NAME}\",\n".format(
-            MR_NAME=mr['class_name']
+            MR_NAME=classData['class_name']
         ),
         "\t\t\tmaterials=[uuid.uuid4() for _ in xrange({MR_NUM_MATS})]".format(
-            MR_NUM_MATS=mr['allowed_number_materials'][0]
+            MR_NUM_MATS=classData['allowed_number_materials'][0]
         ),
         "):\n",
         "\t\treturn {MR_NAME}(\n".format(
-            MR_NAME=mr['class_name']
+            MR_NAME=classData['class_name']
         ),
         "\t\t\tname=name,\n",
         "\t\t\tmaterials=materials\n",
@@ -276,7 +220,7 @@ def generate_test_header(mr):
     return lines
 
 
-def generate_test_parameters(mr):
+def generate_test_parameters(className, classData):
 
     test_att_template = (
         "\tdef test_{ATT_NAME}(self):\n"
@@ -297,7 +241,7 @@ def generate_test_parameters(mr):
 
     lines = []
 
-    for param in mr['supported_parameters']:
+    for param in classData['supported_parameters']:
         lines.append("\n")
         lines.extend(test_att_template.format(
             ATT_NAME=param['cuba'].split('.')[1].lower(),
@@ -335,30 +279,22 @@ def python(input, outpath):
     """
     yml_descriptior = yaml.safe_load(input)
 
-    for key, val in yml_descriptior['CUDS_KEYS'].items():
+    for className, classData in yml_descriptior['CUDS_KEYS'].items():
 
-        class_name_l = getClassName(key)
-        print class_name_l
+        className = getKeyWordName(className)
+        # print className
 
-        with open(outpath+class_name_l+'.py', 'w+') as generatedFile:
+        with open(outpath+className+'.py', 'w+') as generatedFile:
             lines = []
 
-            lines += generate_class_header(class_name_l, val)
-            lines += generate_initializer(class_name_l, val)
+            lines += generate_class_import()
+            lines += generate_class_header(className, classData)
+            lines += generate_description_block(className, classData)
+            lines += generate_attributes_description(className, classData)
+            lines += generate_initializer(className, classData, yml_descriptior)
+            lines += generate_property_get_set(className, classData)
 
-            generatedFile.writelines(lines)
-
-        # class_name_l = key['key'].lower()
-        # with open(outpath+class_name_l+'.py', 'w+') as mrFile:
-        #     lines = []
-        #     lines += generate_class_import()
-        #     lines += generate_class_header(key)
-        #     lines += generate_description_block(key)
-        #     lines += generate_attributes_description(key)
-        #     lines += generate_initializer(key)
-        #     lines += generate_property_get_set(key)
-        #
-        #     mrFile.writelines([i.replace('\t', '    ') for i in lines])
+            generatedFile.writelines([i.replace('\t', '    ') for i in lines])
 
 
 @cli.command()
@@ -369,13 +305,13 @@ def test(input, outpath):
     """
     material_relations = yaml.safe_load(input)
 
-    for mr in material_relations:
-        class_name_l = mr['key'].lower()
+    for classData in material_relations:
+        class_name_l = classData['key'].lower()
         with open(outpath+"test_"+class_name_l+'.py', 'w+') as mrFile:
             lines = []
-            lines += generate_test_import(mr)
-            lines += generate_test_header(mr)
-            lines += generate_test_parameters(mr)
+            lines += generate_test_import(classData)
+            lines += generate_test_header(classData)
+            lines += generate_test_parameters(classData)
             lines += generate_test_main()
 
             mrFile.writelines([i.replace('\t', '    ') for i in lines])
