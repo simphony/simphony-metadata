@@ -3,7 +3,7 @@ import yaml
 from tabulate import tabulate
 from collections import namedtuple
 
-# TODO: I will have to change this!!
+# TODO: I will have to change this
 # from simphony.core.keywords import KEYWORDS
 
 
@@ -320,6 +320,7 @@ def python(input, outpath):
             generatedFile.writelines([i.replace('\t', '    ') for i in lines])
 
 
+# TODO: This is not yet implemented for simphony_metadata
 @cli.command()
 @click.argument('input', type=click.File('rb'))
 @click.argument('outpath', type=click.Path(exists=True))
@@ -339,7 +340,7 @@ def test(input, outpath):
 
             mrFile.writelines([i.replace('\t', '    ') for i in lines])
 
-# This probably is not needed for generated classes. Anyway.
+# TODO: This probably is not needed for generated classes. Anyway.
 # @cli.command()
 # @click.argument('input', type=click.File('rb'))
 # @click.argument('output', type=click.File('wb'))
@@ -362,6 +363,7 @@ def test(input, outpath):
 #     output.writelines(lines)
 
 
+# TODO: This is not yet implemented for simphony_metadata
 @cli.command()
 @click.argument('input', type=click.File('rb'))
 @click.argument('output', type=click.File('wb'))
@@ -414,6 +416,7 @@ def material_relations_definitions_py(input, output):
     output.writelines(lines)
 
 
+# TODO: This is not yet implemented for simphony_metadata
 @cli.command()
 @click.argument('input', type=click.File('rb'))
 @click.argument('output', type=click.File('wb'))
@@ -444,6 +447,7 @@ def create_api(input, output):
 _Column = namedtuple('_Column', ["key", "header", "formatter"])
 
 
+# TODO: This is not yet implemented for simphony_metadata
 @cli.command()
 @click.argument('input', type=click.File('rb'))
 @click.argument('output', type=click.File('wb'))
