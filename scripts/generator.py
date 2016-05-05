@@ -160,15 +160,15 @@ def generate_class_header(className, classData, allowPythonInheritance=True):
 
     '''
 
-    inheritanceList = ''
+    inheritance = ''
 
     if 'parent' in classData.keys() and classData['parent'] and allowPythonInheritance:
-        inheritanceList += getCubaKeyWordName(classData['parent'])
+        inheritance += getCubaKeyWordName(classData['parent'])
 
     return [
         "class {NAME}({INHERIT}):\n".format(
             NAME=className,
-            INHERIT=inheritanceList
+            INHERIT=inheritance
         ),
         "\n"
     ]
