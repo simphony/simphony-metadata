@@ -1,6 +1,7 @@
 import inspect
 import unittest
 import warnings
+from collections import Sequence
 
 import uuid
 
@@ -97,6 +98,19 @@ class TestMetaClass(unittest.TestCase):
             if issubclass(klass, meta_class.ModelEquation):
                 meta_obj = klass()
                 self.check_model_equation(meta_obj)
+
+    def test_parents(self):
+        for name, klass in self.instantiable_classes:
+            if issubclass(klass, meta_class.ModelEquation):
+                meta_obj = klass()
+                self.assertIsInstance(meta_obj.parents, Sequence)
+
+    def test_supported_parameters(self):
+        for name, klass in self.instantiable_classes:
+            if issubclass(klass, meta_class.ModelEquation):
+                meta_obj = klass()
+                self.assertIsInstance(meta_obj.supported_parameters,
+                                      Sequence)
 
     def test_Cfd(self):
         gravity_model = meta_class.GravityModel()
