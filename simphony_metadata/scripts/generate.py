@@ -31,8 +31,8 @@ READ_ONLY_KEYS = ('definition', 'models', 'variables', 'uuid')
 # Directory where this file is
 THIS_DIR = os.path.split(inspect.getfile(inspect.currentframe()))[0]
 
-# Other files to be copied
-FILES_TO_COPY = (os.path.join(THIS_DIR, 'validation.py'),)
+# validation.py for validation codes
+VALIDATION_PY = os.path.join(THIS_DIR, 'validation.py')
 
 # keywords that are excludes from DataContainers
 CUBA_DATA_CONTAINER_EXCLUDE = ['Id', 'Position']
@@ -527,9 +527,17 @@ def cli():
 @click.option('--api/--no-api', 'create_api', default=True,
               help='Create an api.py that collects all classes')
 @click.option('-O', '--overwrite', is_flag=True, default=False)
-def meta_class(yaml_file, out_path, create_api, overwrite):
+@click.option('--test', is_flag=True, default=False)
+def meta_class(yaml_file, out_path, create_api, overwrite, test):
     """ Create the Simphony Metadata classes
     """
+
+    if test:
+        print('*****',
+              'In testing mode, import paths are modified for CUBA and KEYWORDS '
+              '*****')
+        IMPORT_PATHS['CUBA'] = 'from simphony_metadata.scripts.tests.cuba import CUBA'   # noqa
+        IMPORT_PATHS['KEYWORDS'] = 'from simphony_metadata.scripts.tests.keywords import KEYWORDS'  # noqa
 
     if os.path.exists(out_path):
         if overwrite:
@@ -570,12 +578,22 @@ def meta_class(yaml_file, out_path, create_api, overwrite):
                                                       to_camel_case(key)),
                           sep='\n', file=api_file)
 
+        # Create an empty __init__.py
         init_path = os.path.join(temp_dir, '__init__.py')
         open(init_path, 'a').close()
 
-        for file_to_copy in FILES_TO_COPY:
-            dst_path = os.path.join(temp_dir, os.path.split(file_to_copy)[-1])
-            shutil.copyfile(file_to_copy, dst_path)
+        # Create validation.py
+        validation_path = os.path.join(temp_dir, 'validation.py')
+
+        with open(validation_path, 'wb') as dst_file,\
+             open(VALIDATION_PY, 'rb') as src_file:
+            # Write the import statement for cuba keywords
+            # The import order is not great, but this keeps the
+            # generator code simple
+            print(IMPORT_PATHS['KEYWORDS'], file=dst_file)
+
+            # Copy the rest of the file
+            print(*src_file, file=dst_file, sep='')
 
         # Copy everything to the output directory
         shutil.copytree(temp_dir, out_path)

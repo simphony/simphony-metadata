@@ -1,7 +1,6 @@
 import warnings
 import re
 import numpy
-from simphony.core.keywords import KEYWORDS
 
 
 def to_camel_case(text, special={'cuds': 'CUDS'}):
