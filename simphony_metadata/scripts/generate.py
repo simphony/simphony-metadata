@@ -244,6 +244,12 @@ class CodeGenerator(object):
                 'self._{0} = {1}'.format(
                     key, transform_cuba_string(default))])
 
+    def populate_api(self):
+        # Add a supported_parameters property
+        all_attributes = tuple('CUBA.{}'.format(attr.upper())
+                               for attr in self.get_all_attributes())
+        self.populate_getter('supported_parameters',
+                             transform_cuba_string(all_attributes))
 
         # Add a cuba_key property
         self.populate_getter('cuba_key',
@@ -521,6 +527,12 @@ class CodeGenerator(object):
 
     def generate(self, file_out):
         """ This is the main function for generating the code """
+        # Populate codes before writing
+        self.populate_user_variable_code()
+        self.populate_system_code()
+        self.populate_api()
+
+        # Now write to the file output
         self.generate_class_import(file_out)
         self.generate_class_header(file_out)
         self.generate_class_docstring(file_out)
@@ -587,11 +599,9 @@ def meta_class(yaml_file, out_path, create_api, overwrite, test):
             all_generators[key] = CodeGenerator(key, class_data)
 
         for key, gen in all_generators.items():
-            # Populate codes, not writing them yet
+            # Collect parents and attributes inherited from parents
             gen.collect_parents_to_mro(all_generators)
             gen.collect_attributes_from_parents(all_generators)
-            gen.populate_user_variable_code()
-            gen.populate_system_code()
 
             # Target .py file
             filename = os.path.join(temp_dir,
