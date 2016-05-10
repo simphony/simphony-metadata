@@ -221,26 +221,23 @@ class CodeGenerator(object):
             # Populates self.methods with getter
             self.populate_getter(key)
 
-            if isinstance(contents, dict):
+            if isinstance(contents, dict) and key not in READ_ONLY_KEYS:
                 # Populate self.methods with setter
                 self.populate_setter_with_validation(key, contents)
 
-                # default in __init__ signature
-                default = None
-            else:
-                # As most system-managed attributes are defined by
-                # `scope : CUBA.SYSTEM` and `contents` should be a
-                # dict most of the time.  But keys in `READ_ONLY`
-                # are read-only because we hold it so, not because
-                # we could tell from the yaml file, then the content
-                # might not be a dict
-                default = contents
+            # As most system-managed attributes are defined by
+            # `scope : CUBA.SYSTEM` and `contents` should be a
+            # dict most of the time.  But keys in `READ_ONLY`
+            # are read-only because we hold it so, not because
+            # we could tell from the yaml file, then the content
+            # might not be a dict
+            default = None if isinstance(contents, dict) else contents
 
             # We will defined private variable so that the system
             # can modify it but the user is not supposed to
             self.init_body.extend([
                 "",
-                '# This is a system-managed, read-only attribute',
+                '# This is a system-managed attribute',
                 'self._{0} = {1}'.format(
                     key, transform_cuba_string(default))])
 
