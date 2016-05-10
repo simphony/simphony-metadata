@@ -101,13 +101,13 @@ def validate_cuba_keyword(value, key):
         check_shape(value, repr(tuple(keyword.shape)))
         if not numpy.issubdtype(value.dtype, keyword.dtype):
             message = 'value has dtype {dtype1} while {key} needs to be a {dtype2}'
-            raise AssertionError(message.format(dtype1=value.dtype,
-                                                key=key,
-                                                dtype2=keyword.dtype))
+            raise TypeError(message.format(dtype1=value.dtype,
+                                           key=key,
+                                           dtype2=keyword.dtype))
     elif api_class:
         if not isinstance(value, api_class):
             message = '{0!r} is not an instance of {1}'
-            raise AssertionError(message.format(value, api_class))
+            raise TypeError(message.format(value, api_class))
     else:
         message = '{} is not defined in CUBA keyword or meta data'
         warnings.warn(message.format(key.upper()))
