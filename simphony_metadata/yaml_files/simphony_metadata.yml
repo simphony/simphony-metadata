@@ -405,20 +405,3 @@ CUDS_KEYS:
     parent: CUBA.COMPUTATIONAL_METHOD
     definition: Newtonian dynamics integration using verlet algorithm
     physics_equation: [MOLECULAR_DYNAMICS]
-
-  #########################
-  # Please fill these in
-  #########################
-  # Shouldn't INCOMPRESSIBLE_FLUID_MODEL's parent be COMPRESSIBILITY_MODEL
-  COMPRESSIBILITY_MODEL:
-    parent: CUBA.PHYSICS_EQUATION
-    definition: PLEASE FILL ME IN
-
-  TURBULENCE_MODEL:
-    parent: CUBA.PHYSICS_EQUATION
-    definition: PLEASE FILL ME IN
-
-  # Shouldn't SINGLE_PHASE_MODEL's parent be MULTIPHASE_MODEL?
-  MULTIPHASE_MODEL:
-    parent: CUBA.PHYSICS_EQUATION
-    definition: PLEASE FILL ME IN
