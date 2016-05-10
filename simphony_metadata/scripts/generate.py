@@ -225,25 +225,25 @@ class CodeGenerator(object):
                 # Populate self.methods with setter
                 self.populate_setter_with_validation(key, contents)
 
-                # We will defined private variable so that the system
-                # can modify it but the user is not supposed to
-                self.init_body.extend([
-                    "",
-                    '# This is a system-managed, read-only attribute',
-                    'self._{0} = None'.format(key)])
-
+                # default in __init__ signature
+                default = None
             else:
-                # This should be rare and would only apply to keys in
-                # `READ_ONLY`, as most system-managed attributes are
-                # defined by `scope : CUBA.SYSTEM` and hence `contents`
-                # would be a dict.  But keys in `READ_ONLY` are read-only
-                # because we hold it so, not because we could tell from
-                # the yaml file
-                self.init_body.extend([
-                    "",
-                    '# This is a system-managed, read-only attribute',
-                    'self._{0} = {1}'.format(
-                        key, transform_cuba_string(contents))])
+                # As most system-managed attributes are defined by
+                # `scope : CUBA.SYSTEM` and `contents` should be a
+                # dict most of the time.  But keys in `READ_ONLY`
+                # are read-only because we hold it so, not because
+                # we could tell from the yaml file, then the content
+                # might not be a dict
+                default = contents
+
+            # We will defined private variable so that the system
+            # can modify it but the user is not supposed to
+            self.init_body.extend([
+                "",
+                '# This is a system-managed, read-only attribute',
+                'self._{0} = {1}'.format(
+                    key, transform_cuba_string(default))])
+
 
         # Add a cuba_key property
         self.populate_getter('cuba_key',
