@@ -218,24 +218,26 @@ class CodeGenerator(object):
                     'self._{0} = None'.format(key)])
 
             else:
-                # This should be rare and would only apply to keys in `READ_ONLY`,
-                # as most system-managed attributes are defined by
-                # `scope : CUBA.SYSTEM` and hence `contents` would
-                # be a dict.  But keys in `READ_ONLY` are read-only because
-                # we hold it so, not because we could tell from the yaml file
+                # This should be rare and would only apply to keys in
+                # `READ_ONLY`, as most system-managed attributes are
+                # defined by `scope : CUBA.SYSTEM` and hence `contents`
+                # would be a dict.  But keys in `READ_ONLY` are read-only
+                # because we hold it so, not because we could tell from
+                # the yaml file
                 self.init_body.extend([
                     "",
                     '# This is a system-managed, read-only attribute',
-                    'self._{0} = {1}'.format(key, transform_cuba_string(contents))])
+                    'self._{0} = {1}'.format(
+                        key, transform_cuba_string(contents))])
 
         # Add a cuba_key property
-        self.populate_getter('cuba_key', value='CUBA.{}'.format(self.original_key))
+        self.populate_getter('cuba_key',
+                             value='CUBA.{}'.format(self.original_key))
 
         # Add a parents property
-        self.populate_getter('parents',
-                             value=transform_cuba_string(
-                                 tuple('CUBA.{}'.format(parent)
-                                       for parent in self.mro)))
+        self.populate_getter(
+            'parents', transform_cuba_string(tuple('CUBA.{}'.format(parent)
+                                                   for parent in self.mro)))
 
     def populate_user_variable_code(self):
         """ Populate code for user-defined attributes """
@@ -250,9 +252,12 @@ class CodeGenerator(object):
 
             if (isinstance(contents, dict) and
                     isinstance(contents.get('default'), str) and
-                contents['default'].startswith('CUBA.')):
+                    contents['default'].startswith('CUBA.')):
 
-                self.populate_init_body_with_cuba_default(key, contents['default'])
+                # If default value is a CUBA key, it should be an instance
+                # of the corresponding meta class
+                self.populate_init_body_with_cuba_default(key,
+                                                          contents['default'])
             else:
                 # __init__ body
                 self.init_body.append('self.{key} = {key}'.format(key=key))
@@ -288,7 +293,8 @@ class CodeGenerator(object):
     def {key}(self, value):
         if value is not None:
             {validation_code}
-        self._{key} = value'''.format(key=key, validation_code=validation_code))
+        self._{key} = value'''.format(key=key,
+                                      validation_code=validation_code))
 
     def populate_setter_with_validation(self, key, contents):
         # Validation code for the setter
@@ -408,13 +414,17 @@ class CodeGenerator(object):
         self.inherited_optional = generators[root].optional_user_defined.copy()
         self.inherited_required = generators[root].required_user_defined.copy()
 
+        # FIXME: Need some cleaning here
         for parent in self.mro[-2::-1]:
             parent_generator = generators[parent]
-            become_required = set(self.inherited_optional) & set(parent_generator.required_user_defined)
+            become_required = (set(self.inherited_optional) &
+                               set(parent_generator.required_user_defined))
             for key in become_required:
                 self.inherited_optional.pop(key)
 
-            become_optional = set(self.inherited_required) & set(parent_generator.optional_user_defined)
+            become_optional = (set(self.inherited_required) &
+                               set(parent_generator.optional_user_defined))
+
             for key in become_optional:
                 self.inherited_required.pop(key)
 
@@ -431,7 +441,8 @@ class CodeGenerator(object):
 
     def generate_class_import(self, file_out):
         # import statements
-        print(*sorted(set(self.imports), reverse=True), sep="\n", file=file_out)
+        print(*sorted(set(self.imports), reverse=True),
+              sep="\n", file=file_out)
 
     def generate_class_header(self, file_out):
         # class header
@@ -480,11 +491,13 @@ class CodeGenerator(object):
         for key, content in chain(self.inherited_optional.items(),
                                   self.optional_user_defined.items()):
             # Since it is optional, it must have a default entry
-            # However if the default value is a CUBA key, we set it to None in the init
-            if isinstance(content['default'], str) and content['default'].startswith('CUBA.'):
+            # However if the default value is a CUBA key,
+            # we set it to None in the init
+            default = content['default']
+            if isinstance(default, str) and default.startswith('CUBA.'):
                 kwargs.append('{key}=None'.format(key=key))
             else:
-                kwargs.append('{key}={value}'.format(key=key, value=content['default']))
+                kwargs.append('{key}={value}'.format(key=key, value=default))
 
         # __init__ signature
         signature = ["self"]
@@ -515,7 +528,6 @@ class CodeGenerator(object):
         print(*self.methods, sep="\n", file=file_out)
 
 
-
 @click.group()
 def cli():
     """ Auto-generate code from simphony-metadata yaml description. """
@@ -534,12 +546,13 @@ def meta_class(yaml_file, out_path, create_api, overwrite, test):
 
     if test:
         IMPORT_PATHS['CUBA'] = 'from simphony_metadata.scripts.tests.cuba import CUBA'   # noqa
-        IMPORT_PATHS['KEYWORDS'] = 'from simphony_metadata.scripts.tests.keywords import KEYWORDS'  # noqa        
+        IMPORT_PATHS['KEYWORDS'] = 'from simphony_metadata.scripts.tests.keywords import KEYWORDS'  # noqa
         print('**********\n',
-              'In testing mode, import paths are modified for CUBA and KEYWORDS\n'
+              'In testing mode, import paths are modified.\n'
               'CUBA: {0}\n'
               'KEYWORDS: {1}\n'
-              '**********'.format(IMPORT_PATHS['CUBA'], IMPORT_PATHS['KEYWORDS']))
+              '**********'.format(IMPORT_PATHS['CUBA'],
+                                  IMPORT_PATHS['KEYWORDS']))
 
     if os.path.exists(out_path):
         if overwrite:
@@ -561,7 +574,7 @@ def meta_class(yaml_file, out_path, create_api, overwrite, test):
             if (parent and
                     parent.replace('CUBA.', '') not in yml_data['CUDS_KEYS']):
                 message = ('{0} is SKIPPED because its parent {1} '
-                           'is not defined within the given yaml file CUDS_KEYS')
+                           'is not defined in CUDS_KEYS')
                 warnings.warn(message.format(key, class_data['parent']))
                 continue
 
@@ -599,8 +612,8 @@ def meta_class(yaml_file, out_path, create_api, overwrite, test):
         # Create validation.py
         validation_path = os.path.join(temp_dir, 'validation.py')
 
-        with open(validation_path, 'wb') as dst_file,\
-             open(VALIDATION_PY, 'rb') as src_file:
+        with open(validation_path, 'wb') as dst_file, \
+                open(VALIDATION_PY, 'rb') as src_file:
             # Write the import statement for cuba keywords
             # The import order is not great, but this keeps the
             # generator code simple
@@ -611,7 +624,6 @@ def meta_class(yaml_file, out_path, create_api, overwrite, test):
 
         # Copy everything to the output directory
         shutil.copytree(temp_dir, out_path)
-
 
 
 @cli.command()
@@ -625,7 +637,8 @@ def cuba_enum(cuba_input, cuds_input, output):
     metadata = yaml.safe_load(cuds_input)
 
     lines = [
-        '# code auto-generated by the simphony-metadata/scripts/generate.py script.\n',
+        '# code auto-generated by the\n',
+        '# simphony-metadata/scripts/generate.py script.\n',
         '# cuba.yml VERSION: {}\n'.format(keywords['VERSION']),
         'from enum import IntEnum, unique\n',
         '\n',
@@ -656,7 +669,8 @@ def keywords(input, output):
     keywords = yaml.safe_load(input)
 
     lines = [
-        '# code auto-generated by the simphony-metadata/scripts/generate.py script.\n',
+        '# code auto-generated by the\n',
+        '# simphony-metadata/scripts/generate.py script.\n',
         '# cuba.yml VERSION: {}\n'.format(keywords['VERSION']),
         'from collections import namedtuple\n',
         '\n',
