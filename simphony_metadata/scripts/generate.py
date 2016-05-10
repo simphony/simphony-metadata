@@ -553,10 +553,16 @@ def cli():
 @click.argument('out_path', type=click.Path())
 @click.option('--api/--no-api', 'create_api', default=True,
               help='Create an api.py that collects all classes')
-@click.option('-O', '--overwrite', is_flag=True, default=False)
-@click.option('--test', is_flag=True, default=False)
+@click.option('-O', '--overwrite', is_flag=True, default=False,
+              help='Overwrite OUT_PATH')
+@click.option('--test', is_flag=True, default=False,
+              help='Test mode')
 def meta_class(yaml_file, out_path, create_api, overwrite, test):
     """ Create the Simphony Metadata classes
+
+    YAML_FILE  - path to the simphony_metadata yaml file
+
+    OUT_PATH   - path to the directory where the output files should be placed
     """
 
     if test:
@@ -645,6 +651,12 @@ def meta_class(yaml_file, out_path, create_api, overwrite, test):
 @click.argument('output', type=click.File('wb'))
 def cuba_enum(cuba_input, cuds_input, output):
     """ Create the CUBA Enum
+
+    CUBA_INPUT  - Path to the cuba.yml
+
+    CUDS_INPUT  - Path to the simphony_metadata.yml
+
+    OUTPUT      - Path to the output cuba.py file
     """
     keywords = yaml.safe_load(cuba_input)
     metadata = yaml.safe_load(cuds_input)
