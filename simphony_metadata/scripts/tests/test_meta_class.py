@@ -43,6 +43,13 @@ class TestMetaClass(unittest.TestCase):
         self.assertTrue(hasattr(instance, 'name'),
                         'Should have an attribute called `name`')
 
+    def check_model_equation(self, instance):
+        ''' Check attributes of a ModelEquation '''
+        self.assertTrue(hasattr(instance, 'models'),
+                        'Should have an attribute called `models`')
+        self.assertTrue(hasattr(instance, 'variables'),
+                        'Should have an attribute called `variables`')
+
     def test_all_instantiate(self):
         ''' Test if classes that do not required arguments in init can be instantiated '''  # noqa
         errors = []
@@ -84,6 +91,12 @@ class TestMetaClass(unittest.TestCase):
             if issubclass(klass, meta_class.CUDSComponent):
                 meta_obj = klass()
                 self.check_cuds_component(meta_obj)
+
+    def test_model_equation(self):
+        for name, klass in self.instantiable_classes:
+            if issubclass(klass, meta_class.ModelEquation):
+                meta_obj = klass()
+                self.check_model_equation(meta_obj)
 
     def test_Cfd(self):
         gravity_model = meta_class.GravityModel()
