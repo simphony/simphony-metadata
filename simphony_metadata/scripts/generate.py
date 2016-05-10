@@ -193,6 +193,16 @@ class CodeGenerator(object):
             else:
                 self.required_user_defined[key] = contents
 
+    def get_all_non_inherited_attributes(self):
+        return (set(self.system_variables) |
+                set(self.optional_user_defined) |
+                set(self.required_user_defined))
+
+    def get_all_attributes(self):
+        return (self.get_all_non_inherited_attributes() |
+                set(self.inherited_required) |
+                set(self.inherited_optional))
+
     def populate_system_code(self):
         """ Populate code for system-managed (and read-only) attributes"""
 
@@ -406,38 +416,21 @@ class CodeGenerator(object):
         if not self.mro:
             return
 
-        # Go from the greatest grandparent (i.e. root node)
-        root = self.mro[-1]
-
-        # Collect user defined attributes
-        # with the younger parent's attributes overwriting the older's ones
-        self.inherited_optional = generators[root].optional_user_defined.copy()
-        self.inherited_required = generators[root].required_user_defined.copy()
-
         # FIXME: Need some cleaning here
-        for parent in self.mro[-2::-1]:
-            parent_generator = generators[parent]
-            become_required = (set(self.inherited_optional) &
-                               set(parent_generator.required_user_defined))
-            for key in become_required:
-                self.inherited_optional.pop(key)
+        for parent_name in self.mro:
+            parent = generators[parent_name]
 
-            become_optional = (set(self.inherited_required) &
-                               set(parent_generator.optional_user_defined))
+            inherited_required = (set(parent.required_user_defined) -
+                                  self.get_all_attributes())
 
-            for key in become_optional:
-                self.inherited_required.pop(key)
+            for key in inherited_required:
+                self.inherited_required[key] = parent.required_user_defined[key]
 
-            self.inherited_optional.update(parent_generator.optional_user_defined)
-            self.inherited_required.update(parent_generator.required_user_defined)
+            inherited_optional = (set(parent.optional_user_defined) -
+                                  self.get_all_attributes())
 
-        for key in self.inherited_optional:
-            if key in self.optional_user_defined or key in self.required_user_defined:
-                self.inherited_optional.pop(key)
-
-        for key in self.inherited_required:
-            if key in self.optional_user_defined or key in self.required_user_defined:
-                self.inherited_required.pop(key)
+            for key in inherited_optional:
+                self.inherited_optional[key] = parent.optional_user_defined[key]
 
     def generate_class_import(self, file_out):
         # import statements
