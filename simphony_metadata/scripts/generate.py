@@ -328,9 +328,10 @@ class CodeGenerator(object):
             statement = "validation.check_shape(value, {!r})"
             check_statements.append(statement.format(contents['shape']))
 
-            check_statements.append('\n    '.join(
-                ['for item in value:'
-                 'validation.validate_cuba_keyword(item, {!r})'.format(key)]))
+            check_statements.extend([
+                'for item in value:',
+                '    validation.validate_cuba_keyword(item, {!r})'.format(key)
+            ])
         else:
             statement = 'validation.validate_cuba_keyword(value, {!r})'
             check_statements.append(statement.format(key))
