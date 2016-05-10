@@ -94,7 +94,7 @@ def transform_cuba_string(code):
 
 def is_system_managed(key, contents):
     ''' Return True is `key` is a system-managed attribute
-    
+
     Criteria:
     (1) It is defined in `READ_ONLY_KEYS`  OR
     (2) contents['scope'] is CUBA.SYSTEM
@@ -117,18 +117,21 @@ def is_system_managed(key, contents):
 
 class CodeGenerator(object):
 
-    def __init__(self, key, **kwargs):
+    def __init__(self, key, class_data):
 
         # We keep a record of the original key
         self.original_key = key
+
+        # We keep a record of the whole class data
+        self.class_data = class_data
 
         # This collects import statements
         self.imports = [IMPORT_PATHS['CUBA'],
                         IMPORT_PATHS['validation']]
 
         # parent is for class inheritance so it is handled separately
-        # self.parent = ""; kwargs.pop("parent")    # for testing
-        self.parent = kwargs.pop('parent', None)
+        # self.parent = ""; class_data.pop("parent")    # for testing
+        self.parent = class_data.pop('parent', None)
 
         if self.parent and not self.parent.startswith('CUBA.'):
             message = "'parent' should be either empty or a CUBA value, got {}"
@@ -136,7 +139,7 @@ class CodeGenerator(object):
 
         if self.parent:
             self.parent = self.parent.replace('CUBA.', '')
-            
+
             self.imports.append("from {0}.{1} import {2}".format(
                 PATH_TO_CLASSES, self.parent.lower(),
                 to_camel_case(self.parent)))
@@ -175,7 +178,7 @@ class CodeGenerator(object):
         # Flag for whether the MRO is completed
         self.mro_completed = False
 
-        for key, contents in kwargs.items():
+        for key, contents in class_data.items():
             key = key.lower().replace('cuba.', '')
 
             if is_system_managed(key, contents):
@@ -244,11 +247,11 @@ class CodeGenerator(object):
             if hasattr(self, 'populate_'+key):
                 getattr(self, 'populate_'+key)(contents)
                 continue
-            
+
             if (isinstance(contents, dict) and
                     isinstance(contents.get('default'), str) and
                 contents['default'].startswith('CUBA.')):
-                
+
                 self.populate_init_body_with_cuba_default(key, contents['default'])
             else:
                 # __init__ body
@@ -289,13 +292,21 @@ class CodeGenerator(object):
 
     def populate_setter_with_validation(self, key, contents):
         # Validation code for the setter
-        statement = 'validation.validate_cuba_keyword(value, {!r})'
-        check_statements = [statement.format(key)]
+        check_statements = []
 
-        # If `shape` is defined, we add one more validation code
         if isinstance(contents, dict) and "shape" in contents:
+            # If `shape` is defined, the value is supposed to be a sequence
+            # We check the shape of the sequence
+            # Then validate each item in the sequence
             statement = "validation.check_shape(value, {!r})"
             check_statements.append(statement.format(contents['shape']))
+
+            check_statements.append('\n    '.join(
+                ['for item in value:'
+                 'validation.validate_cuba_keyword(item, {!r})'.format(key)]))
+        else:
+            statement = 'validation.validate_cuba_keyword(value, {!r})'
+            check_statements.append(statement.format(key))
 
         # Populate setter
         self.populate_setter(key, check_statements)
@@ -418,47 +429,87 @@ class CodeGenerator(object):
             if key in self.optional_user_defined or key in self.required_user_defined:
                 self.inherited_required.pop(key)
 
-    def generate(self, file_out):
-        """ This is the main function for generating the code """
+    def generate_class_import(self, file_out):
         # import statements
         print(*sorted(set(self.imports), reverse=True), sep="\n", file=file_out)
 
+    def generate_class_header(self, file_out):
         # class header
         if self.parent != 'object':
             parent_class_name = to_camel_case(self.parent)
         else:
             parent_class_name = self.parent
 
+        print('\n\nclass {name}({parent}):'.format(
+            name=to_camel_case(self.original_key), parent=parent_class_name),
+              file=file_out)
+
+    def generate_class_docstring(self, file_out):
+        ''' Generates the description block of the generated class.
+
+        This block does not include individual attribute documentation
+
+        Parameters
+        ----------
+        file_out : File object
+        '''
+
+        definition = self.class_data.get('definition', 'Missing definition')
+
         print('''
+    \'\'\'{DOC_DESCRIPTION}
 
-class {name}({parent}):'''.format(name=to_camel_case(self.original_key),
-                                  parent=parent_class_name), file=file_out)
+    Attributes
+    ----------
+    \'\'\''''.format(DOC_DESCRIPTION=definition), file=file_out)
 
-        # __init__ signature
-        signature = ["self"]
-        signature.extend(self.inherited_required.keys())
-        signature.extend(self.required_user_defined.keys())
+    def generate_class_attributes_docstring(self, file_out):
+        ''' Generates the description block of the generated class.
 
-        all_optional_args = chain(self.inherited_optional.items(),
-                                  self.optional_user_defined.items())
+        This block does not include individual attribute documentation
+
+        Parameters
+        ----------
+        file_out : File object
+        '''
+        pass
+
+    def generate_initializer(self, file_out):
+        # __init__ keyword arguments
         kwargs = []
-        for key, content in all_optional_args:
+        for key, content in chain(self.inherited_optional.items(),
+                                  self.optional_user_defined.items()):
             # Since it is optional, it must have a default entry
+            # However if the default value is a CUBA key, we set it to None in the init
             if isinstance(content['default'], str) and content['default'].startswith('CUBA.'):
                 kwargs.append('{key}=None'.format(key=key))
             else:
                 kwargs.append('{key}={value}'.format(key=key, value=content['default']))
 
+        # __init__ signature
+        signature = ["self"]
+        signature.extend(self.inherited_required.keys())
+        signature.extend(self.required_user_defined.keys())
         signature.extend(kwargs)
 
+        # Print __init__ definition and signature
         print('''
-    def __init__({signature}):'''.format(
-                signature=", ".join(signature)), file=file_out)
+    def __init__({signature}):'''.format(signature=", ".join(signature)),
+              file=file_out)
 
         # __init__ body
         if self.init_body == [""]:
             self.init_body.append("pass")
+
         print(*self.init_body, sep="\n        ", file=file_out)
+
+    def generate(self, file_out):
+        """ This is the main function for generating the code """
+        self.generate_class_import(file_out)
+        self.generate_class_header(file_out)
+        self.generate_class_docstring(file_out)
+        self.generate_class_attributes_docstring(file_out)
+        self.generate_initializer(file_out)
 
         # methods (including descriptors)
         print(*self.methods, sep="\n", file=file_out)
@@ -498,7 +549,7 @@ def meta_class(yaml_file, out_path, create_api, overwrite):
                 warnings.warn(('{key} is SKIPPED because its parent is CUBA.FORCE, '
                                'which is not a CUDSItem').format(key=key))
                 continue
-            all_generators[key] = CodeGenerator(key, **class_data)
+            all_generators[key] = CodeGenerator(key, class_data)
 
         for key, gen in all_generators.items():
             gen.collect_parents_to_mro(all_generators)
