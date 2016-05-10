@@ -425,3 +425,106 @@ CUBA_KEYS:
     definition: Full attribute of an entity.
     shape: [128]
     type: string
+
+  #########################
+  # Please fill these in
+  #########################
+  CHARGE:
+    definition: PLEASE FILL ME IN
+    shape: [0]
+    type: double
+
+  CHARGE_DENSITY:
+    definition: PLEASE FILL ME IN
+    shape: [0]
+    type: double
+
+  DESCRIPTION:
+    definition: PLEASE FILL ME IN
+    shape: [0]
+    type: string
+
+  ELECTRIC_FIELD:
+    definition: PLEASE FILL ME IN
+    shape: ()
+    type: double
+
+  ELECTRON_MASS:
+    definition: PLEASE FILL ME IN
+    shape: ()
+    type: double
+
+  ELECTROSTATIC_FIELD:
+    definition: PLEASE FILL ME IN
+    shape: ()
+    type: double
+
+  ENERGY:
+    definition: PLEASE FILL ME IN
+    shape: ()
+    type: double
+
+  HEAT_CONDUCTIVITY:
+    definition: PLEASE FILL ME IN
+    shape: ()
+    type: double
+
+  INITIAL_VISCOSITY:
+    definition: PLEASE FILL ME IN
+    shape: ()
+    type: double
+
+  LINEAR_CONSTANT:
+    definition: PLEASE FILL ME IN
+    shape: ()
+    type: double
+
+  MAXIMUM_VISCOSITY:
+    definition: PLEASE FILL ME IN
+    shape: ()
+    type: double
+
+  MINIMUM_VISCOSITY:
+    definition: PLEASE FILL ME IN
+    shape: ()
+    type: double
+
+  MOMENTUM:
+    definition: PLEASE FILL ME IN
+    shape: ()
+    type: double
+
+  MOMENT_INERTIA:
+    definition: PLEASE FILL ME IN
+    shape: ()
+    type: double
+
+  POTENTIAL_ENERGY:
+    definition: PLEASE FILL ME IN
+    shape: ()
+    type: double
+
+  POWER_LAW_INDEX:
+    definition: PLEASE FILL ME IN
+    shape: ()
+    type: double
+
+  RELAXATION_TIME:
+    definition: PLEASE FILL ME IN
+    shape: ()
+    type: double
+
+  SURFACE_TENSION:
+    definition: PLEASE FILL ME IN
+    shape: ()
+    type: double
+
+  TIME:
+    definition: PLEASE FILL ME IN
+    shape: ()
+    type: double
+
+  VISCOSITY:
+    definition: PLEASE FILL ME IN
+    shape: ()
+    type: double
