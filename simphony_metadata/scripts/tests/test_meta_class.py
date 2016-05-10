@@ -37,7 +37,7 @@ class TestMetaClass(unittest.TestCase):
         self.assertIsInstance(instance.data, DataContainer)
 
     def check_cuds_component(self, instance):
-        ''' Check attributes of a CUDS Component '''        
+        ''' Check attributes of a CUDS Component '''
         self.assertTrue(hasattr(instance, 'description'),
                         'Should have an attribute called `description`')
         self.assertTrue(hasattr(instance, 'name'),
