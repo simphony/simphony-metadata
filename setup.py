@@ -11,7 +11,7 @@ IS_RELEASED = False
 VERSION = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
 
 if not IS_RELEASED:
-    VERSION += '.dev'
+    VERSION += '.dev0'
 
 
 def write_version_py(filename=None):
