@@ -533,11 +533,13 @@ def meta_class(yaml_file, out_path, create_api, overwrite, test):
     """
 
     if test:
-        print('*****',
-              'In testing mode, import paths are modified for CUBA and KEYWORDS '
-              '*****')
         IMPORT_PATHS['CUBA'] = 'from simphony_metadata.scripts.tests.cuba import CUBA'   # noqa
-        IMPORT_PATHS['KEYWORDS'] = 'from simphony_metadata.scripts.tests.keywords import KEYWORDS'  # noqa
+        IMPORT_PATHS['KEYWORDS'] = 'from simphony_metadata.scripts.tests.keywords import KEYWORDS'  # noqa        
+        print('**********\n',
+              'In testing mode, import paths are modified for CUBA and KEYWORDS\n'
+              'CUBA: {0}\n'
+              'KEYWORDS: {1}\n'
+              '**********'.format(IMPORT_PATHS['CUBA'], IMPORT_PATHS['KEYWORDS']))
 
     if os.path.exists(out_path):
         if overwrite:
@@ -545,29 +547,41 @@ def meta_class(yaml_file, out_path, create_api, overwrite, test):
         else:
             raise OSError('Destination already exists: {!r}'.format(out_path))
 
-    yml_descriptor = yaml.safe_load(yaml_file)
+    yml_data = yaml.safe_load(yaml_file)
 
     all_generators = {}
 
     # Temporary directory that stores the output
     with make_temporary_directory() as temp_dir:
 
-        for key, class_data in yml_descriptor['CUDS_KEYS'].items():
-            if class_data['parent'] == 'CUBA.FORCE':
-                warnings.warn(('{key} is SKIPPED because its parent is CUBA.FORCE, '
-                               'which is not a CUDSItem').format(key=key))
+        for key, class_data in yml_data['CUDS_KEYS'].items():
+
+            # Catch inconsistent definitions that would choke the generator
+            parent = class_data['parent']
+            if (parent and
+                    parent.replace('CUBA.', '') not in yml_data['CUDS_KEYS']):
+                message = ('{0} is SKIPPED because its parent {1} '
+                           'is not defined within the given yaml file CUDS_KEYS')
+                warnings.warn(message.format(key, class_data['parent']))
                 continue
+
+            # Create the generator object, on init, it identifies its own
+            # required/optional user-defined attributes and
+            # system-managed attributes
             all_generators[key] = CodeGenerator(key, class_data)
 
         for key, gen in all_generators.items():
+            # Populate codes, not writing them yet
             gen.collect_parents_to_mro(all_generators)
             gen.collect_user_defined_from_parents(all_generators)
             gen.populate_user_variable_code()
             gen.populate_system_code()
 
+            # Target .py file
             filename = os.path.join(temp_dir,
                                     "{}.py".format(gen.original_key.lower()))
 
+            # Now write the code
             with open(filename, 'wb') as generated_file:
                 gen.generate(file_out=generated_file)
 
