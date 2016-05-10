@@ -165,6 +165,9 @@ class CodeGenerator(object):
         # Readonly variables managed by the system
         self.system_variables = {}
 
+        # This collects inherited system-managed attributes
+        self.inherited_sys_vars = OrderedDict()
+
         # All statements within __init__
         self.init_body = [""]
 
@@ -201,12 +204,14 @@ class CodeGenerator(object):
     def get_all_attributes(self):
         return (self.get_all_non_inherited_attributes() |
                 set(self.inherited_required) |
-                set(self.inherited_optional))
+                set(self.inherited_optional) |
+                set(self.inherited_sys_vars))
 
     def populate_system_code(self):
         """ Populate code for system-managed (and read-only) attributes"""
 
-        for key, contents in self.system_variables.items():
+        for key, contents in chain(self.system_variables.items(),
+                                   self.inherited_sys_vars.items()):
             # We first search for CodeGenerator.populate_`key`
             # If the method is defined, that is used and then move on
             if hasattr(self, 'populate_'+key):
@@ -400,10 +405,10 @@ class CodeGenerator(object):
         # Mark MRO as completed
         self.mro_completed = True
 
-    def collect_user_defined_from_parents(self, generators):
-        ''' Given the MRO is populated, collect all the user defined
+    def collect_attributes_from_parents(self, generators):
+        ''' Given the MRO is populated, collect all the
         attributes inherited from the parents and thus populate
-        `inherited_required` and `inherited_optional`
+        `inherited_required`, `inherited_optional` and `inherited_sys_vars`
 
         See Also
         --------
@@ -416,21 +421,26 @@ class CodeGenerator(object):
         if not self.mro:
             return
 
-        # FIXME: Need some cleaning here
+        # Populate inherited_required and inherited_optional
+        # with the ones from parents.  Make sure only add the ones
+        # that are not known to the chile already
+        # MRO's order goes from the closest parent
+        mappings = {'inherited_required': 'required_user_defined',
+                    'inherited_optional': 'optional_user_defined',
+                    'inherited_sys_vars': 'system_variables'}
+
         for parent_name in self.mro:
             parent = generators[parent_name]
 
-            inherited_required = (set(parent.required_user_defined) -
-                                  self.get_all_attributes())
+            # Update the known attribute
+            known_attributes = self.get_all_attributes()
 
-            for key in inherited_required:
-                self.inherited_required[key] = parent.required_user_defined[key]
+            # populate self.to_save[key] with parent.to_get[key]
+            for to_save, to_get in mappings.items():
+                new_attrs = set(getattr(parent, to_get)) - known_attributes
 
-            inherited_optional = (set(parent.optional_user_defined) -
-                                  self.get_all_attributes())
-
-            for key in inherited_optional:
-                self.inherited_optional[key] = parent.optional_user_defined[key]
+                for key in new_attrs:
+                    getattr(self, to_save)[key] = getattr(parent, to_get)[key]
 
     def generate_class_import(self, file_out):
         # import statements
@@ -579,7 +589,7 @@ def meta_class(yaml_file, out_path, create_api, overwrite, test):
         for key, gen in all_generators.items():
             # Populate codes, not writing them yet
             gen.collect_parents_to_mro(all_generators)
-            gen.collect_user_defined_from_parents(all_generators)
+            gen.collect_attributes_from_parents(all_generators)
             gen.populate_user_variable_code()
             gen.populate_system_code()
 
