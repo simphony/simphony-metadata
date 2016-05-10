@@ -73,7 +73,8 @@ class TestMetaClass(unittest.TestCase):
                 errors.append(message.format(klass=name))
 
             # Test properties for CUDSItem
-            self.check_cuds_item(klass())
+            meta_obj = klass()
+            self.check_cuds_item(meta_obj)
 
         if errors:
             self.fail('\n'.join(errors))
@@ -81,7 +82,8 @@ class TestMetaClass(unittest.TestCase):
     def test_cuds_components(self):
         for name, klass in self.instantiable_classes:
             if issubclass(klass, meta_class.CUDSComponent):
-                self.check_cuds_component(klass())
+                meta_obj = klass()
+                self.check_cuds_component(meta_obj)
 
     def test_Cfd(self):
         gravity_model = meta_class.GravityModel()
@@ -110,3 +112,37 @@ class TestMetaClass(unittest.TestCase):
 
         self.check_cuds_item(meta_obj)
         self.check_cuds_component(meta_obj)
+
+    def test_ComputationalMethod(self):
+        physics_equation = meta_class.PhysicsEquation()
+        meta_obj = meta_class.ComputationalMethod(physics_equation)
+
+        # Test setting the attribute on init
+        self.assertEqual(meta_obj.physics_equation, physics_equation)
+
+        self.assertEqual(meta_obj.definition,
+                         'A computational method according to the RoMM')  # noqa
+
+        self.check_cuds_item(meta_obj)
+        self.check_cuds_component(meta_obj)
+
+    def test_validation_with_LennardJones(self):
+        meta_obj = meta_class.LennardJones_6_12()
+
+        with self.assertRaises(TypeError):
+            # Has to be a float
+            meta_obj.van_der_waals_radius = 1
+
+        # But this is fine
+        meta_obj.van_der_waals_radius = 1.0
+
+        with self.assertRaises(ValueError):
+            # Has to be between two materials
+            meta_obj.material = [1, 3, 5]
+
+        with self.assertRaises(TypeError):
+            # The items of the sequence are not instance of Material
+            meta_obj.material = [1, 2]
+
+        # This is fine
+        meta_obj.material = [meta_class.Material(), meta_class.Material()]
