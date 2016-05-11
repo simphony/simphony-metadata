@@ -199,9 +199,10 @@ class TestMetaClass(unittest.TestCase):
     def test_Dem(self):
         ''' Test for Dem '''
         # These are all physical equations, therefore valid arguments for DEM
-        physics_equations = tuple((klass()
-                                   for _, klass in self.no_required_args_classes
-                                   if issubclass(klass, meta_class.PhysicsEquation)))
+        physics_equations = tuple(
+            klass()
+            for _, klass in self.no_required_args_classes
+            if issubclass(klass, meta_class.PhysicsEquation))
 
         for physics_equation in physics_equations:
             meta_obj = meta_class.Dem(physics_equation)
