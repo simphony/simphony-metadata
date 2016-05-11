@@ -15,7 +15,7 @@ class TestMetaClass(unittest.TestCase):
     def setUpClass(cls):
         ''' Collect classes that can be instantiated without arguments
         '''
-        cls.instantiable_classes = []
+        cls.no_required_args_classes = []
 
         for name, klass in inspect.getmembers(meta_class, inspect.isclass):
             init_spec = inspect.getargspec(klass.__init__)
@@ -30,26 +30,50 @@ class TestMetaClass(unittest.TestCase):
                     warnings.warn(message.format(name, required_args))
                 continue
 
-            cls.instantiable_classes.append((name, klass))
+            cls.no_required_args_classes.append((name, klass))
 
     def check_cuds_item(self, instance):
-        ''' Check attributes of a CUDSItem '''
+        ''' Check properties of a CUDSItem '''
         self.assertIsInstance(instance.uuid, uuid.UUID)
         self.assertIsInstance(instance.data, DataContainer)
 
+        # uuid is read-only
+        with self.assertRaises(AttributeError):
+            instance.uuid = uuid.uuid4()
+
     def check_cuds_component(self, instance):
-        ''' Check attributes of a CUDS Component '''
+        ''' Check properties of a CUDS Component '''
         self.assertTrue(hasattr(instance, 'description'),
                         'Should have an attribute called `description`')
         self.assertTrue(hasattr(instance, 'name'),
                         'Should have an attribute called `name`')
 
+        # definition is read-only
+        with self.assertRaises(AttributeError):
+            instance.definition = 'blah'
+
+        # name should be a string
+        with self.assertRaises(TypeError):
+            instance.name = 1
+
+        # description should be a string
+        with self.assertRaises(TypeError):
+            instance.description = 1
+
     def check_model_equation(self, instance):
-        ''' Check attributes of a ModelEquation '''
+        ''' Check properties of a ModelEquation '''
         self.assertTrue(hasattr(instance, 'models'),
                         'Should have an attribute called `models`')
         self.assertTrue(hasattr(instance, 'variables'),
                         'Should have an attribute called `variables`')
+
+        # variables is read-only
+        with self.assertRaises(AttributeError):
+            instance.variables = ('1', '2')
+
+        # models is read-only
+        with self.assertRaises(AttributeError):
+            instance.models = []
 
     def test_all_instantiate(self):
         ''' Test if classes that do not required arguments in init can be instantiated '''  # noqa
@@ -58,7 +82,7 @@ class TestMetaClass(unittest.TestCase):
         message = ('Error when instantiating {klass} with {error_type}:'
                    '{error_message}')
         # Test instantiation
-        for name, klass in self.instantiable_classes:
+        for name, klass in self.no_required_args_classes:
             try:
                 klass()
             except Exception as exception:
@@ -76,7 +100,7 @@ class TestMetaClass(unittest.TestCase):
         message = '{klass} does not inherit from CUDSItem'
 
         # Test subclass
-        for name, klass in self.instantiable_classes:
+        for name, klass in self.no_required_args_classes:
             if not issubclass(klass, meta_class.CUDSItem):
                 errors.append(message.format(klass=name))
 
@@ -87,32 +111,27 @@ class TestMetaClass(unittest.TestCase):
         if errors:
             self.fail('\n'.join(errors))
 
-    def test_cuds_components(self):
-        for name, klass in self.instantiable_classes:
+    def test_cuds_components_properties(self):
+        ''' Test the properties of CUDSComponent '''
+        for name, klass in self.no_required_args_classes:
             if issubclass(klass, meta_class.CUDSComponent):
                 meta_obj = klass()
                 self.check_cuds_component(meta_obj)
 
-    def test_model_equation(self):
-        for name, klass in self.instantiable_classes:
-            if issubclass(klass, meta_class.ModelEquation):
-                meta_obj = klass()
-                self.check_model_equation(meta_obj)
-
     def test_parents(self):
-        for name, klass in self.instantiable_classes:
-            if issubclass(klass, meta_class.ModelEquation):
-                meta_obj = klass()
-                self.assertIsInstance(meta_obj.parents, Sequence)
+        ''' Test API for parents '''
+        for name, klass in self.no_required_args_classes:
+            meta_obj = klass()
+            self.assertIsInstance(meta_obj.parents, Sequence)
 
     def test_supported_parameters(self):
-        for name, klass in self.instantiable_classes:
-            if issubclass(klass, meta_class.ModelEquation):
-                meta_obj = klass()
-                self.assertIsInstance(meta_obj.supported_parameters,
-                                      Sequence)
+        ''' Test API for supported_parameters '''
+        for name, klass in self.no_required_args_classes:
+            meta_obj = klass()
+            self.assertIsInstance(meta_obj.supported_parameters, Sequence)
 
     def test_Cfd(self):
+        ''' Test for Cfd '''
         gravity_model = meta_class.GravityModel()
 
         meta_obj = meta_class.Cfd(gravity_model)
@@ -139,8 +158,10 @@ class TestMetaClass(unittest.TestCase):
 
         self.check_cuds_item(meta_obj)
         self.check_cuds_component(meta_obj)
+        self.check_model_equation(meta_obj)
 
     def test_ComputationalMethod(self):
+        ''' Test for ComputationalMethod '''
         physics_equation = meta_class.PhysicsEquation()
         meta_obj = meta_class.ComputationalMethod(physics_equation)
 
@@ -154,6 +175,7 @@ class TestMetaClass(unittest.TestCase):
         self.check_cuds_component(meta_obj)
 
     def test_validation_with_LennardJones(self):
+        ''' Test validation code using LennardJones_6_12 '''
         meta_obj = meta_class.LennardJones_6_12()
 
         with self.assertRaises(TypeError):
@@ -173,3 +195,44 @@ class TestMetaClass(unittest.TestCase):
 
         # This is fine
         meta_obj.material = [meta_class.Material(), meta_class.Material()]
+
+    def test_Dem(self):
+        ''' Test for Dem '''
+        # These are all physical equations, therefore valid arguments for DEM
+        physics_equations = tuple((klass()
+                                   for _, klass in self.no_required_args_classes
+                                   if issubclass(klass, meta_class.PhysicsEquation)))
+
+        for physics_equation in physics_equations:
+            meta_obj = meta_class.Dem(physics_equation)
+
+        self.check_cuds_item(meta_obj)
+        self.check_cuds_component(meta_obj)
+
+    def test_EmptyBoundaryCondition(self):
+        ''' Test for EmptyBoundaryCondition '''
+        # It can accept any number of materials
+        for num_materials in range(5):
+            materials = tuple(meta_class.Material()
+                              for _ in range(num_materials))
+            meta_obj = meta_class.EmptyBoundaryCondition(materials)
+
+        self.check_cuds_item(meta_obj)
+        self.check_cuds_component(meta_obj)
+
+    def test_Version(self):
+        ''' Test for Version '''
+        # This is fine
+        meta_obj = meta_class.Version('1', '2', '3', '4')
+
+        # This should raise TypeError because minor/patch/... should be str
+        with self.assertRaises(TypeError):
+            meta_obj = meta_class.Version(1, '2', '3', '4')
+
+        self.check_cuds_item(meta_obj)
+
+    def test_physics_equation_are_model_equation(self):
+        ''' Test all physics equations are model equations '''
+        for name, klass in self.no_required_args_classes:
+            if issubclass(klass, meta_class.PhysicsEquation):
+                self.check_model_equation(klass())
