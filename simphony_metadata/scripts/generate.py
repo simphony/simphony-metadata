@@ -87,8 +87,12 @@ def transform_cuba_string(code):
     Parameters
     ----------
     code : str
+
+    Returns
+    -------
+    transformed_code : str
+       with any \'CUBA.SOMETHING\' converted to CUBA.SOMETHING
     '''
-    code = repr(code)
     return re.sub('\'(CUBA.\w+)\'', lambda x: x.group(0).strip("'"), code)
 
 
@@ -166,7 +170,7 @@ class CodeGenerator(object):
         self.system_variables = {}
 
         # This collects inherited system-managed attributes
-        self.inherited_sys_vars = OrderedDict()
+        self.inherited_sys_vars = {}
 
         # All statements within __init__
         self.init_body = [""]
@@ -188,9 +192,6 @@ class CodeGenerator(object):
                 self.system_variables[key] = contents
 
             elif isinstance(contents, dict) and 'default' in contents:
-                if contents['default'] == []:
-                    contents['default'] = None
-
                 self.optional_user_defined[key] = contents
 
             else:
@@ -239,23 +240,25 @@ class CodeGenerator(object):
                 "",
                 '# This is a system-managed attribute',
                 'self._{0} = {1}'.format(
-                    key, transform_cuba_string(default))])
+                    key, transform_cuba_string(repr(default)))])
 
     def populate_api(self):
         # Add a supported_parameters property
         all_attributes = tuple('CUBA.{}'.format(attr.upper())
                                for attr in self.get_all_attributes())
         self.populate_getter('supported_parameters',
-                             transform_cuba_string(all_attributes))
+                             transform_cuba_string(repr(all_attributes)))
 
         # Add a cuba_key property
         self.populate_getter('cuba_key',
                              value='CUBA.{}'.format(self.original_key))
 
         # Add a parents property
-        self.populate_getter(
-            'parents', transform_cuba_string(tuple('CUBA.{}'.format(parent)
-                                                   for parent in self.mro)))
+        self.populate_getter('parents',
+                             transform_cuba_string(
+                                 repr(
+                                     tuple('CUBA.{}'.format(parent)
+                                           for parent in self.mro))))
 
     def populate_user_variable_code(self):
         """ Populate code for user-defined attributes """
@@ -502,6 +505,9 @@ class CodeGenerator(object):
             # we set it to None in the init
             default = content['default']
             if isinstance(default, str) and default.startswith('CUBA.'):
+                kwargs.append('{key}=None'.format(key=key))
+            elif default == []:
+                # Should not use empty list in the signature
                 kwargs.append('{key}=None'.format(key=key))
             else:
                 kwargs.append('{key}={value}'.format(key=key, value=default))
