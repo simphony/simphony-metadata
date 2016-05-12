@@ -34,7 +34,7 @@ setup(
     name='simphony_metadata',
     version=VERSION,
     author='SimPhoNy, EU FP7 Project (Nr. 604005) www.simphony-project.eu',
-    description='The native implementation of the SimPhoNy cuds objects',
+    description='SimPhoNy Metadata',
     install_requires=[],
     extras_require={
         'CUBAGen': ["click >= 3.3", "pyyaml >= 3.11", "numpy>=1.4.1"]},
