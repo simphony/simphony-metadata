@@ -296,7 +296,13 @@ class CodeGenerator(object):
     def populate_getter(self, key, value=None):
         # default property getter
         if value is None:
-            value = "self._{key}".format(key=key)
+            # Where is the value stored
+            # If the key is a CUBA key, store it in the DataContainer
+            cuba_key = 'CUBA.'+key.upper()
+            if cuba_key in self.class_data:
+                value = 'self.data[{cuba_key}]'.format(cuba_key=cuba_key)
+            else:
+                value = 'self._{key}'.format(key=key)
 
         self.methods.append('''
     @property
@@ -308,13 +314,21 @@ class CodeGenerator(object):
         validation_code = '''
             '''.join(check_statements)
 
+        # Where to store the value
+        # If the key is a CUBA key, store it in the DataContainer
+        cuba_key = 'CUBA.'+key.upper()
+        if cuba_key in self.class_data:
+            target = 'self.data[{cuba_key}]'.format(cuba_key=cuba_key)
+        else:
+            target = 'self._{key}'.format(key=key)
+
         # default property setter
         self.methods.append('''
     @{key}.setter
     def {key}(self, value):
         if value is not None:
             {validation_code}
-        self._{key} = value'''.format(key=key,
+        {target} = value'''.format(key=key, target=target,
                                       validation_code=validation_code))
 
     def populate_setter_with_validation(self, key, contents):
@@ -375,19 +389,31 @@ class CodeGenerator(object):
         self.imports.append(IMPORT_PATHS['DataContainer'])
 
         self.init_body.append('''if data:
-            self.data = data
-        else:
-            self._data = DataContainer()''')
+            self.data = data''')
 
         self.methods.append('''
     @property
     def data(self):
-        return DataContainer(self._data)''')
+        try:
+            data_container = self._data
+        except AttributeError:
+            self._data = DataContainer()
+            return self._data
+        else:
+            # One more check in case the
+            # property setter is by-passed
+            if not isinstance(data_container, DataContainer):
+                raise TypeError("Stored data is not a DataContainer. "
+                                "data.setter is by-passed.")
+            return data_container''')
 
         self.methods.append('''
     @data.setter
     def data(self, new_data):
-        self._data = DataContainer(new_data)''')
+        if isinstance(new_data, DataContainer):
+            self._data = new_data
+        else:
+            self._data = DataContainer(new_data)''')
 
     def collect_parents_to_mro(self, generators):
         ''' recursively collect all the inherited into CodeGenerator.mro
@@ -572,12 +598,15 @@ def meta_class(yaml_file, out_path, create_api, overwrite, test):
     if test:
         IMPORT_PATHS['CUBA'] = 'from simphony_metadata.scripts.tests.cuba import CUBA'   # noqa
         IMPORT_PATHS['KEYWORDS'] = 'from simphony_metadata.scripts.tests.keywords import KEYWORDS'  # noqa
+        IMPORT_PATHS['DataContainer'] = 'from simphony_metadata.scripts.tests.data_container import DataContainer'  # noqa
         print('**********\n',
               'In testing mode, import paths are modified.\n'
               'CUBA: {0}\n'
               'KEYWORDS: {1}\n'
+              'DataContainer: {2}\n'
               '**********'.format(IMPORT_PATHS['CUBA'],
-                                  IMPORT_PATHS['KEYWORDS']))
+                                  IMPORT_PATHS['KEYWORDS'],
+                                  IMPORT_PATHS['DataContainer']))
 
     if os.path.exists(out_path):
         if overwrite:
