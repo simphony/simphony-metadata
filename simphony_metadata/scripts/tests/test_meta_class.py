@@ -5,7 +5,8 @@ from collections import Sequence
 
 import uuid
 
-from simphony.core.data_container import DataContainer
+from simphony_metadata.scripts.tests.cuba import CUBA
+from simphony_metadata.scripts.tests.data_container import DataContainer
 from simphony_metadata.scripts.tests.meta_class import api as meta_class
 
 
@@ -59,6 +60,15 @@ class TestMetaClass(unittest.TestCase):
         # description should be a string
         with self.assertRaises(TypeError):
             instance.description = 1
+
+        # Since NAME and DESCRIPTION are CUBA keys
+        # Make sure that their values are stored in
+        # the DataContainer as well
+        instance.name = 'dummy name'
+        self.assertEqual(instance.data[CUBA.NAME], 'dummy name')
+
+        instance.description = 'dummy description'
+        self.assertEqual(instance.data[CUBA.DESCRIPTION], 'dummy description')
 
     def check_model_equation(self, instance):
         ''' Check properties of a ModelEquation '''
