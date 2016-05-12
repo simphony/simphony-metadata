@@ -1,6 +1,5 @@
 from __future__ import print_function
 
-import inspect
 import os
 import re
 import shutil
@@ -13,6 +12,7 @@ from itertools import chain, count
 import click
 import yaml
 
+from . import validation
 
 # May be 'simphony.meta', we can make this as a command-line attribute
 PATH_TO_CLASSES = ''
@@ -32,7 +32,7 @@ READ_ONLY_KEYS = ('definition', 'models', 'variables', 'uuid')
 THIS_DIR = os.path.split(inspect.getfile(inspect.currentframe()))[0]
 
 # validation.py for validation codes
-VALIDATION_PY = os.path.join(THIS_DIR, 'validation.py')
+VALIDATION_PY_PATH = os.path.splitext(validation.__file__)[0]+'.py'
 
 # keywords that are excludes from DataContainers
 CUBA_DATA_CONTAINER_EXCLUDE = ['Id', 'Position']
@@ -665,7 +665,7 @@ def meta_class(yaml_file, out_path, create_api, overwrite, test):
         validation_path = os.path.join(temp_dir, 'validation.py')
 
         with open(validation_path, 'wb') as dst_file, \
-                open(VALIDATION_PY, 'rb') as src_file:
+                open(VALIDATION_PY_PATH, 'rb') as src_file:
             # Write the import statement for cuba keywords
             # The import order is not great, but this keeps the
             # generator code simple
