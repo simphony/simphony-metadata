@@ -28,8 +28,8 @@ IMPORT_PATHS = {
 # (see wiki page on simphony metadata schema)
 READ_ONLY_KEYS = ('definition', 'models', 'variables', 'uuid')
 
-# Directory where this file is
-THIS_DIR = os.path.split(inspect.getfile(inspect.currentframe()))[0]
+# Excludes these keys in the `supported_parameters` property
+EXCLUDE_SUPPORTED_PARAMETERS = READ_ONLY_KEYS + ('data',)
 
 # validation.py for validation codes
 VALIDATION_PY_PATH = os.path.splitext(validation.__file__)[0]+'.py'
@@ -244,8 +244,10 @@ class CodeGenerator(object):
 
     def populate_api(self):
         # Add a supported_parameters property
+        # Skipping READ_ONLY_KEYS
         all_attributes = tuple('CUBA.{}'.format(attr.upper())
-                               for attr in self.get_all_attributes())
+                               for attr in self.get_all_attributes()
+                               if attr not in EXCLUDE_SUPPORTED_PARAMETERS)
         self.populate_getter('supported_parameters',
                              transform_cuba_string(repr(all_attributes)))
 
