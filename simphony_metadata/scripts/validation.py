@@ -1,16 +1,34 @@
 import warnings
 import re
+
 import numpy
 
 
 def to_camel_case(text, special={'cuds': 'CUDS'}):
     """ Convert text to CamelCase (for class name)
+
+    Parameters
+    ----------
+    text : str
+        The text to be converted
+
+    special : dict
+        If any substring of text (lower case) matches a key of `special`,
+        the substring is replaced by the value
+
+    Returns
+    -------
+    result : str
     """
+
     def replace_func(matched):
-        word = matched.group(0).strip("_").lower()
+        # word should be lower case already
+        word = matched.group(0).strip("_")
         if word in special:
+            # Handle special case
             return special[word]
         else:
+            # Capitalise the first character
             return word[0].upper()+word[1:]
 
     return re.sub(r'(_?[a-zA-Z]+)', replace_func, text.lower())
@@ -76,28 +94,67 @@ def check_shape(value, shape):
         return ((size >= int(min_size) if min_size else True) and
                 (size <= int(max_size) if max_size else True))
 
-    value_arr = numpy.array(value)
+    try:
+        value_shape = value.shape
+    except AttributeError:
+        value_shape = numpy.array(value).shape
+
     error_message = ("value has a shape of {value_shape}, "
                      "which does not comply with shape: {shape}")
 
-    for (min_size, max_size), size in zip(decoded_shape, value_arr.shape):
+    for (min_size, max_size), size in zip(decoded_shape, value_shape):
         if not check_valid(min_size, max_size, size):
-            raise ValueError(error_message.format(value_shape=value_arr.shape,
+            raise ValueError(error_message.format(value_shape=value_shape,
                                                   shape=shape))            
 
 
 def validate_cuba_keyword(value, key):
-    ''' Draft validation code '''
+    ''' Validate the given `value` against `key`
+
+    Parameters
+    ----------
+    value : object
+       any value
+
+    key : str
+       CUBA key, can be stripped of 'CUBA.'
+
+    Returns
+    -------
+    None
+
+    Raises
+    ------
+    TypeError
+        - if key is a CUBA keyword with shape and the value's shape
+          or type does not match
+        - if key corresponds to a class defined by the meta data and
+          the value is not an instance of that class
+    '''
     from . import api
 
+    # Sanitising, although generated code already did
+    key = key.replace('CUBA.', '')
+
+    # Class name, e.g. cuds_item -> CUDSItem
     class_name = to_camel_case(key)
-    keyword_name = key.upper()
+
+    # The corresponding class in the metadata
     api_class = getattr(api, class_name, None)
 
+    # Keyword name in KEYWORDS
+    keyword_name = key.upper()
+
     if keyword_name in KEYWORDS:
-        keyword = KEYWORDS[key.upper()]
+        keyword = KEYWORDS[keyword_name]
+
+        # Convert to numpy array
         value = numpy.array(value)
+
+        # Check shape, keyword.shape needs to be converted to our shape syntax
         check_shape(value, repr(tuple(keyword.shape)))
+
+        # Check type
         if not numpy.issubdtype(value.dtype, keyword.dtype):
             message = 'value has dtype {dtype1} while {key} needs to be a {dtype2}'
             raise TypeError(message.format(dtype1=value.dtype,
