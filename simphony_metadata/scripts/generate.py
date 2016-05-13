@@ -273,14 +273,20 @@ class CodeGenerator(object):
                 getattr(self, 'populate_'+key)(contents)
                 continue
 
-            if (isinstance(contents, dict) and
-                    isinstance(contents.get('default'), str) and
-                    contents['default'].startswith('CUBA.')):
+            try:
+                default = contents['default']
+            except (TypeError, KeyError):
+                default = None
 
+            if isinstance(default, str) and default.startswith('CUBA.'):
                 # If default value is a CUBA key, it should be an instance
                 # of the corresponding meta class
                 self.populate_init_body_with_cuba_default(key,
                                                           contents['default'])
+            elif default == []:
+                # The __init__ signature will replace the default with None
+                self.init_body.extend(('if {key} is None:'.format(key=key),
+                                       '    self.{key} = []'.format(key=key)))
             else:
                 # __init__ body
                 self.init_body.append('self.{key} = {key}'.format(key=key))
@@ -314,7 +320,7 @@ class CodeGenerator(object):
     def populate_setter(self, key, check_statements=()):
         # Get the indentation right
         validation_code = '''
-            '''.join(check_statements)
+        '''.join(check_statements)
 
         # Where to store the value
         # If the key is a CUBA key, store it in the DataContainer
@@ -328,14 +334,19 @@ class CodeGenerator(object):
         self.methods.append('''
     @{key}.setter
     def {key}(self, value):
-        if value is not None:
-            {validation_code}
+        {validation_code}
         {target} = value'''.format(key=key, target=target,
                                       validation_code=validation_code))
 
     def populate_setter_with_validation(self, key, contents):
         # Validation code for the setter
         check_statements = []
+
+        # Allow None?
+        allow_none = False
+        if isinstance(contents, dict) and contents.get('default') is None:
+            allow_none = True
+            check_statements.append('if value is not None:')
 
         if isinstance(contents, dict) and "shape" in contents:
             # If `shape` is defined, the value is supposed to be a sequence
@@ -351,6 +362,10 @@ class CodeGenerator(object):
         else:
             statement = 'validation.validate_cuba_keyword(value, {!r})'
             check_statements.append(statement.format(key))
+
+        if allow_none:
+            check_statements[1:] = ('    '+statement
+                                    for statement in check_statements[1:])
 
         # Populate setter
         self.populate_setter(key, check_statements)
