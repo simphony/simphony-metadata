@@ -184,13 +184,19 @@ class TestMetaClass(unittest.TestCase):
         self.check_cuds_item(meta_obj)
         self.check_cuds_component(meta_obj)
 
-    def test_validation_with_LennardJones(self):
+    def test_LennardJones_6_12(self):
         ''' Test validation code using LennardJones_6_12 '''
-        meta_obj = meta_class.LennardJones_6_12()
+        # Material needs to be of shape of 2, both instance of Material
+        materials = (meta_class.Material(), meta_class.Material())
+        meta_obj = meta_class.LennardJones_6_12(material=materials)
 
         with self.assertRaises(TypeError):
             # Has to be a float
             meta_obj.van_der_waals_radius = 1
+
+        with self.assertRaises(TypeError):
+            # Cannot be None
+            meta_obj.van_der_waals_radius = None
 
         # But this is fine
         meta_obj.van_der_waals_radius = 1.0
@@ -202,9 +208,6 @@ class TestMetaClass(unittest.TestCase):
         with self.assertRaises(TypeError):
             # The items of the sequence are not instance of Material
             meta_obj.material = [1, 2]
-
-        # This is fine
-        meta_obj.material = [meta_class.Material(), meta_class.Material()]
 
     def test_Dem(self):
         ''' Test for Dem '''
