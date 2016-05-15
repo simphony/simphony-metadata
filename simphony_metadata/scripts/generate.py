@@ -336,7 +336,7 @@ class CodeGenerator(object):
     def {key}(self, value):
         {validation_code}
         {target} = value'''.format(key=key, target=target,
-                                      validation_code=validation_code))
+                                   validation_code=validation_code))
 
     def populate_setter_with_validation(self, key, contents):
         # Validation code for the setter
