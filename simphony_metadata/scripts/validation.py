@@ -48,10 +48,10 @@ def decode_shape(shape_code):
     Examples
     --------
     >>> decode_shape("(1:)")
-    ((1, None),)
+    ((1, inf),)
 
     >>> decode_shape("(:, :10)")
-    ((None, None), (None, 10))
+    ((-inf, inf), (-inf, 10))
     """
     matched = re.finditer(
         r'([0-9+]):([0-9]+)|([0-9]+):|:([0-9]+)|([0-9]+)|[^0-9](:)[^0-9]',
@@ -61,9 +61,9 @@ def decode_shape(shape_code):
 
     for code in matched:
         min_size = code.group(1) or code.group(3) or code.group(5)
-        min_size = int(min_size) if min_size else min_size
+        min_size = int(min_size) if min_size else -numpy.inf
         max_size = code.group(2) or code.group(4) or code.group(5)
-        max_size = int(max_size) if max_size else max_size
+        max_size = int(max_size) if max_size else numpy.inf
         shapes.append((min_size, max_size))
     return tuple(shapes)
 
@@ -90,22 +90,20 @@ def check_shape(value, shape):
         # Any shape is allowed
         return
 
-    def check_valid(min_size, max_size, size):
-        return ((size >= int(min_size) if min_size else True) and
-                (size <= int(max_size) if max_size else True))
+    # FIXME: cuba.yml uses [1] to mean a single value with no shape
+    value_shape = numpy.asarray(value).shape or (1,)
 
-    try:
-        value_shape = value.shape
-    except AttributeError:
-        value_shape = numpy.array(value).shape
+    msg_fmt = ("value has a shape of {value_shape}, "
+               "which does not comply with shape: {shape}")
+    error_message = msg_fmt.format(value_shape=value_shape,
+                                   shape=shape)
 
-    error_message = ("value has a shape of {value_shape}, "
-                     "which does not comply with shape: {shape}")
+    if len(decoded_shape) != len(value_shape):
+        raise ValueError(error_message)
 
     for (min_size, max_size), size in zip(decoded_shape, value_shape):
-        if not check_valid(min_size, max_size, size):
-            raise ValueError(error_message.format(value_shape=value_shape,
-                                                  shape=shape))            
+        if not (size >= min_size and size <= max_size):
+            raise ValueError(error_message)
 
 
 def validate_cuba_keyword(value, key):
@@ -148,18 +146,37 @@ def validate_cuba_keyword(value, key):
     if keyword_name in KEYWORDS:
         keyword = KEYWORDS[keyword_name]
 
-        # Convert to numpy array
-        value = numpy.array(value)
-
-        # Check shape, keyword.shape needs to be converted to our shape syntax
-        check_shape(value, repr(tuple(keyword.shape)))
-
         # Check type
-        if not numpy.issubdtype(value.dtype, keyword.dtype):
-            message = 'value has dtype {dtype1} while {key} needs to be a {dtype2}'
-            raise TypeError(message.format(dtype1=value.dtype,
+        def get_type(value):
+            if isinstance(value, (list, tuple)):
+                return numpy.asarray(value).dtype
+            else:
+                return type(value)
+
+        if not numpy.issubdtype(get_type(value), keyword.dtype):
+            message = ('value has dtype {dtype1} while {key} '
+                       'needs to be a {dtype2}')
+            raise TypeError(message.format(dtype1=type(value),
                                            key=key,
                                            dtype2=keyword.dtype))
+        # Proceed with checking shape
+        # FIXME: STRING
+        # cuba.yml gives a fix length for the shape of string
+        # It actually means the maximum length of the string,
+        # which is inconsistent with the shape syntax in
+        # simphony_metadata.yml
+        # We will skip checking validating it for now
+        value_arr = numpy.asarray(value)
+        if keyword.dtype is str and value_arr.dtype.char[0] in ('S', 'U'):
+            warnings.warn('Value is a string, its shape is not validated. '
+                          'Please fix the cuba.yml shape syntax.')
+            return
+
+        # Check shape, keyword.shape needs to be converted
+        # to our shape syntax
+        shape = '({})'.format(str(keyword.shape).strip('[]'))
+        check_shape(value, shape)
+
     elif api_class:
         if not isinstance(value, api_class):
             message = '{0!r} is not an instance of {1}'
@@ -167,5 +184,3 @@ def validate_cuba_keyword(value, key):
     else:
         message = '{} is not defined in CUBA keyword or meta data'
         warnings.warn(message.format(key.upper()))
-
-    
