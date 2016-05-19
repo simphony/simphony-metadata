@@ -432,10 +432,10 @@ class CodeGenerator(object):
 
         self.methods.append('''
     @property
-    def uuid(self):
-        if not hasattr(self, "_uuid") or self._uuid is None:
-            self._uuid = uuid.uuid4()
-        return self._uuid''')
+    def uid(self):
+        if not hasattr(self, '_uid') or self._uid is None:
+            self._uid = uuid.uuid4()
+        return self._uid''')
 
     def populate_data(self, contents):
         """Populate code for CUBA.DATA"""
