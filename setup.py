@@ -41,5 +41,6 @@ setup(
     packages=find_packages(),
     entry_points={
         'console_scripts': [
-            'simphony-meta-generate = simphony_metadata.scripts.generate:cli [CUBAGen]']},
+            ('simphony-meta-generate = '
+             'simphony_metadata.scripts.generate:cli [CUBAGen]')]},
     )
