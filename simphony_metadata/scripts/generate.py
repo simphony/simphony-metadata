@@ -365,28 +365,46 @@ class CodeGenerator(object):
         # Validation code for the setter
         check_statements = []
 
-        # Allow None?
-        allow_none = False
-        if isinstance(contents, dict) and contents.get('default') is None:
-            allow_none = True
-            check_statements.append('if value is not None:')
+        # Is `shape` defined that we need to check shape?
+        check_shape = isinstance(contents, dict) and "shape" in contents
 
-        if isinstance(contents, dict) and "shape" in contents:
+        if check_shape:
             # If `shape` is defined, the value is supposed to be a sequence
             # We check the shape of the sequence
-            # Then validate each item in the sequence
             statement = "validation.check_shape(value, {!r})"
             check_statements.append(statement.format(contents['shape']))
 
-            check_statements.extend([
-                'for item in value:',
-                '    validation.validate_cuba_keyword(item, {!r})'.format(key)
-            ])
+        # is key defined as CUBA.* in the meta data?
+        is_cuba_key = 'CUBA.'+key.upper() in self.class_data
+
+        # If the key is also a CUBA key and `shape` is defined
+        # we should check each element in the sequence
+        if is_cuba_key:
+            if check_shape:
+                check_statements.extend([
+                    'for item in value:',
+                    ('    validation.validate_cuba_keyword('
+                     'item, {!r})').format(key)])
+            else:
+                statement = ('validation.validate_cuba_keyword('
+                             'value, {!r})').format(key)
+                check_statements.append(statement)
         else:
-            statement = 'validation.validate_cuba_keyword(value, {!r})'
-            check_statements.append(statement.format(key))
+            # Warn the user/developer that an attribute is not identified
+            # as a CUBA keyword in the meta data (even if it is in cuba.yml)
+            warnings.warn('{key} is not described as a CUBA.{upper} '
+                          'in the meta data of {name}.  It will not be '
+                          'validated against the CUBA keyword and it will '
+                          'not be stored in the DataContainer'.format(
+                              key=key, upper=key.upper(),
+                              name=self.original_key))
+
+        # Allow None?
+        allow_none = (isinstance(contents, dict) and
+                      contents.get('default') is None)
 
         if allow_none:
+            check_statements.insert(0, 'if value is not None:')
             check_statements[1:] = ('    '+statement
                                     for statement in check_statements[1:])
 
