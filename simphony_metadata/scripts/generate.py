@@ -269,14 +269,16 @@ class CodeGenerator(object):
 
         # Add a cuba_key property
         self.populate_getter('cuba_key',
-                             value='CUBA.{}'.format(self.original_key))
+                             'CUBA.{}'.format(self.original_key),
+                             'Corresponding CUBA key for this class')
 
         # Add a parents property
         self.populate_getter('parents',
                              transform_cuba_string(
                                  repr(
                                      tuple('CUBA.{}'.format(parent)
-                                           for parent in self.mro))))
+                                           for parent in self.mro))),
+                             'Parents of this class (closest first)')
 
     def populate_user_variable_code(self):
         """ Populate code for user-defined attributes """
@@ -317,7 +319,7 @@ class CodeGenerator(object):
                 # Setter
                 self.populate_setter_with_validation(key, contents)
 
-    def populate_getter(self, key, value=None):
+    def populate_getter(self, key, value=None, docstring=''):
         # default property getter
         if value is None:
             # Where is the value stored
@@ -328,10 +330,15 @@ class CodeGenerator(object):
             else:
                 value = 'self._{key}'.format(key=key)
 
+        if docstring:
+            docstring = "'''{}'''".format(docstring)
+
         self.methods.append('''
     @property
     def {key}(self):
-        return {value}'''.format(key=key, value=value))
+        {docstring}
+        return {value}'''.format(key=key, value=value,
+                                 docstring=docstring))
 
     def populate_setter(self, key, check_statements=()):
         # Get the indentation right
