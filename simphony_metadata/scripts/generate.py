@@ -120,9 +120,103 @@ def is_system_managed(key, contents):
 
 
 class CodeGenerator(object):
+    ''' Generator for SimPhoNy Metadata classes
+
+    On initialisation, the generator will identify which attributes
+    are managed by the system etc. (i.e. `system_variables`,
+    `required_user_defined`, `optional_user_defined`).
+
+    Then, if the generated class should inherit from other generated
+    classes, `collect_parents_to_mro`, `collect_attributes_from_parents`
+    should be called, which populates the dictionaries containing
+    inherited attributes (`inherited_required`, `inherited_optional`,
+    `inherited_sys_vars`).
+
+    Then, a number of `populate_` methods populate the code (`imports`,
+    `init_boby`, `methods`).
+
+    At last, the code is written to a file by a number of `generate_*`
+    methods.
+
+    For convenience, the `generate` method is included and it calls
+    the `populate_*` and `generate_*` methods in the right order.
+
+    Examples
+    --------
+    >>> gen = CodeGenerator(key, class_data)
+
+    >>> # if class should inherit other classes
+    >>> # you should call `collect_parents_to_mro`
+    >>> # and `collect_attributes_from_parents` here
+
+    >>> with open('output.py', 'wb') as file_out:
+            gen.generate(file_out)
+
+
+    Attributes
+    ----------
+    original_key : str
+        Name of the CUBA key
+
+    class_data : dict
+        All the meta data of the class
+
+    system_variables: OrderedDict
+        Attributes that are system-managed.
+        key is the name of the attribute;
+        value is a dictionary of metadata for the attributes
+
+    required_user_defined: OrderedDict
+        Attributes that required user's definition.
+        key is the name of the attribute;
+        value is a dictionary of metadata for the attributes
+
+    optional_user_defined: OrderedDict
+        Attributes that have default values.
+        key is the name of the attribute;
+        value is a dictionary of metadata
+
+    parent : str
+        Name of the superclass
+
+    imports : list
+        Lists of import statements
+
+    init_body: list
+        Lists of code in the `__init__` body
+
+    methods: list
+        Lists of code for the class's methods and descriptors
+
+    inherited_required: dict
+       Inherited attributes that require user's definition
+
+    inherited_optional: dict
+       Inherited attributes that have default values
+
+    inherited_sys_vars: dict
+       Inherited attributes that are managed by the system
+
+    mro: list
+        List of inherited parents' names
+
+    mro_completed : boolean
+        Whether the mro is completed
+    '''
 
     def __init__(self, key, class_data):
+        ''' Initialisation
 
+        Parameters
+        ----------
+        key : str
+            CUBA key, e.g. 'CUBA.CUDS_ITEM'
+
+        class_data : dict
+            meta data of the class, generally the result from
+            the pyyaml parser.  Keys are the attributes of the
+            generated class
+        '''
         # We keep a record of the original key
         self.original_key = key
 
@@ -199,12 +293,14 @@ class CodeGenerator(object):
 
     @property
     def all_non_inherited_attributes(self):
+        ''' All attributes that are not inherited '''
         return (set(self.system_variables) |
                 set(self.optional_user_defined) |
                 set(self.required_user_defined))
 
     @property
     def all_attributes(self):
+        ''' All attributes, inherited and non-inherited '''
         return (self.all_non_inherited_attributes |
                 set(self.inherited_required) |
                 set(self.inherited_optional) |
@@ -261,6 +357,8 @@ class CodeGenerator(object):
                     key, transform_cuba_string(repr(default)))])
 
     def populate_api(self):
+        ''' Populate methods per API request '''
+
         # Add a supported_parameters property
         self.populate_getter(
             'supported_parameters',
@@ -320,6 +418,19 @@ class CodeGenerator(object):
                 self.populate_setter_with_validation(key, contents)
 
     def populate_getter(self, key, value=None, docstring=''):
+        ''' Populate getter descriptor
+
+        Parameters
+        ----------
+        key : str
+            name of the attribute
+
+        value : object
+            fixed return value of the getter
+
+        docstring : str
+            Documentation for the getter
+        '''
         # default property getter
         if value is None:
             # Where is the value stored
@@ -341,6 +452,16 @@ class CodeGenerator(object):
                                  docstring=docstring))
 
     def populate_setter(self, key, check_statements=()):
+        ''' Populate setter descriptor
+
+        Parameters
+        ----------
+        key : str
+            name of the attribute
+
+        check_statements : sequence
+            sequence of strings (code)
+        '''
         # Get the indentation right
         validation_code = '''
         '''.join(check_statements)
@@ -362,6 +483,16 @@ class CodeGenerator(object):
                                    validation_code=validation_code))
 
     def populate_setter_with_validation(self, key, contents):
+        ''' Populate setter descriptor with validation codes
+
+        Parameters
+        ----------
+        key : str
+            name of the attribute
+
+        contents : dict
+            metadata of the attribute
+        '''
         # Validation code for the setter
         check_statements = []
 
@@ -405,6 +536,7 @@ class CodeGenerator(object):
 
         if allow_none:
             check_statements.insert(0, 'if value is not None:')
+            # add indentation
             check_statements[1:] = ('    '+statement
                                     for statement in check_statements[1:])
 
@@ -412,6 +544,20 @@ class CodeGenerator(object):
         self.populate_setter(key, check_statements)
 
     def populate_init_body_with_cuba_default(self, key, default):
+        '''  Populate the body of `__init__` for an attribute
+
+        Parameters
+        ----------
+        key : str
+            name of the attribute
+
+        default : object
+            default value of the attribute.  If it is a string that
+            starts with "CUBA.", the default value is understood
+            as a metadata class and an instance of that class
+            would be created on initialisation.  The corresponding
+            import statement would be added.
+        '''
         default_key = default.lower().replace('cuba.', '')
         class_name = to_camel_case(default_key)
         # __init__ body
@@ -427,7 +573,13 @@ class CodeGenerator(object):
             to_camel_case(default_key)))
 
     def populate_uuid(self, contents):
-        """Populate code for CUBA.UUID"""
+        """Populate code for CUBA.UUID
+
+        Parameters
+        ----------
+        contents : dict
+            meta data of the uuid (not currently used)
+        """
         self.imports.append("import uuid")
 
         self.methods.append('''
@@ -438,7 +590,13 @@ class CodeGenerator(object):
         return self._uid''')
 
     def populate_data(self, contents):
-        """Populate code for CUBA.DATA"""
+        """Populate code for CUBA.DATA
+
+        Parameters
+        ----------
+        contents : dict
+            meta data for the attribute `data` (not currently used)
+        """
         if contents:
             # FIXME: contents is not being used, what should we expect there?
             message = "provided value for DATA is currently ignored. given: {}"
@@ -474,8 +632,14 @@ class CodeGenerator(object):
             self._data = DataContainer(new_data)''')
 
     def collect_parents_to_mro(self, generators):
-        ''' recursively collect all the inherited into CodeGenerator.mro
+        ''' Recursively collect all the inherited into CodeGenerator.mro
         Assume single inheritence, i.e. no multiple parents
+
+        Parameters
+        ----------
+        generators : dict
+            keys are the names of classes (all upper case)
+            values are the cooresponding CodeGenerator objects
         '''
         # If its mro is already completed, return
         if self.mro_completed:
@@ -500,6 +664,12 @@ class CodeGenerator(object):
         ''' Given the MRO is populated, collect all the
         attributes inherited from the parents and thus populate
         `inherited_required`, `inherited_optional` and `inherited_sys_vars`
+
+        Parameters
+        ----------
+        generators : dict
+            keys are the names of classes (all upper case)
+            values are the cooresponding CodeGenerator objects
 
         See Also
         --------
@@ -534,11 +704,23 @@ class CodeGenerator(object):
                     getattr(self, to_save)[key] = getattr(parent, to_get)[key]
 
     def generate_class_import(self, file_out):
+        ''' Print import statements to the file output
+
+        Parameters
+        ----------
+        file_out : file object
+        '''
         # import statements
         print(*sorted(set(self.imports), reverse=True),
               sep="\n", file=file_out)
 
     def generate_class_header(self, file_out):
+        ''' Print class definition to the file output
+
+        Parameters
+        ----------
+        file_out : file object
+        '''
         # class header
         if self.parent != 'object':
             parent_class_name = to_camel_case(self.parent)
@@ -577,6 +759,12 @@ class CodeGenerator(object):
         pass
 
     def generate_initializer(self, file_out):
+        ''' Generate the entire __init__ method of the generated class.
+
+        Parameters
+        ----------
+        file_out : File object
+        '''
         # __init__ keyword arguments
         kwargs = []
         for key, content in chain(self.inherited_optional.items(),
@@ -611,7 +799,13 @@ class CodeGenerator(object):
         print(*self.init_body, sep="\n        ", file=file_out)
 
     def generate(self, file_out):
-        """ This is the main function for generating the code """
+        """ Populate and generate the code in the right order.
+
+        Parameters
+        ----------
+        file_out : file object
+
+        """
         # Populate codes before writing
         self.populate_user_variable_code()
         self.populate_system_code()
