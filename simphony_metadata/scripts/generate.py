@@ -563,9 +563,6 @@ class CodeGenerator(object):
 
         print('''
     \'\'\'{DOC_DESCRIPTION}
-
-    Attributes
-    ----------
     \'\'\''''.format(DOC_DESCRIPTION=definition), file=file_out)
 
     def generate_class_attributes_docstring(self, file_out):
@@ -639,13 +636,11 @@ def cli():
 @cli.command()
 @click.argument('yaml_file', type=click.File('rb'))
 @click.argument('out_path', type=click.Path())
-@click.option('--api/--no-api', 'create_api', default=True,
-              help='Create an api.py that collects all classes')
 @click.option('-O', '--overwrite', is_flag=True, default=False,
               help='Overwrite OUT_PATH')
 @click.option('--test', is_flag=True, default=False,
               help='Test mode')
-def meta_class(yaml_file, out_path, create_api, overwrite, test):
+def meta_class(yaml_file, out_path, overwrite, test):
     """ Create the Simphony Metadata classes
 
     YAML_FILE  - path to the simphony_metadata yaml file
@@ -656,15 +651,15 @@ def meta_class(yaml_file, out_path, create_api, overwrite, test):
     if test:
         IMPORT_PATHS['CUBA'] = 'from simphony_metadata.scripts.tests.cuba import CUBA'   # noqa
         IMPORT_PATHS['KEYWORDS'] = 'from simphony_metadata.scripts.tests.keywords import KEYWORDS'  # noqa
-        IMPORT_PATHS['DataContainer'] = 'from simphony_metadata.scripts.tests.data_container import DataContainer'  # noqa
-        print('**********\n',
-              'In testing mode, import paths are modified.\n'
-              'CUBA: {0}\n'
-              'KEYWORDS: {1}\n'
-              'DataContainer: {2}\n'
-              '**********'.format(IMPORT_PATHS['CUBA'],
-                                  IMPORT_PATHS['KEYWORDS'],
-                                  IMPORT_PATHS['DataContainer']))
+
+        print('*'*50,
+              'In testing mode, some import paths are modified. ',
+              'These are the import paths the generator uses', sep='\n')
+
+        for name, path in IMPORT_PATHS.items():
+            print('{name:>15}: {path:<}'.format(name=name, path=path))
+
+        print('*'*50)
 
     if os.path.exists(out_path):
         if overwrite:
@@ -690,6 +685,10 @@ def meta_class(yaml_file, out_path, create_api, overwrite, test):
                 warnings.warn(message.format(key, class_data['parent']))
                 continue
 
+            if key.lower() in ('validation', 'api'):
+                message = 'Name crashes with utility modules: '+key.lower()
+                raise ValueError(message)
+
             # Create the generator object, on init, it identifies its own
             # required/optional user-defined attributes and
             # system-managed attributes
@@ -708,12 +707,11 @@ def meta_class(yaml_file, out_path, create_api, overwrite, test):
             with open(filename, 'wb') as generated_file:
                 gen.generate(file_out=generated_file)
 
-            if create_api:
-                # Print to the api.py
-                with open(os.path.join(temp_dir, "api.py"), 'ab') as api_file:
-                    print('from .{} import {}'.format(key.lower(),
-                                                      to_camel_case(key)),
-                          sep='\n', file=api_file)
+            # Print to the api.py
+            with open(os.path.join(temp_dir, "api.py"), 'ab') as api_file:
+                print('from .{} import {}'.format(key.lower(),
+                                                  to_camel_case(key)),
+                      sep='\n', file=api_file)
 
         # Create an empty __init__.py
         init_path = os.path.join(temp_dir, '__init__.py')
@@ -724,13 +722,16 @@ def meta_class(yaml_file, out_path, create_api, overwrite, test):
 
         with open(validation_path, 'wb') as dst_file, \
                 open(VALIDATION_PY_PATH, 'rb') as src_file:
-            # Write the import statement for cuba keywords
-            # The import order is not great, but this keeps the
-            # generator code simple
-            print(IMPORT_PATHS['KEYWORDS'], file=dst_file)
+
+            # Replace import path for KEYWORDS
+            def read_lines(src_file):
+                while True:
+                    line = src_file.next()
+                    yield re.sub(r'.+import KEYWORDS',
+                                 IMPORT_PATHS['KEYWORDS'], line)
 
             # Copy the rest of the file
-            print(*src_file, file=dst_file, sep='')
+            print(*read_lines(src_file), file=dst_file, sep='')
 
         # Copy everything to the output directory
         shutil.copytree(temp_dir, out_path)
