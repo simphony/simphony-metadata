@@ -197,16 +197,34 @@ class CodeGenerator(object):
             else:
                 self.required_user_defined[key] = contents
 
-    def get_all_non_inherited_attributes(self):
+    @property
+    def all_non_inherited_attributes(self):
         return (set(self.system_variables) |
                 set(self.optional_user_defined) |
                 set(self.required_user_defined))
 
-    def get_all_attributes(self):
-        return (self.get_all_non_inherited_attributes() |
+    @property
+    def all_attributes(self):
+        return (self.all_non_inherited_attributes |
                 set(self.inherited_required) |
                 set(self.inherited_optional) |
                 set(self.inherited_sys_vars))
+
+    @property
+    def supported_parameters(self):
+        ''' Return a tuple of supported CUBA IntEnum
+
+        Supported parameters are the attributes defined as
+        CUBA.* in the metadata yaml file, excluding the ones
+        specified in `EXCLUDE_SUPPORTED_PARAMETERS`
+        '''
+        def get_cuba_attribute():
+            for attr in self.all_attributes:
+                if (attr not in self.class_data and
+                        attr not in EXCLUDE_SUPPORTED_PARAMETERS):
+                    yield 'CUBA.'+attr.upper()
+
+        return tuple(attr for attr in get_cuba_attribute())
 
     def populate_system_code(self):
         """ Populate code for system-managed (and read-only) attributes"""
@@ -244,12 +262,10 @@ class CodeGenerator(object):
 
     def populate_api(self):
         # Add a supported_parameters property
-        # Skipping READ_ONLY_KEYS
-        all_attributes = tuple('CUBA.{}'.format(attr.upper())
-                               for attr in self.get_all_attributes()
-                               if attr not in EXCLUDE_SUPPORTED_PARAMETERS)
-        self.populate_getter('supported_parameters',
-                             transform_cuba_string(repr(all_attributes)))
+        self.populate_getter(
+            'supported_parameters',
+            transform_cuba_string(repr(self.supported_parameters)),
+            'Supported CUBA keys in the DataContainer')
 
         # Add a cuba_key property
         self.populate_getter('cuba_key',
@@ -483,7 +499,7 @@ class CodeGenerator(object):
             parent = generators[parent_name]
 
             # Update the known attribute
-            known_attributes = self.get_all_attributes()
+            known_attributes = self.all_attributes
 
             # populate self.to_save[key] with parent.to_get[key]
             for to_save, to_get in mappings.items():
