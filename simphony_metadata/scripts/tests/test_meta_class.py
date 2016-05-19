@@ -3,13 +3,14 @@ import unittest
 import warnings
 from collections import Sequence
 
+from mock import patch
 import uuid
 
-from simphony_metadata.scripts.tests.cuba import CUBA
-from simphony_metadata.scripts.tests.data_container import DataContainer
-from simphony_metadata.scripts.tests.meta_class import api as meta_class
+from .cuba import CUBA
+from .meta_class import api as meta_class
 
 
+@patch('simphony.core.data_container.CUBA', CUBA)
 class TestMetaClass(unittest.TestCase):
 
     @classmethod
@@ -19,28 +20,31 @@ class TestMetaClass(unittest.TestCase):
         cls.no_required_args_classes = []
 
         for name, klass in inspect.getmembers(meta_class, inspect.isclass):
+            # Inspect the __init__ signature
             init_spec = inspect.getargspec(klass.__init__)
-            required_args = len(init_spec.args) - len(init_spec.defaults) - 1
 
-            if required_args > 0:
+            # Number of required arguments
+            num_required = len(init_spec.args) - len(init_spec.defaults) - 1
+
+            if num_required > 0:
                 if not hasattr(cls, 'test_'+name):
                     message = ('Instantiation of `{0}` required {1} arguments '
                                'and is not tested in batch. A test case '
                                '`test_{0}` is not found either. '
                                'Please add a test case.')
-                    warnings.warn(message.format(name, required_args))
+                    warnings.warn(message.format(name, num_required))
                 continue
 
             cls.no_required_args_classes.append((name, klass))
 
     def check_cuds_item(self, instance):
         ''' Check properties of a CUDSItem '''
-        self.assertIsInstance(instance.uuid, uuid.UUID)
-        self.assertIsInstance(instance.data, DataContainer)
+        self.assertIsInstance(instance.uid, uuid.UUID)
+        self.assertIsNotNone(instance.data)
 
         # uuid is read-only
         with self.assertRaises(AttributeError):
-            instance.uuid = uuid.uuid4()
+            instance.uid = uuid.uuid4()
 
     def check_cuds_component(self, instance):
         ''' Check properties of a CUDS Component '''
@@ -74,8 +78,10 @@ class TestMetaClass(unittest.TestCase):
         ''' Check properties of a ModelEquation '''
         self.assertTrue(hasattr(instance, 'models'),
                         'Should have an attribute called `models`')
+        self.assertIsNotNone(instance.models)
         self.assertTrue(hasattr(instance, 'variables'),
                         'Should have an attribute called `variables`')
+        self.assertIsNotNone(instance.variables)
 
         # variables is read-only
         with self.assertRaises(AttributeError):
@@ -250,3 +256,58 @@ class TestMetaClass(unittest.TestCase):
         for name, klass in self.no_required_args_classes:
             if issubclass(klass, meta_class.PhysicsEquation):
                 self.check_model_equation(klass())
+
+    def test_Coulomb(self):
+        meta_class.Coulomb(
+            material=(meta_class.Material(), meta_class.Material()))
+
+    def test_CoulombFrictionForce(self):
+        # CoulombFrictionForce is a material relation
+        # material should be a sequence of Material (any number)
+        meta_class.CoulombFrictionForce(
+            material=(meta_class.Material(), meta_class.Material()))
+
+    def test_DirichletBoundaryCondition(self):
+        meta_class.DirichletBoundaryCondition(
+            material=(meta_class.Material(), meta_class.Material()))
+
+    def test_DissipationForce(self):
+        meta_class.DissipationForce(
+            material=(meta_class.Material(), meta_class.Material()))
+
+    def test_Fem(self):
+        meta_class.Fem(physics_equation=meta_class.PhysicsEquation())
+
+    def test_Fvm(self):
+        meta_class.Fvm(physics_equation=meta_class.PhysicsEquation())
+
+    def test_InteratomicPotential(self):
+        meta_class.InteratomicPotential(
+            material=(meta_class.Material(), meta_class.Material()))
+
+    def test_MaterialRelation(self):
+        meta_class.MaterialRelation(
+            material=(meta_class.Material(), meta_class.Material()))
+
+    def test_NeumannBoundaryCondition(self):
+        meta_class.NeumannBoundaryCondition(
+            material=(meta_class.Material(), meta_class.Material(),
+                      meta_class.Material()))
+
+    def test_PairPotential(self):
+        meta_class.PairPotential(
+            material=(meta_class.Material(), meta_class.Material()))
+
+    def test_SjkrCohesionForce(self):
+        meta_class.SjkrCohesionForce(
+            material=(meta_class.Material(), meta_class.Material()))
+
+    def test_Sph(self):
+        meta_class.Sph(physics_equation=meta_class.PhysicsEquation())
+
+    def test_SurfaceTensionRelation(self):
+        meta_class.SurfaceTensionRelation(
+            material=(meta_class.Material(), meta_class.Material()))
+
+    def test_Verlet(self):
+        meta_class.Verlet(physics_equation=meta_class.PhysicsEquation())

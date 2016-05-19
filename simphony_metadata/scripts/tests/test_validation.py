@@ -1,17 +1,18 @@
 import unittest
-import warnings
 
 import numpy
 from mock import patch
 
-from simphony_metadata.scripts import validation
-from simphony_metadata.scripts.validation import (decode_shape,
-                                                  check_shape,
-                                                  validate_cuba_keyword)
+from .cuba import CUBA
 from .keywords import KEYWORDS
 from .meta_class import api
+from .meta_class.validation import (decode_shape,
+                                    check_shape,
+                                    validate_cuba_keyword)
 
 
+@patch('simphony.core.data_container.CUBA', CUBA)
+@patch('simphony.core.cuba.CUBA', CUBA)
 class TestValidation(unittest.TestCase):
 
     def test_decode_shape(self):
@@ -66,26 +67,13 @@ class TestValidation(unittest.TestCase):
                 msg = 'ValueError is not raised for value: {}, shape: {}'
                 self.fail(msg.format(value, required_shape))
 
-    @patch.object(validation, 'KEYWORDS', KEYWORDS, create=True)
-    @patch('simphony_metadata.scripts.api', api, create=True)
     def test_validate_cuba_keyword(self):
         ''' Test for valid cases for CUBA keyword values '''
         # Check valid cases
         self.assertIsNone(validate_cuba_keyword(1.0, 'time_step'))
         self.assertIsNone(validate_cuba_keyword(api.Material(), 'material'))
+        self.assertIsNone(validate_cuba_keyword('Hi', 'name'))
 
-    @patch.object(validation, 'KEYWORDS', KEYWORDS, create=True)
-    @patch('simphony_metadata.scripts.api', api, create=True)
-    def test_warnings_validate_string_cuba_keyword(self):
-        ''' Test if validating a string passes the shape test with warning '''
-        # FIXME: string's shape is not checked, make sure a warning is emitted
-        with warnings.catch_warnings(record=True) as warning_record:
-            self.assertIsNone(validate_cuba_keyword('Hi', 'name'))
-            self.assertIn('Value is a string, its shape is not validated',
-                          str(warning_record[-1].message))
-
-    @patch.object(validation, 'KEYWORDS', KEYWORDS, create=True)
-    @patch('simphony_metadata.scripts.api', api, create=True)
     def test_error_validate_cuba_keyword(self):
         ''' Test for TypeError for invalid CUBA keyword value '''
         invalid_examples = (
