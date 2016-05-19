@@ -9,7 +9,7 @@ CUBA_KEYS:
   UUID:
     definition: Universal unique id represented as a hex string size 32
     shape: [32]
-    type: string
+    type: uuid
 
   NAME:
     definition: Naming of high-level objects (e.g. solver models)
@@ -425,3 +425,107 @@ CUBA_KEYS:
     definition: Full attribute of an entity.
     shape: [128]
     type: string
+
+  #############################
+  # Please check the following
+  #############################
+
+  CHARGE:
+    definition: Charge
+    shape: [1]
+    type: double
+
+  CHARGE_DENSITY:
+    definition: Charge density
+    shape: []
+    type: double
+
+  DESCRIPTION:
+    definition: Description text
+    shape: [20]
+    type: string
+
+  ELECTRIC_FIELD:
+    definition: Electric field
+    shape: []
+    type: double
+
+  ELECTRON_MASS:
+    definition: Electron mass
+    shape: [1]
+    type: double
+
+  ELECTROSTATIC_FIELD:
+    definition: Electrostatic field
+    shape: []
+    type: double
+
+  ENERGY:
+    definition: Energy
+    shape: []
+    type: double
+
+  HEAT_CONDUCTIVITY:
+    definition: Heat conductivity
+    shape: [1]
+    type: double
+
+  INITIAL_VISCOSITY:
+    definition: Initial viscosity
+    shape: [1]
+    type: double
+
+  LINEAR_CONSTANT:
+    definition: Linear constant
+    shape: [1]
+    type: double
+
+  MAXIMUM_VISCOSITY:
+    definition: Maximum viscosity
+    shape: [1]
+    type: double
+
+  MINIMUM_VISCOSITY:
+    definition: Minimum viscosity
+    shape: [1]
+    type: double
+
+  MOMENTUM:
+    definition: Momentum
+    shape: []
+    type: double
+
+  MOMENT_INERTIA:
+    definition: Moment inertia
+    shape: []
+    type: double
+
+  POTENTIAL_ENERGY:
+    definition: Potential energy
+    shape: []
+    type: double
+
+  POWER_LAW_INDEX:
+    definition: Power law index
+    shape: [1]
+    type: double
+
+  RELAXATION_TIME:
+    definition: Relaxation time
+    shape: [1]
+    type: double
+
+  SURFACE_TENSION:
+    definition: Surface tension
+    shape: [1]
+    type: double
+
+  TIME:
+    definition: PLEASE FILL ME IN
+    shape: [1]
+    type: double
+
+  VISCOSITY:
+    definition: PLEASE FILL ME IN
+    shape: [1]
+    type: double

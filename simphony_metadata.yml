@@ -16,7 +16,8 @@ CUDS_KEYS:
     parent:
     CUBA.UUID:
       scope: CUBA.SYSTEM
-    CUBA.DATA:
+    data:
+      default:
 
   CUDS_COMPONENT:
     definition: Base data type for the CUDS components
@@ -128,7 +129,7 @@ CUDS_KEYS:
     CUBA.MULTIPHASE_MODEL:
       default: CUBA.SINGLE_PHASE_MODEL
     CUBA.RHEOLOGY_MODEL:
-      default: CUBA.NEWTONIAN_MODEL
+      default: CUBA.NEWTONIAN_FLUID_MODEL
     CUBA.GRAVITY_MODEL:
     CUBA.ELECTROSTATIC_MODEL:
       default: CUBA.CONSTANT_ELECTROSTATIC_FIELD_MODEL
@@ -143,7 +144,7 @@ CUDS_KEYS:
 
   CONSTANT_ELECTROSTATIC_FIELD_MODEL:
     definition: A constant electrostatic field model
-    parent: CUBA.PHYSICS_EQUATION
+    parent: CUBA.ELECTROSTATIC_MODEL
     models: [CUBA.MESOSCOPIC, CUBA.CONTINUUM]
     variables: [CUBA.ELECTRIC_FIELD, CUBA.CHARGE]
     CUBA.ELECTROSTATIC_FIELD:
@@ -152,7 +153,7 @@ CUDS_KEYS:
 
   ISOTHERMAL_MODEL:
     definition: Isothermal heat transport model, no transport of heat is assumed
-    parent: CUBA.PHYSICS_EQUATION
+    parent: CUBA.THERMAL_MODEL
     models: [CUBA.CONTINUUM]
     variables: []
 
@@ -163,18 +164,18 @@ CUDS_KEYS:
     variables: [CUBA.TEMPERATURE, CUBA.HEAT_CONDUCTIVITY]
 
   INCOMPRESSIBLE_FLUID_MODEL:
-    parent: CUBA.PHYSICS_EQUATION
+    parent: CUBA.COMPRESSIBILITY_MODEL
     models: [CUBA.CONTINUUM]
     definition: Incompressible fluid model
     variables: [CUBA.VELOCITY, CUBA.POSITION, CUBA.DENSITY, CUBA.VISCOSITY]
 
   LAMINAR_FLOW_MODEL:
-    parent: CUBA.PHYSICS_EQUATION
+    parent: CUBA.TURBULENCE_MODEL
     definition: Laminar model
     models: [CUBA.CONTINUUM]
 
   SINGLE_PHASE_MODEL:
-    parent: CUBA.PHYSICS_EQUATION
+    parent: CUBA.MULTIPHASE_MODEL
     definition: A single phase fluid model
     models: [CUBA.CONTINUUM]
 
@@ -193,7 +194,6 @@ CUDS_KEYS:
     definition: Rheology model of a CFD fluid
     parent: CUBA.PHYSICS_EQUATION
     models: [CUBA.CONTINUUM]
-    default: CUBA.NEWTONIAN_FLUID_MODEL
 
   NEWTONIAN_FLUID_MODEL:
     definition: Newtonian fluid model assuming the viscous stresses are proportional to the rates of deformation
@@ -211,7 +211,7 @@ CUDS_KEYS:
     CUBA.LINEAR_CONSTANT:
       default: 1e-5
     CUBA.POWER_LAW_INDEX:
-      default: 1
+      default: 1.0
 
   HERSCHEL_BULKLEY_MODEL:
     definition: Herschel-Bulkley model combines the effects of Bingham plastic and power-law behavior in a fluid
@@ -224,7 +224,7 @@ CUDS_KEYS:
     CUBA.LINEAR_CONSTANT:
       default: 1e-5
     CUBA.POWER_LAW_INDEX:
-      default: 1
+      default: 1.0
 
   CROSS_POWER_LAW_MODEL:
     definition: Viscosity Cross power law model
@@ -259,7 +259,6 @@ CUDS_KEYS:
     CUBA.SURFACE_TENSION:
       default: 0.07
       scope: CUBA.USER
-      shape: (2)
     CUBA.MATERIAL:
       shape: (2)
 
@@ -267,7 +266,7 @@ CUDS_KEYS:
     definition: Dirichlet boundary condition
     parent: CUBA.CONDITION
     models: [CUBA.CONTINUUM]
-    CUBA.VARIABLES:
+    variables:
       shape: (:)
     CUBA.MATERIAL:
       shape: (:)
@@ -276,7 +275,7 @@ CUDS_KEYS:
     definition: Neumann boundary condition
     parent: CUBA.CONDITION
     models: [CUBA.CONTINUUM]
-    CUBA.VARIABLES:
+    variables:
       shape: (:)
     CUBA.MATERIAL:
       shape: (:)
@@ -285,7 +284,7 @@ CUDS_KEYS:
     parent: CUBA.CONDITION
     definition: Empty boundary condition
     models: [CUBA.CONTINUUM]
-    CUBA.VARIABLES:
+    variables:
       shape: (:)
     CUBA.MATERIAL:
       shape: (:)
@@ -300,7 +299,6 @@ CUDS_KEYS:
     parent: CUBA.INTERATOMIC_POTENTIAL
     models: [CUBA.ATOMISTIC]
     CUBA.MATERIAL:
-      default: []
       shape: (2)
 
   LENNARD_JONES_6_12:
@@ -325,21 +323,21 @@ CUDS_KEYS:
       default: 1.0
 
   COULOMB_FRICTION_FORCE:
-    parent: CUBA.FORCE
+    parent: CUBA.MATERIAL_RELATION
     definition: Shear force accounting for the tangential displacement between contacting particles
     models: [CUBA.ATOMISTIC]
     CUBA.FRICTION_COEFFICIENT:
       default: 0.0
 
   DISSIPATION_FORCE:
-    parent: CUBA.FORCE
+    parent: CUBA.MATERIAL_RELATION
     definition: Viscous normal force describing the inelasticity of particle collisions
     models: [CUBA.ATOMISTIC]
     CUBA.RESTITUTION_COEFFICIENT:
       default: 1.0
 
   SJKR_COHESION_FORCE:
-    parent: CUBA.FORCE
+    parent: CUBA.MATERIAL_RELATION
     definition: Additional normal force tending to maintain the contact
     models: [CUBA.ATOMISTIC]
     CUBA.COHESION_ENERGY_DENSITY:
@@ -379,29 +377,45 @@ CUDS_KEYS:
   COMPUTATIONAL_METHOD:
     parent: CUBA.CUDS_COMPONENT
     definition: A computational method according to the RoMM
-    physics_equation: []
+    CUBA.PHYSICS_EQUATION: []
 
   DEM:
     parent: CUBA.COMPUTATIONAL_METHOD
     definition: Discrete element method
-    physics_equation: [GRANULAR_DYNAMICS]
+    CUBA.PHYSICS_EQUATION: [GRANULAR_DYNAMICS]
 
   FVM:
     parent: CUBA.COMPUTATIONAL_METHOD
     definition: Finite volume method
-    physics_equation: [CFD]
+    CUBA.PHYSICS_EQUATION: [CFD]
 
   FEM:
     parent: CUBA.COMPUTATIONAL_METHOD
     definition: Finite element method
-    physics_equation: [CFD]
+    CUBA.PHYSICS_EQUATION: [CFD]
 
   SPH:
     parent: CUBA.COMPUTATIONAL_METHOD
     definition: Smooth particle hydrodynamics
-    physics_equation: [CFD]
+    CUBA.PHYSICS_EQUATION: [CFD]
 
   VERLET:
     parent: CUBA.COMPUTATIONAL_METHOD
     definition: Newtonian dynamics integration using verlet algorithm
-    physics_equation: [MOLECULAR_DYNAMICS]
+    CUBA.PHYSICS_EQUATION: [MOLECULAR_DYNAMICS]
+
+  COMPRESSIBILITY_MODEL:
+    parent: CUBA.PHYSICS_EQUATION
+    definition: Compressibility model
+
+  TURBULENCE_MODEL:
+    parent: CUBA.PHYSICS_EQUATION
+    definition: Turbulence model
+
+  MULTIPHASE_MODEL:
+    parent: CUBA.PHYSICS_EQUATION
+    definition: Multiphase model
+
+  ELECTROSTATIC_MODEL:
+    parent: CUBA.PHYSICS_EQUATION
+    definition: Electrostatic model
