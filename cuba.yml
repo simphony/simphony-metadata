@@ -426,10 +426,6 @@ CUBA_KEYS:
     shape: [128]
     type: string
 
-  #############################
-  # Please check the following
-  #############################
-
   CHARGE:
     definition: Charge
     shape: [1]
@@ -521,11 +517,31 @@ CUBA_KEYS:
     type: double
 
   TIME:
-    definition: PLEASE FILL ME IN
+    definition: Time
     shape: [1]
     type: double
 
   VISCOSITY:
-    definition: PLEASE FILL ME IN
+    definition: Viscosity
     shape: [1]
     type: double
+
+  COLLISION_OPERATOR:
+    definition: Collision operator of a model Boltzmann equation
+    shape: [1]
+    type: integer
+
+  REFERENCE_DENSITY:
+    definition: Reference value for density
+    shape: [1]
+    type: double
+
+  EXTERNAL_FORCING:
+    definition: Toggle for an external force
+    shape: [1]
+    type: boolean
+
+  FLOW_TYPE:
+    definition: Classification of a fluid flow type
+    shape: [1]
+    type: integer
