@@ -20,6 +20,7 @@ PATH_TO_CLASSES = ''
 IMPORT_PATHS = {
     'CUBA': 'from simphony.core.cuba import CUBA',
     'DataContainer': 'from simphony.core.data_container import DataContainer',
+    'create_data_container': 'from simphony.core.data_container import create_data_container',  # noqa
     'KEYWORDS': 'from simphony.core.keywords import KEYWORDS',
     'validation': 'from . import validation'
     }
@@ -66,6 +67,10 @@ def to_camel_case(text, special={'cuds': 'CUDS'}):
     special : dict
         If any substring of text (lower case) matches a key of `special`,
         the substring is replaced by the value
+
+    Returns
+    -------
+    result : str
     """
 
     def replace_func(matched):
@@ -266,6 +271,12 @@ class CodeGenerator(object):
         # This collects inherited system-managed attributes
         self.inherited_sys_vars = {}
 
+        # module-level variables after imports and before class definition
+        self.module_variables = []
+
+        # All code at the class levels
+        self.class_variables = [""]
+
         # All statements within __init__
         self.init_body = [""]
 
@@ -352,31 +363,46 @@ class CodeGenerator(object):
             # can modify it but the user is not supposed to
             self.init_body.extend([
                 "",
-                '# This is a system-managed attribute',
+                '# This is a system-managed, read-only attribute',
                 'self._{0} = {1}'.format(
                     key, transform_cuba_string(repr(default)))])
 
-    def populate_api(self):
-        ''' Populate methods per API request '''
+    def populate_module_variables(self):
+        ''' Populate module-level variables '''
 
-        # Add a supported_parameters property
-        self.populate_getter(
-            'supported_parameters',
-            transform_cuba_string(repr(self.supported_parameters)),
-            'Supported CUBA keys in the DataContainer')
+        self.module_variables.append(
+            transform_cuba_string(
+                '_RestrictedDataContainer = '
+                'create_data_container('
+                '{supported_parameters},\n'
+                '{indent}class_name="_RestrictedDataContainer")'.format(
+                    supported_parameters=self.supported_parameters,
+                    indent=' '*49))
+        )
 
-        # Add a cuba_key property
-        self.populate_getter('cuba_key',
-                             'CUBA.{}'.format(self.original_key),
-                             'Corresponding CUBA key for this class')
+    def populate_class_variables(self):
+        ''' Populate class variables
 
-        # Add a parents property
-        self.populate_getter('parents',
-                             transform_cuba_string(
-                                 repr(
-                                     tuple('CUBA.{}'.format(parent)
-                                           for parent in self.mro))),
-                             'Parents of this class (closest first)')
+        These variables are requested by the user, but they are not
+        directly specified in the yaml file
+        '''
+
+        # Add a supported_parameters
+        self.class_variables.append(
+            transform_cuba_string(
+                'supported_parameters = {!r}'.format(
+                    self.supported_parameters)))
+
+        # Add cuba_key as a class variable
+        self.class_variables.append(
+            'cuba_key = CUBA.{}'.format(self.original_key))
+
+        # Add parents as a class attributes
+        self.class_variables.append(
+            transform_cuba_string(
+                'parents = {!r}'.format(
+                    tuple('CUBA.{}'.format(parent)
+                          for parent in self.mro))))
 
     def populate_user_variable_code(self):
         """ Populate code for user-defined attributes """
@@ -602,7 +628,8 @@ class CodeGenerator(object):
             message = "provided value for DATA is currently ignored. given: {}"
             warnings.warn(message.format(contents))
 
-        self.imports.append(IMPORT_PATHS['DataContainer'])
+        self.imports.extend([IMPORT_PATHS['create_data_container'],
+                             IMPORT_PATHS['DataContainer']])
 
         self.init_body.append('''if data:
             self.data = data''')
@@ -613,7 +640,7 @@ class CodeGenerator(object):
         try:
             data_container = self._data
         except AttributeError:
-            self._data = DataContainer()
+            self._data = _RestrictedDataContainer()
             return self._data
         else:
             # One more check in case the
@@ -714,6 +741,17 @@ class CodeGenerator(object):
         print(*sorted(set(self.imports), reverse=True),
               sep="\n", file=file_out)
 
+    def generate_module_variables(self, file_out):
+        ''' Print module-level variables to the file output
+
+        Parameters
+        ----------
+        file_out : file object
+        '''
+        print("", file=file_out)
+        print(*self.module_variables,
+              sep="\n", file=file_out)
+
     def generate_class_header(self, file_out):
         ''' Print class definition to the file output
 
@@ -756,7 +794,19 @@ class CodeGenerator(object):
         ----------
         file_out : File object
         '''
+        # Not yet implemented
         pass
+
+    def generate_class_variables(self, file_out):
+        ''' Print class-level variables
+
+        Parameters
+        ----------
+        file_out : file object
+        '''
+        # class-level variables
+        print(*self.class_variables,
+              sep="\n    ", file=file_out)
 
     def generate_initializer(self, file_out):
         ''' Generate the entire __init__ method of the generated class.
@@ -809,13 +859,16 @@ class CodeGenerator(object):
         # Populate codes before writing
         self.populate_user_variable_code()
         self.populate_system_code()
-        self.populate_api()
+        self.populate_module_variables()
+        self.populate_class_variables()
 
         # Now write to the file output
         self.generate_class_import(file_out)
+        self.generate_module_variables(file_out)
         self.generate_class_header(file_out)
         self.generate_class_docstring(file_out)
         self.generate_class_attributes_docstring(file_out)
+        self.generate_class_variables(file_out)
         self.generate_initializer(file_out)
 
         # methods (including descriptors)
