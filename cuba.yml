@@ -425,3 +425,23 @@ CUBA_KEYS:
     definition: Full attribute of an entity.
     shape: [128]
     type: string
+
+  COLLISION_OPERATOR:
+    definition: Collision operator of a model Boltzmann equation
+    shape: [1]
+    type: integer
+
+  REFERENCE_DENSITY:
+    definition: Reference value for density
+    shape: [1]
+    type: double
+
+  EXTERNAL_FORCING:
+    definition: Toggle for an external force
+    shape: [1]
+    type: boolean
+
+  FLOW_TYPE:
+    definition: Classification of a fluid flow type
+    shape: [1]
+    type: integer
