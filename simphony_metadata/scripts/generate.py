@@ -999,7 +999,8 @@ def keywords(input, output):
         'uuid': 'uuid.UUID',
         'string': 'numpy.str',
         'double': 'numpy.float64',
-        'integer': 'numpy.int32'}
+        'integer': 'numpy.int32',
+        'boolean': 'bool'}
     template = (
         "    '{key}': Keyword(\n"
         "        name='{name}',\n"
