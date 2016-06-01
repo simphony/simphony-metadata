@@ -885,28 +885,13 @@ def cli():
 @click.argument('out_path', type=click.Path())
 @click.option('-O', '--overwrite', is_flag=True, default=False,
               help='Overwrite OUT_PATH')
-@click.option('--test', is_flag=True, default=False,
-              help='Test mode')
-def meta_class(yaml_file, out_path, overwrite, test):
+def meta_class(yaml_file, out_path, overwrite):
     """ Create the Simphony Metadata classes
 
     YAML_FILE  - path to the simphony_metadata yaml file
 
     OUT_PATH   - path to the directory where the output files should be placed
     """
-
-    if test:
-        IMPORT_PATHS['CUBA'] = 'from simphony_metadata.scripts.tests.cuba import CUBA'   # noqa
-        IMPORT_PATHS['KEYWORDS'] = 'from simphony_metadata.scripts.tests.keywords import KEYWORDS'  # noqa
-
-        print('*'*50,
-              'In testing mode, some import paths are modified. ',
-              'These are the import paths the generator uses', sep='\n')
-
-        for name, path in IMPORT_PATHS.items():
-            print('{name:>15}: {path:<}'.format(name=name, path=path))
-
-        print('*'*50)
 
     if os.path.exists(out_path):
         if overwrite:

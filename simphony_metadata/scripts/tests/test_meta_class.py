@@ -7,10 +7,16 @@ from mock import patch
 import uuid
 
 from .cuba import CUBA
-from .meta_class import api as meta_class
+
+
+# We need to patch the CUBA values before importing the meta class
+with patch('simphony.core.cuba.CUBA', CUBA),\
+     patch('simphony.core.data_container.CUBA', CUBA):
+    from .meta_class import api as meta_class
 
 
 @patch('simphony.core.data_container.CUBA', CUBA)
+@patch('simphony.core.cuba.CUBA', CUBA)
 class TestMetaClass(unittest.TestCase):
 
     @classmethod
