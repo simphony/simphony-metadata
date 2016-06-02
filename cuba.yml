@@ -9,7 +9,7 @@ CUBA_KEYS:
   UUID:
     definition: Universal unique id represented as a hex string size 32
     shape: [32]
-    type: uuid
+    type: string
 
   NAME:
     definition: Naming of high-level objects (e.g. solver models)
