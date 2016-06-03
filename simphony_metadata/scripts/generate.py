@@ -520,7 +520,8 @@ class CodeGenerator(object):
             metadata of the attribute
         '''
         # Validation code for the setter
-        check_statements = []
+        check_statements = [
+            'value = validation.cast_data_type(value, {!r})'.format(key)]
 
         # Is `shape` defined that we need to check shape?
         check_shape = isinstance(contents, dict) and "shape" in contents

@@ -109,7 +109,8 @@ def check_shape(value, shape):
 
 
 def validate_cuba_keyword(value, key):
-    ''' Validate the given `value` against `key`
+    ''' Validate the given `value` against `key` such that
+    shape and type of value matches what was specified
 
     Parameters
     ----------
@@ -161,12 +162,9 @@ def validate_cuba_keyword(value, key):
             raise TypeError(message.format(dtype1=type(value),
                                            key=key,
                                            dtype2=keyword.dtype))
-        # Proceed with checking shape
         # FIXME: STRING
         # cuba.yml gives a fix length for the shape of string
-        # It actually means the maximum length of the string,
-        # which is inconsistent with the shape syntax in
-        # simphony_metadata.yml
+        # It actually means the maximum length of the string
         # We will skip checking validating it for now
         value_arr = numpy.asarray(value)
         if keyword.dtype is str and value_arr.dtype.char[0] in ('S', 'U'):
@@ -186,3 +184,47 @@ def validate_cuba_keyword(value, key):
     else:
         message = '{} is not defined in CUBA keyword or meta data'
         warnings.warn(message.format(key.upper()))
+
+
+def cast_data_type(value, key):
+    ''' Safely cast the value according to the type specified by
+    KEYWORDS[key].
+
+    Parameters
+    ----------
+    value : any
+        Value to be casted
+
+    key : str
+        Name of the keyword
+
+    Returns
+    -------
+    new_value : any
+        If key is in KEYWORDS, new_value has the same data type as the
+        type especified in KEYWORDS[key]
+        If key is not in KEYWORDS, the original value is returned
+
+    Raises
+    ------
+    ValueError
+        If casting is not possible
+
+    TypeError
+        If casting would be unsafe
+    '''
+    keyword_name = key.upper()
+
+    if keyword_name in KEYWORDS:
+        target_type = KEYWORDS[keyword_name].dtype
+
+        # If safe casting is not possible,
+        # this will raise a ValueError/TypeError
+        new_value = numpy.asarray(value).astype(target_type, casting='safe')
+
+        if new_value.shape == ():
+            return numpy.asscalar(new_value)
+        else:
+            return type(value)(new_value)
+    else:
+        return value
