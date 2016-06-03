@@ -229,8 +229,7 @@ class CodeGenerator(object):
         self.class_data = class_data
 
         # This collects import statements
-        self.imports = [IMPORT_PATHS['CUBA'],
-                        IMPORT_PATHS['validation']]
+        self.imports = [IMPORT_PATHS['CUBA']]
 
         # parent is for class inheritance so it is handled separately
         # self.parent = ""; class_data.pop("parent")    # for testing
@@ -373,11 +372,11 @@ class CodeGenerator(object):
         self.module_variables.append(
             transform_cuba_string(
                 '_RestrictedDataContainer = '
-                'create_data_container('
-                '{supported_parameters},\n'
+                'create_data_container(\n'
+                '{indent}{supported_parameters},\n'
                 '{indent}class_name="_RestrictedDataContainer")'.format(
                     supported_parameters=self.supported_parameters,
-                    indent=' '*49))
+                    indent=' '*4))
         )
 
     def populate_class_variables(self):
@@ -519,6 +518,8 @@ class CodeGenerator(object):
         contents : dict
             metadata of the attribute
         '''
+        self.imports.append(IMPORT_PATHS['validation'])
+
         # Validation code for the setter
         check_statements = [
             'value = validation.cast_data_type(value, {!r})'.format(key)]
