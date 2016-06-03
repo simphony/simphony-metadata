@@ -12,7 +12,7 @@ from .cuba import CUBA
 
 # We need to patch the CUBA values before importing the meta class
 with patch('simphony.core.cuba.CUBA', CUBA),\
-     patch('simphony.core.data_container.CUBA', CUBA):
+         patch('simphony.core.data_container.CUBA', CUBA):
     from .meta_class import api as meta_class
 
 
