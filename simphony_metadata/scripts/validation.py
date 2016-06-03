@@ -220,7 +220,8 @@ def cast_data_type(value, key):
 
         # If safe casting is not possible,
         # this will raise a ValueError/TypeError
-        new_value = numpy.asarray(value).astype(target_type, casting='safe')
+        new_value = numpy.asarray(value).astype(target_type,
+                                                casting='same_kind')
 
         if new_value.shape == ():
             return numpy.asscalar(new_value)

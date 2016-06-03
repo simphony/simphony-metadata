@@ -63,13 +63,13 @@ class TestMetaClass(unittest.TestCase):
         with self.assertRaises(AttributeError):
             instance.definition = 'blah'
 
-        # name should be a string
-        with self.assertRaises(TypeError):
-            instance.name = 1
+        # name should be a string, but it would be casted as such
+        instance.name = 1
+        self.assertIsInstance(instance.name, str)
 
-        # description should be a string
-        with self.assertRaises(TypeError):
-            instance.description = 1
+        # description should be a string and it would be casted as such
+        instance.description = 1
+        self.assertIsInstance(instance.description, str)
 
         # Since NAME and DESCRIPTION are CUBA keys
         # Make sure that their values are stored in
@@ -202,16 +202,17 @@ class TestMetaClass(unittest.TestCase):
         materials = (meta_class.Material(), meta_class.Material())
         meta_obj = meta_class.LennardJones_6_12(material=materials)
 
+        # van_der_waals has to be a float
         with self.assertRaises(TypeError):
-            # Has to be a float
-            meta_obj.van_der_waals_radius = 1
-
-        with self.assertRaises(TypeError):
-            # Cannot be None
+            # Casting None to float would raise an Error
             meta_obj.van_der_waals_radius = None
 
         # But this is fine
         meta_obj.van_der_waals_radius = 1.0
+
+        # This is fine too, integer is upcasted to float
+        meta_obj.van_der_waals_radius = 1
+        self.assertIsInstance(meta_obj.van_der_waals_radius, float)
 
         with self.assertRaises(ValueError):
             # Has to be between two materials
@@ -251,9 +252,16 @@ class TestMetaClass(unittest.TestCase):
         # This is fine
         meta_obj = meta_class.Version('1', '2', '3', '4')
 
-        # This should raise TypeError because minor/patch/... should be str
+        # minor/patch/... should be str, these can be casted
+        meta_obj = meta_class.Version(1, '2', '3', '4')
+        self.assertIsInstance(meta_obj.minor, str)
+        self.assertIsInstance(meta_obj.patch, str)
+        self.assertIsInstance(meta_obj.major, str)
+        self.assertIsInstance(meta_obj.full, str)
+
+        # But these can't be casted, raise an Error
         with self.assertRaises(TypeError):
-            meta_obj = meta_class.Version(1, '2', '3', '4')
+            meta_obj = meta_class.Version(str, str, str, str)
 
         self.check_cuds_item(meta_obj)
 
