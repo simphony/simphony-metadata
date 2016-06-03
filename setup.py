@@ -35,12 +35,10 @@ setup(
     version=VERSION,
     author='SimPhoNy, EU FP7 Project (Nr. 604005) www.simphony-project.eu',
     description='SimPhoNy Metadata',
-    install_requires=[],
-    extras_require={
-        'CUBAGen': ["click >= 3.3", "pyyaml >= 3.11", "numpy>=1.4.1"]},
+    install_requires=["click >= 3.3", "pyyaml >= 3.11", "numpy>=1.4.1"],
     packages=find_packages(),
     entry_points={
         'console_scripts': [
             ('simphony-meta-generate = '
-             'simphony_metadata.scripts.generate:cli [CUBAGen]')]},
+             'simphony_metadata.scripts.generate:cli')]},
     )
