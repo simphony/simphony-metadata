@@ -4,6 +4,7 @@ import warnings
 from collections import Sequence
 
 from mock import patch
+import numpy
 import uuid
 
 from .cuba import CUBA
@@ -325,3 +326,19 @@ class TestMetaClass(unittest.TestCase):
 
     def test_Verlet(self):
         meta_class.Verlet(physics_equation=meta_class.PhysicsEquation())
+
+    def test_assign_vector(self):
+        '''Test for assigning value to a CUBA with vector+float type'''
+        # GravityModel.acceleration is a vector of float
+        gravity_model = meta_class.GravityModel()
+
+        with self.assertRaises(ValueError):
+            # shape should be (3)
+            gravity_model.acceleration = (1.0, 2.0)
+
+        # Make sure values assigned can be obtained within
+        # numerical precision
+        expected = (1.e-10, 1.e-10, 1.e-10)
+        gravity_model.acceleration = expected
+        actual = gravity_model.acceleration
+        numpy.testing.assert_allclose(actual, expected)
