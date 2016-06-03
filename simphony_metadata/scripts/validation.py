@@ -150,23 +150,18 @@ def validate_cuba_keyword(value, key):
         keyword = KEYWORDS[keyword_name]
 
         # Check type
-        def get_type(value):
-            if isinstance(value, (list, tuple)):
-                return numpy.asarray(value).dtype
-            else:
-                return type(value)
+        value_arr = numpy.asarray(value)
 
-        if not numpy.issubdtype(get_type(value), keyword.dtype):
+        if not numpy.issubdtype(value_arr.dtype, keyword.dtype):
             message = ('value has dtype {dtype1} while {key} '
                        'needs to be a {dtype2}')
-            raise TypeError(message.format(dtype1=type(value),
+            raise TypeError(message.format(dtype1=value_arr.dtype,
                                            key=key,
                                            dtype2=keyword.dtype))
         # FIXME: STRING
         # cuba.yml gives a fix length for the shape of string
         # It actually means the maximum length of the string
         # We will skip checking validating it for now
-        value_arr = numpy.asarray(value)
         if keyword.dtype is str and value_arr.dtype.char[0] in ('S', 'U'):
             warnings.warn('Value is a string, its shape is not validated. '
                           'Please fix the cuba.yml shape syntax.')
@@ -223,9 +218,13 @@ def cast_data_type(value, key):
         new_value = numpy.asarray(value).astype(target_type,
                                                 casting='same_kind')
 
+        if isinstance(value, (list, tuple)):
+            return type(value)(new_value)
+
         if new_value.shape == ():
             return numpy.asscalar(new_value)
-        else:
-            return type(value)(new_value)
+
+        return new_value
+
     else:
         return value
