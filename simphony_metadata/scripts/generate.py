@@ -369,13 +369,17 @@ class CodeGenerator(object):
     def populate_module_variables(self):
         ''' Populate module-level variables '''
 
+        supported_parameters = self.supported_parameters
+        if not supported_parameters:
+            supported_parameters = 'CUBA'
+
         self.module_variables.append(
             transform_cuba_string(
                 '_RestrictedDataContainer = '
                 'create_data_container(\n'
                 '{indent}{supported_parameters},\n'
                 '{indent}class_name="_RestrictedDataContainer")'.format(
-                    supported_parameters=self.supported_parameters,
+                    supported_parameters=supported_parameters,
                     indent=' '*4))
         )
 
