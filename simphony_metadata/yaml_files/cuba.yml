@@ -425,3 +425,123 @@ CUBA_KEYS:
     definition: Full attribute of an entity.
     shape: [128]
     type: string
+
+  CHARGE:
+    definition: Charge
+    shape: [1]
+    type: double
+
+  CHARGE_DENSITY:
+    definition: Charge density
+    shape: []
+    type: double
+
+  DESCRIPTION:
+    definition: Description text
+    shape: [20]
+    type: string
+
+  ELECTRIC_FIELD:
+    definition: Electric field
+    shape: []
+    type: double
+
+  ELECTRON_MASS:
+    definition: Electron mass
+    shape: [1]
+    type: double
+
+  ELECTROSTATIC_FIELD:
+    definition: Electrostatic field
+    shape: []
+    type: double
+
+  ENERGY:
+    definition: Energy
+    shape: []
+    type: double
+
+  HEAT_CONDUCTIVITY:
+    definition: Heat conductivity
+    shape: [1]
+    type: double
+
+  INITIAL_VISCOSITY:
+    definition: Initial viscosity
+    shape: [1]
+    type: double
+
+  LINEAR_CONSTANT:
+    definition: Linear constant
+    shape: [1]
+    type: double
+
+  MAXIMUM_VISCOSITY:
+    definition: Maximum viscosity
+    shape: [1]
+    type: double
+
+  MINIMUM_VISCOSITY:
+    definition: Minimum viscosity
+    shape: [1]
+    type: double
+
+  MOMENTUM:
+    definition: Momentum
+    shape: []
+    type: double
+
+  MOMENT_INERTIA:
+    definition: Moment inertia
+    shape: []
+    type: double
+
+  POTENTIAL_ENERGY:
+    definition: Potential energy
+    shape: []
+    type: double
+
+  POWER_LAW_INDEX:
+    definition: Power law index
+    shape: [1]
+    type: double
+
+  RELAXATION_TIME:
+    definition: Relaxation time
+    shape: [1]
+    type: double
+
+  SURFACE_TENSION:
+    definition: Surface tension
+    shape: [1]
+    type: double
+
+  TIME:
+    definition: Time
+    shape: [1]
+    type: double
+
+  VISCOSITY:
+    definition: Viscosity
+    shape: [1]
+    type: double
+
+  COLLISION_OPERATOR:
+    definition: Collision operator of a model Boltzmann equation
+    shape: [1]
+    type: integer
+
+  REFERENCE_DENSITY:
+    definition: Reference value for density
+    shape: [1]
+    type: double
+
+  EXTERNAL_FORCING:
+    definition: Toggle for an external force
+    shape: [1]
+    type: boolean
+
+  FLOW_TYPE:
+    definition: Classification of a fluid flow type
+    shape: [1]
+    type: integer
