@@ -8,16 +8,19 @@ import numpy
 import uuid
 
 from .cuba import CUBA
+from .keywords import KEYWORDS
 
 
 # We need to patch the CUBA values before importing the meta class
 with patch('simphony.core.cuba.CUBA', CUBA),\
-         patch('simphony.core.data_container.CUBA', CUBA):
+         patch('simphony.core.data_container.CUBA', CUBA),\
+         patch('simphony.core.keywords.KEYWORDS', KEYWORDS):
     from .meta_class import api as meta_class
 
 
 @patch('simphony.core.data_container.CUBA', CUBA)
 @patch('simphony.core.cuba.CUBA', CUBA)
+@patch('simphony.core.keywords.KEYWORDS', KEYWORDS)
 class TestMetaClass(unittest.TestCase):
 
     @classmethod
