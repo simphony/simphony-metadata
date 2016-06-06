@@ -545,3 +545,23 @@ CUBA_KEYS:
     definition: Classification of a fluid flow type
     shape: [1]
     type: integer
+
+  VECTOR:
+    definition: A vector
+    shape: [1]
+    type: double
+
+  POINT:
+    definition: A point in a 3D space system
+    shape: [3]
+    type: double
+
+  FACE:
+    definition: A face
+    shape: [1]
+    type: double
+
+  THERMODYNAMIC_ENSEMBLE:
+    definition: Thermodynamic ensemble
+    shape: [1]
+    type: string

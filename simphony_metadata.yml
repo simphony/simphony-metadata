@@ -419,3 +419,28 @@ CUDS_KEYS:
   ELECTROSTATIC_MODEL:
     parent: CUBA.PHYSICS_EQUATION
     definition: Electrostatic model
+    physics_equation: [MOLECULAR_DYNAMICS]
+
+  BASIS:
+     definition: Space basis vectors
+     parent: CUBA.COMPONENT
+     CUBA.VECTOR:
+        shape: (3)
+        default: [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
+
+  ORIGIN:
+    definition: The origin of a space system
+    parent: CUDS:COMPONENT
+    CUBA.POINT:
+      default: [0 0 0]
+
+  BOX:
+    definition: A simple hexahedron box object
+    parent: CUBA.BOUNDARY
+    CUBA.BASIS:
+      default:
+        CUBA.VECTOR: [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
+      scope: CUBA.USER
+    CUBA.ORIGIN:
+    CUBA.FACE:
+    CUBA.VECTOR:
