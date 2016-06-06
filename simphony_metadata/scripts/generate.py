@@ -390,25 +390,31 @@ class CodeGenerator(object):
         directly specified in the yaml file
         '''
 
-        # Add a supported_parameters
-        self.class_variables.append(
-            transform_cuba_string(
-                'supported_parameters = {!r}'.format(
-                    self.supported_parameters)))
-
         # Add cuba_key as a class variable
         self.class_variables.append(
             'cuba_key = CUBA.{}'.format(self.original_key))
 
-        # Add parents as a class attributes
-        self.class_variables.append(
-            transform_cuba_string(
-                'parents = {!r}'.format(
-                    tuple('CUBA.{}'.format(parent)
-                          for parent in self.mro))))
+    def populate_meta_api(self):
+        ''' Populate API for interoperability '''
+
+        # Add a supported_parameters as a class method
+        self.methods.append(
+            transform_cuba_string('''
+    @classmethod
+    def supported_parameters(cls):
+        return {!r}'''.format(self.supported_parameters)))
+
+        # Add parents as a class method
+        self.methods.append(
+            transform_cuba_string('''
+    @classmethod
+    def parents(cls):
+        return {!r}'''.format(
+            tuple('CUBA.{}'.format(parent)
+                  for parent in self.mro))))
 
     def populate_user_variable_code(self):
-        """ Populate code for user-defined attributes """
+        ''' Populate code for user-defined attributes '''
 
         for key, contents in chain(self.inherited_required.items(),
                                    self.required_user_defined.items(),
@@ -867,6 +873,7 @@ class CodeGenerator(object):
         self.populate_system_code()
         self.populate_module_variables()
         self.populate_class_variables()
+        self.populate_meta_api()
 
         # Now write to the file output
         self.generate_class_import(file_out)
