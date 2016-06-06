@@ -59,3 +59,8 @@ simphony-meta-generate cuba_enum yaml_files/cuba.yml yaml_files/simphony_metadat
   ```
 simphony-meta-generate keywords yaml_files/cuba.yml $PATH_TO_KEYWORD_PY
   ```
+
+- Make generated class comply with PEP 8
+ 
+  The generated code do not automatically comply with PEP 8.  Auto formatters are available on PyPI.
+  Examples are [`yapf`](https://pypi.python.org/pypi/yapf) and [`authpep8`](https://pypi.python.org/pypi/autopep8)
