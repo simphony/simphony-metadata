@@ -144,17 +144,23 @@ class TestMetaClass(unittest.TestCase):
                 meta_obj = klass()
                 self.check_cuds_component(meta_obj)
 
+    def test_cuba_key(self):
+        ''' Test API for cuba key '''
+        for name, klass in self.no_required_args_classes:
+            meta_obj = klass()
+            self.assertIsInstance(meta_obj.cuba_key, CUBA)
+
     def test_parents(self):
         ''' Test API for parents '''
         for name, klass in self.no_required_args_classes:
             meta_obj = klass()
-            self.assertIsInstance(meta_obj.parents, Sequence)
+            self.assertIsInstance(meta_obj.parents(), Sequence)
 
     def test_supported_parameters(self):
         ''' Test API for supported_parameters '''
         for name, klass in self.no_required_args_classes:
             meta_obj = klass()
-            self.assertIsInstance(meta_obj.supported_parameters, Sequence)
+            self.assertIsInstance(meta_obj.supported_parameters(), Sequence)
 
     def test_Cfd(self):
         ''' Test for Cfd '''
