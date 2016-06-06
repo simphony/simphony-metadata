@@ -366,6 +366,10 @@ class CodeGenerator(object):
                 'self._{0} = {1}'.format(
                     key, transform_cuba_string(repr(default)))])
 
+            # String default values maybe too long to fulfil PEP8
+            if isinstance(default, str):
+                self.init_body[-1] += '  # noqa'
+
     def populate_module_variables(self):
         ''' Populate module-level variables '''
 
@@ -793,7 +797,7 @@ class CodeGenerator(object):
         definition = self.class_data.get('definition', 'Missing definition')
 
         print('''
-    \'\'\'{DOC_DESCRIPTION}
+    \'\'\'{DOC_DESCRIPTION}  # noqa
     \'\'\''''.format(DOC_DESCRIPTION=definition), file=file_out)
 
     def generate_class_attributes_docstring(self, file_out):
