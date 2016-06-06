@@ -351,3 +351,9 @@ class TestMetaClass(unittest.TestCase):
         gravity_model.acceleration = expected
         actual = gravity_model.acceleration
         numpy.testing.assert_allclose(actual, expected)
+
+    def test_assign_data_with_unsupported_parameters(self):
+        ''' Test for assigning unsupported CUBA keys to data '''
+
+        with self.assertRaises(ValueError):
+            meta_class.Material(data={CUBA.SIZE: 1})

@@ -643,8 +643,7 @@ class CodeGenerator(object):
             message = "provided value for DATA is currently ignored. given: {}"
             warnings.warn(message.format(contents))
 
-        self.imports.extend([IMPORT_PATHS['create_data_container'],
-                             IMPORT_PATHS['DataContainer']])
+        self.imports.append(IMPORT_PATHS['create_data_container'])
 
         self.init_body.append('''if data:
             self.data = data''')
@@ -660,18 +659,18 @@ class CodeGenerator(object):
         else:
             # One more check in case the
             # property setter is by-passed
-            if not isinstance(data_container, DataContainer):
-                raise TypeError("Stored data is not a DataContainer. "
+            if not isinstance(data_container, _RestrictedDataContainer):
+                raise TypeError("data is not a RestrictedDataContainer. "
                                 "data.setter is by-passed.")
             return data_container''')
 
         self.methods.append('''
     @data.setter
     def data(self, new_data):
-        if isinstance(new_data, DataContainer):
+        if isinstance(new_data, _RestrictedDataContainer):
             self._data = new_data
         else:
-            self._data = DataContainer(new_data)''')
+            self._data = _RestrictedDataContainer(new_data)''')
 
     def collect_parents_to_mro(self, generators):
         ''' Recursively collect all the inherited into CodeGenerator.mro
