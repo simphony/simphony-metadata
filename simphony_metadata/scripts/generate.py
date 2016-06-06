@@ -409,9 +409,8 @@ class CodeGenerator(object):
             transform_cuba_string('''
     @classmethod
     def parents(cls):
-        return {!r}'''.format(
-            tuple('CUBA.{}'.format(parent)
-                  for parent in self.mro))))
+        return {!r}'''.format(tuple('CUBA.{}'.format(parent)
+                                    for parent in self.mro))))
 
     def populate_user_variable_code(self):
         ''' Populate code for user-defined attributes '''
