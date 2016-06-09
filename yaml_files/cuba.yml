@@ -557,7 +557,7 @@ CUBA_KEYS:
     type: double
 
   FACE:
-    definition: A face
+    definition: A face of a three dimensional object defined by the nodes
     shape: [1]
     type: double
 

@@ -430,7 +430,7 @@ CUDS_KEYS:
 
   ORIGIN:
     definition: The origin of a space system
-    parent: CUDS:COMPONENT
+    parent: CUDS.COMPONENT
     CUBA.POINT:
       default: [0 0 0]
 
