@@ -1,7 +1,5 @@
 # simphony-metadata
-.. image:: https://travis-ci.org/simphony/simphony-metadata.svg?branch=master
-   :target: https://travis-ci.org/simphony/simphony-metadata
-   :alt: Build status
+[!["Build status"](https://travis-ci.org/simphony/simphony-metadata.svg?branch=master)](https://travis-ci.org/simphony/simphony-metadata)
 
 This repository contains the metadata schema defnition of the SimPhoNy project  casted in YAML Syntax.
 
