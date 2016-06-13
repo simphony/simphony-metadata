@@ -417,20 +417,20 @@ CUDS_KEYS:
     definition: Multiphase model
 
   ELECTROSTATIC_MODEL:
-    parent: CUBA.PHYSICS_EQUATION
     definition: Electrostatic model
-    physics_equation: [MOLECULAR_DYNAMICS]
+    parent: CUBA.PHYSICS_EQUATION
+    CUBA.PHYSICS_EQUATION: [MOLECULAR_DYNAMICS]
 
   BASIS:
      definition: Space basis vectors
-     parent: CUBA.COMPONENT
+     parent: CUBA.CUDS_COMPONENT
      CUBA.VECTOR:
         shape: (3)
         default: [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
 
   ORIGIN:
     definition: The origin of a space system
-    parent: CUDS.COMPONENT
+    parent: CUBA.CUDS_COMPONENT
     CUBA.POINT:
       default: [0 0 0]
 
