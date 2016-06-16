@@ -194,12 +194,7 @@ class TestMetaClass(unittest.TestCase):
 
     def test_ComputationalMethod(self):
         ''' Test for ComputationalMethod '''
-        physics_equation = meta_class.PhysicsEquation()
-        meta_obj = meta_class.ComputationalMethod(physics_equation)
-
-        # Test setting the attribute on init
-        self.assertEqual(meta_obj.physics_equation, physics_equation)
-
+        meta_obj = meta_class.ComputationalMethod()
         self.assertEqual(meta_obj.definition,
                          'A computational method according to the RoMM')  # noqa
 
@@ -231,20 +226,6 @@ class TestMetaClass(unittest.TestCase):
         with self.assertRaises(TypeError):
             # The items of the sequence are not instance of Material
             meta_obj.material = [1, 2]
-
-    def test_Dem(self):
-        ''' Test for Dem '''
-        # These are all physical equations, therefore valid arguments for DEM
-        physics_equations = tuple(
-            klass()
-            for _, klass in self.no_required_args_classes
-            if issubclass(klass, meta_class.PhysicsEquation))
-
-        for physics_equation in physics_equations:
-            meta_obj = meta_class.Dem(physics_equation)
-
-        self.check_cuds_item(meta_obj)
-        self.check_cuds_component(meta_obj)
 
     def test_EmptyBoundaryCondition(self):
         ''' Test for EmptyBoundaryCondition '''
@@ -299,12 +280,6 @@ class TestMetaClass(unittest.TestCase):
         meta_class.DissipationForce(
             material=(meta_class.Material(), meta_class.Material()))
 
-    def test_Fem(self):
-        meta_class.Fem(physics_equation=meta_class.PhysicsEquation())
-
-    def test_Fvm(self):
-        meta_class.Fvm(physics_equation=meta_class.PhysicsEquation())
-
     def test_InteratomicPotential(self):
         meta_class.InteratomicPotential(
             material=(meta_class.Material(), meta_class.Material()))
@@ -326,15 +301,9 @@ class TestMetaClass(unittest.TestCase):
         meta_class.SjkrCohesionForce(
             material=(meta_class.Material(), meta_class.Material()))
 
-    def test_Sph(self):
-        meta_class.Sph(physics_equation=meta_class.PhysicsEquation())
-
     def test_SurfaceTensionRelation(self):
         meta_class.SurfaceTensionRelation(
             material=(meta_class.Material(), meta_class.Material()))
-
-    def test_Verlet(self):
-        meta_class.Verlet(physics_equation=meta_class.PhysicsEquation())
 
     def test_assign_vector(self):
         '''Test for assigning value to a CUBA with vector+float type'''

@@ -25,12 +25,9 @@ IMPORT_PATHS = {
     'validation': 'from . import validation'
     }
 
-# These are keys that are read-only
-# (see wiki page on simphony metadata schema)
-READ_ONLY_KEYS = ('definition', 'models', 'variables', 'uuid')
-
 # Excludes these keys in the `supported_parameters` property
-EXCLUDE_SUPPORTED_PARAMETERS = READ_ONLY_KEYS + ('data',)
+# FIXME: These are excluded because they are not defined CUBA keys
+EXCLUDE_SUPPORTED_PARAMETERS = ('definition', 'models', 'variables', 'data',)
 
 # validation.py for validation codes
 VALIDATION_PY_PATH = os.path.splitext(validation.__file__)[0]+'.py'
@@ -105,20 +102,20 @@ def is_system_managed(key, contents):
     ''' Return True is `key` is a system-managed attribute
 
     Criteria:
-    (1) It is defined in `READ_ONLY_KEYS`  OR
+    (1) the key does not start with "CUBA."
     (2) contents['scope'] is CUBA.SYSTEM
 
     Parameters
     ----------
     key : str
     '''
-    # If attribute is read-only, it is system-defined
-    if key.replace('CUBA.', '').lower() in READ_ONLY_KEYS:
-        return True
+    if isinstance(contents, dict):
+        if contents.get('scope') == 'CUBA.SYSTEM':
+            return True
+        if contents.get('scope') == 'CUBA.USER':
+            return False
 
-    # If the scope of the attribute is 'CUBA.SYSTEM', it is
-    # also system-defined
-    if isinstance(contents, dict) and contents.get('scope') == 'CUBA.SYSTEM':
+    if not key.upper().startswith('CUBA.'):
         return True
 
     return False
@@ -289,10 +286,10 @@ class CodeGenerator(object):
         # Flag for whether the MRO is completed
         self.mro_completed = False
 
-        for key, contents in class_data.items():
-            key = key.lower().replace('cuba.', '')
+        for original_key, contents in class_data.items():
+            key = original_key.lower().replace('cuba.', '')
 
-            if is_system_managed(key, contents):
+            if is_system_managed(original_key, contents):
                 self.system_variables[key] = contents
 
             elif isinstance(contents, dict) and 'default' in contents:
@@ -319,15 +316,15 @@ class CodeGenerator(object):
     @property
     def supported_parameters(self):
         ''' Return a tuple of supported CUBA IntEnum
-
-        Supported parameters are the attributes defined as
-        CUBA.* in the metadata yaml file, excluding the ones
-        specified in `EXCLUDE_SUPPORTED_PARAMETERS`
         '''
+        # We loop over `self.all_attributes` which include
+        # inherited attributes.  These attributes are lower-case
+        # without 'CUBA.' in front.  If they are in the yaml-file,
+        # They are not CUBA attributes and therefore not supported
+        # parameter
         def get_cuba_attribute():
             for attr in self.all_attributes:
-                if (attr not in self.class_data and
-                        attr not in EXCLUDE_SUPPORTED_PARAMETERS):
+                if attr not in EXCLUDE_SUPPORTED_PARAMETERS:
                     yield 'CUBA.'+attr.upper()
 
         return tuple(attr for attr in get_cuba_attribute())
@@ -346,17 +343,12 @@ class CodeGenerator(object):
             # Populates self.methods with getter
             self.populate_getter(key)
 
-            if isinstance(contents, dict) and key not in READ_ONLY_KEYS:
-                # Populate self.methods with setter
-                self.populate_setter_with_validation(key, contents)
-
-            # As most system-managed attributes are defined by
-            # `scope : CUBA.SYSTEM` and `contents` should be a
-            # dict most of the time.  But keys in `READ_ONLY`
-            # are read-only because we hold it so, not because
-            # we could tell from the yaml file, then the content
-            # might not be a dict
-            default = None if isinstance(contents, dict) else contents
+            # For CUBA attributes that are read-only, `content`
+            # should be a dict.
+            if isinstance(contents, dict):
+                default = contents.get('default')
+            else:
+                default = contents
 
             # We will defined private variable so that the system
             # can modify it but the user is not supposed to
@@ -638,9 +630,10 @@ class CodeGenerator(object):
         contents : dict
             meta data for the attribute `data` (not currently used)
         """
-        if contents:
+        if isinstance(contents, dict) and contents.get('default'):
             # FIXME: contents is not being used, what should we expect there?
-            message = "provided value for DATA is currently ignored. given: {}"
+            message = ("provided default value for DATA is currently ignored. "
+                       "Given: {}")
             warnings.warn(message.format(contents))
 
         self.imports.append(IMPORT_PATHS['create_data_container'])
