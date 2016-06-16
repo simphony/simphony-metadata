@@ -18,6 +18,7 @@ CUDS_KEYS:
       scope: CUBA.SYSTEM
     data:
       default:
+      scope: CUBA.USER
 
   CUDS_COMPONENT:
     definition: Base data type for the CUDS components
@@ -377,32 +378,32 @@ CUDS_KEYS:
   COMPUTATIONAL_METHOD:
     parent: CUBA.CUDS_COMPONENT
     definition: A computational method according to the RoMM
-    CUBA.PHYSICS_EQUATION: []
+    physics_equation: []
 
   DEM:
     parent: CUBA.COMPUTATIONAL_METHOD
     definition: Discrete element method
-    CUBA.PHYSICS_EQUATION: [GRANULAR_DYNAMICS]
+    physics_equation: [CUBA.GRANULAR_DYNAMICS]
 
   FVM:
     parent: CUBA.COMPUTATIONAL_METHOD
     definition: Finite volume method
-    CUBA.PHYSICS_EQUATION: [CFD]
+    physics_equation: [CUBA.CFD]
 
   FEM:
     parent: CUBA.COMPUTATIONAL_METHOD
     definition: Finite element method
-    CUBA.PHYSICS_EQUATION: [CFD]
+    physics_equation: [CUBA.CFD]
 
   SPH:
     parent: CUBA.COMPUTATIONAL_METHOD
     definition: Smooth particle hydrodynamics
-    CUBA.PHYSICS_EQUATION: [CFD]
+    physics_equation: [CUBA.CFD]
 
   VERLET:
     parent: CUBA.COMPUTATIONAL_METHOD
     definition: Newtonian dynamics integration using verlet algorithm
-    CUBA.PHYSICS_EQUATION: [MOLECULAR_DYNAMICS]
+    physics_equation: [CUBA.MOLECULAR_DYNAMICS]
 
   COMPRESSIBILITY_MODEL:
     parent: CUBA.PHYSICS_EQUATION
