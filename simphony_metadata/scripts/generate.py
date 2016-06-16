@@ -102,7 +102,7 @@ def is_system_managed(key, contents):
     ''' Return True is `key` is a system-managed attribute
 
     Criteria:
-    (1) the key does not start with "CUBA."
+    (1) the key does not start with "CUBA." OR
     (2) contents['scope'] is CUBA.SYSTEM
 
     Parameters
