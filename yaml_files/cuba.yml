@@ -577,7 +577,7 @@ CUBA_KEYS:
     type: string
 
   STL_MODE:
-    definition: STL cutting process mode: normal or negative cutting
+    definition: STL cutting process mode. Normal or negative cutting
     shape: [1]
     type: integer
 
