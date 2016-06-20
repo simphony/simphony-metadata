@@ -564,12 +564,12 @@ CUBA_KEYS:
   SHAPE_ORIENTATION_1:
     definition: Real space orientation of a component. Shape-center system reference set to global cartesian system reference.
     shape: [1, 3]
-    type: integer, double
+    type: double
 
   SHAPE_ORIENTATION_2:
     definition: Real space orientation of a component. Shape-center system reference set to global cartesian system reference.
     shape: [1, 3]
-    type: integer, double
+    type: double
 
   FILE_STL:
     definition: Absolute path of a STL file
