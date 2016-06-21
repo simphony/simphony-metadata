@@ -439,9 +439,15 @@ CUDS_KEYS:
   BOX:
     definition: A simple hexahedron box object
     parent: CUBA.BOUNDARY
+    CUBA.VECTOR:
+      default: [0, 0, 0]
+      scope: CUBA.USER
+    CUBA.FACE:
+      default: 0
+      scope: CUBA.USER
     CUBA.BASIS:
-      default : [[1, 0, 0], [0, 1, 0], [0, 0,1]]
+      default: CUBA.BASIS
       scope: CUBA.USER
     CUBA.ORIGIN:
-    CUBA.FACE:
-    CUBA.VECTOR:
+      default: CUBA.ORIGIN
+      scope: CUBA.USER
