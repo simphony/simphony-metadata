@@ -547,8 +547,8 @@ CUBA_KEYS:
     type: integer
 
   VECTOR:
-    definition: A vector
-    shape: [1]
+    definition: A vector in 3D geometric space
+    shape: [3]
     type: double
 
   POINT:
