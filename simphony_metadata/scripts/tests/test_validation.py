@@ -5,13 +5,14 @@ from mock import patch
 
 from .cuba import CUBA
 from .keywords import KEYWORDS
-from .meta_class.validation import (decode_shape,
-                                    check_shape,
-                                    validate_cuba_keyword)
+
 with patch('simphony.core.cuba.CUBA', CUBA),\
-     patch('simphony.core.data_container.CUBA', CUBA),\
-     patch('simphony.core.keywords.KEYWORDS', KEYWORDS):
-        from .meta_class import api
+         patch('simphony.core.data_container.CUBA', CUBA),\
+         patch('simphony.core.keywords.KEYWORDS', KEYWORDS):
+    from .meta_class import api
+    from .meta_class.validation import (decode_shape,
+                                        check_shape,
+                                        validate_cuba_keyword)
 
 
 @patch('simphony.core.data_container.CUBA', CUBA)
