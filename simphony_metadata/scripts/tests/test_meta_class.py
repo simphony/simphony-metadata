@@ -339,9 +339,5 @@ class TestMetaClass(unittest.TestCase):
 
     def test_Box(self):
         box = meta_class.Box()
-        self.assertEqual(box.vector, [0, 0, 0])
-        self.assertEqual(box.face, 0)
-        arr = box.basis.vector == numpy.array(meta_class.Basis().vector)
+        arr = box.vector == numpy.array([[0, 0, 0], [0, 0, 0], [0, 0, 0]])
         self.assertTrue(arr.all())
-        self.assertEqual(box.origin.point, [0, 0, 0])
-        self.assertEqual(box.origin.point, meta_class.Origin().point)
