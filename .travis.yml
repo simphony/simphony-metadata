@@ -25,7 +25,7 @@ install:
 - simphony-meta-generate keywords yaml_files/cuba.yml simphony_metadata/scripts/tests/keywords.py
 - simphony-meta-generate cuba_enum yaml_files/cuba.yml yaml_files/simphony_metadata.yml simphony_metadata/scripts/tests/cuba.py
 script:
-- coverage run -m unittest discover -p test*
+- coverage run -m unittest discover -v -p test*
 after_success:
 - pip install codecov
 - codecov

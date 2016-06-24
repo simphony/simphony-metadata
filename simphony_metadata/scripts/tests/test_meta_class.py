@@ -326,3 +326,18 @@ class TestMetaClass(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             meta_class.Material(data={CUBA.SIZE: 1})
+
+    def test_Basis(self):
+        basis = meta_class.Basis()
+        arr = basis.vector == numpy.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
+        self.assertTrue(arr.all())
+
+    def test_Origin(self):
+        origin = meta_class.Origin()
+        arr = origin.point == numpy.array([0, 0, 0])
+        self.assertTrue(arr.all())
+
+    def test_Box(self):
+        box = meta_class.Box()
+        arr = box.vector == numpy.array([[0, 0, 0], [0, 0, 0], [0, 0, 0]])
+        self.assertTrue(arr.all())
