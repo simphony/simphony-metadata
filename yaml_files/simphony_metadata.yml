@@ -74,6 +74,8 @@ CUDS_KEYS:
   BOUNDARY:
     definition: System boundary
     parent: CUBA.CUDS_COMPONENT
+    CUBA.CONDITION:
+      shape (:)
 
   CONDITION:
     definition: Condition on boundaries or model entities
@@ -263,7 +265,7 @@ CUDS_KEYS:
     CUBA.MATERIAL:
       shape: (2)
 
-  DIRICHLET_BOUNDARY_CONDITION:
+  DIRICHLET:
     definition: Dirichlet boundary condition
     parent: CUBA.CONDITION
     models: [CUBA.CONTINUUM]
@@ -272,7 +274,7 @@ CUDS_KEYS:
     CUBA.MATERIAL:
       shape: (:)
 
-  NEUMANN_BOUNDARY_CONDITION:
+  NEUMANN:
     definition: Neumann boundary condition
     parent: CUBA.CONDITION
     models: [CUBA.CONTINUUM]
@@ -281,7 +283,7 @@ CUDS_KEYS:
     CUBA.MATERIAL:
       shape: (:)
 
-  EMPTY_BOUNDARY_CONDITION:
+  EMPTY:
     parent: CUBA.CONDITION
     definition: Empty boundary condition
     models: [CUBA.CONTINUUM]
@@ -289,6 +291,16 @@ CUDS_KEYS:
       shape: (:)
     CUBA.MATERIAL:
       shape: (:)
+
+  FREE:
+    parent: CUBA.CONDITION
+    definition: Free boundary condition
+    models: [CUBA.ELECTROIC, CUBA.ATOMISTIC, CUBA.MESOSCOPIC, CUBA.CONTINUUM]
+
+  PERIODIC:
+    parent: CUBA.CONDITION
+    definition: Periodic boundary condition (PBC)
+    models: [CUBA.CONTINUUM]
 
   INTERATOMIC_POTENTIAL:
     definition: Interatomic Potentials Category
@@ -437,9 +449,11 @@ CUDS_KEYS:
       scope: CUBA.USER
 
   BOX:
-    definition: A simple hexahedron box object
+    definition: A simple hexahedron (with six faces) simulation box defined by the three vectors and three directions. The condition should be specified for each direction (two faces at a time).   
     parent: CUBA.BOUNDARY
     CUBA.VECTOR:
-      shape: (3, 3)
+      shape: (3,3)
       default: [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
       scope: CUBA.USER
+    CUBA.CONDITION:
+      shape: (3) 
