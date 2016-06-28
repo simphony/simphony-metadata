@@ -108,6 +108,41 @@ CUDS_KEYS:
     models: [CUBA.ATOMISTIC]
     variables: [CUBA.POSITION, CUBA.FORCE]
 
+ THERMOSTAT: 
+    definition: A thermostat is a model that describes the thermal interaction of a material with the environment or a heat reservoir
+    parent: CUBA.MATERIAL_RELATION
+    models: [CUBA.ATOMISTIC, CUBA.MESOSCOPIC]
+
+  NOSE_HOOVER: 
+    definition: The Nose-Hoover thermostat: add an extra term to the equation of motion to model the interaction with a heat bath. The coupling time specifies how rapidly the temperature should be coupled to the bath. 
+    parent: CUBA.THERMOSTAT
+    models: [CUBA.ATOMISTIC, CUBA.MESOSCOPIC]
+    CUBA.TEMPERATURE:
+      shape: (2)
+      default: (0.0, 0.0)
+    CUBA.COUPLING_TIME:
+      default: 1.0
+
+  BERENDSEN: 
+    definition: The Berendsen thermostat model for temperature rescaling of all particles each time step. The coupling time specifies how rapidly the temperature should be relaxed or coupled to the bath. 
+    parent: CUBA.THERMOSTAT
+    models: [CUBA.ATOMISTIC, CUBA.MESOSCOPIC]
+    CUBA.TEMPERATURE:
+      shape: (2)
+      default: (0.0, 0.0)
+    CUBA.COUPLING_TIME:
+      default: 0.0001
+    
+  TEMPERATURE_RESCALING:
+    definition: A simple temperature rescaling thermostat. The coupling time specifies how offen the temperature should be relaxed or coupled to the bath.  
+    parent: CUBA.THERMOSTAT
+    models: [CUBA.ATOMISTIC, CUBA.MESOSCOPIC]
+    CUBA.TEMPERATURE:
+      shape: (2)
+      default: (0.0, 0.0)
+    CUBA.COUPLING_TIME:
+      default: 0.000001
+    
   GRANULAR_DYNAMICS:
     definition: Granular dynamics of spherical particles using DEM
     parent: CUBA.PHYSICS_EQUATION
@@ -269,7 +304,7 @@ CUDS_KEYS:
     definition: Dirichlet boundary condition
     parent: CUBA.CONDITION
     models: [CUBA.CONTINUUM]
-    variables:
+    CUBA.VARIABLES:
       shape: (:)
     CUBA.MATERIAL:
       shape: (:)
@@ -300,7 +335,7 @@ CUDS_KEYS:
   PERIODIC:
     parent: CUBA.CONDITION
     definition: Periodic boundary condition (PBC)
-    models: [CUBA.CONTINUUM]
+    models: [CUBA.ELECTROIC, CUBA.ATOMISTIC, CUBA.MESOSCOPIC, CUBA.CONTINUUM]
 
   INTERATOMIC_POTENTIAL:
     definition: Interatomic Potentials Category
