@@ -87,7 +87,6 @@ def check_shape(value, shape):
         if the `value` does not comply with the required `shape`
     """
     decoded_shape = decode_shape(shape)
-
     if len(decoded_shape) == 0:
         # Any shape is allowed
         return
@@ -146,7 +145,11 @@ def validate_cuba_keyword(value, key):
     # Keyword name in KEYWORDS
     keyword_name = key.upper()
 
-    if keyword_name in KEYWORDS:
+    if api_class:
+        if not isinstance(value, api_class):
+            message = '{0!r} is not an instance of {1}'
+            raise TypeError(message.format(value, api_class))
+    elif keyword_name in KEYWORDS:
         keyword = KEYWORDS[keyword_name]
 
         # Check type
@@ -171,11 +174,6 @@ def validate_cuba_keyword(value, key):
         # to our shape syntax
         shape = '({})'.format(str(keyword.shape).strip('[]'))
         check_shape(value, shape)
-
-    elif api_class:
-        if not isinstance(value, api_class):
-            message = '{0!r} is not an instance of {1}'
-            raise TypeError(message.format(value, api_class))
     else:
         message = '{} is not defined in CUBA keyword or meta data'
         warnings.warn(message.format(key.upper()))

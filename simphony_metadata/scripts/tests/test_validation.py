@@ -96,6 +96,9 @@ class TestValidation(unittest.TestCase):
             else:
                 msg = ('Error is not raised for {cuba}: {value}'
                        '{cuba} should be a {type} with shape {shape}')
+                key = cuba_name
+                if key.startswith('CUBA.') or key.startswith('czba.'):
+                    key = cuba_name[5:]
                 self.fail(msg.format(cuba=cuba_name, value=value,
-                                     type=KEYWORDS[cuba_name.upper()].dtype,
-                                     shape=KEYWORDS[cuba_name.upper()].dtype))
+                                     type=KEYWORDS[key.upper()].dtype,
+                                     shape=KEYWORDS[key.upper()].dtype))
