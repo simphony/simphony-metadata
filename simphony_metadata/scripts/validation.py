@@ -211,6 +211,11 @@ def cast_data_type(value, key):
     if keyword_name in KEYWORDS:
         target_type = KEYWORDS[keyword_name].dtype
 
+        # Check if target is cuds instance
+        if not target_type:
+            # No casting for CUDS instances
+            return value
+
         # If safe casting is not possible,
         # this will raise a ValueError/TypeError
         new_value = numpy.asarray(value).astype(target_type,

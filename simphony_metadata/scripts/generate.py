@@ -12,8 +12,6 @@ from itertools import chain, count
 import click
 import yaml
 
-from . import validation
-
 # May be 'simphony.meta', we can make this as a command-line attribute
 PATH_TO_CLASSES = ''
 
@@ -29,8 +27,8 @@ IMPORT_PATHS = {
 # FIXME: These are excluded because they are not defined CUBA keys
 EXCLUDE_SUPPORTED_PARAMETERS = ('definition', 'models', 'variables', 'data',)
 
-# validation.py for validation codes
-VALIDATION_PY_PATH = os.path.splitext(validation.__file__)[0]+'.py'
+# validation.py for validation codes.
+VALIDATION_PY_PATH = 'simphony_metadata/scripts/validation.py'
 
 # keywords that are excludes from DataContainers
 CUBA_DATA_CONTAINER_EXCLUDE = ['Id', 'Position']
@@ -1043,7 +1041,6 @@ def keywords(cuba_input, cuds_input, output):
         '# cuba.yml VERSION: {}\n'.format(keywords['VERSION']),
         '# simphony_metadata.yml VERSION: {}\n'.format(metadata['VERSION']),
         'from collections import namedtuple\n',
-        'from simphony.cuds.meta import api as cuds\n',
         '\n',
         'import numpy\n',
         'import uuid  # noqa\n',
@@ -1075,7 +1072,7 @@ def keywords(cuba_input, cuds_input, output):
         lines.extend(template.format(**content))
 
     for keyword, content in metadata['CUDS_KEYS'].items():
-        content['type'] = "cuds." + to_camel_case(keyword)
+        content['type'] = "None"
         content['name'] = to_camel_case(keyword)
         content['key'] = keyword
         content['shape'] = None

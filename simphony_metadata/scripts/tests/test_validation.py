@@ -6,9 +6,9 @@ from mock import patch
 from .cuba import CUBA
 from .keywords import KEYWORDS
 
-with patch('simphony.core.cuba.CUBA', CUBA),\
-         patch('simphony.core.data_container.CUBA', CUBA),\
-         patch('simphony.core.keywords.KEYWORDS', KEYWORDS):
+with patch('simphony.core.keywords.KEYWORDS', KEYWORDS,
+           patch('simphony.core.cuba.CUBA', CUBA),
+           patch('simphony.core.data_container.CUBA', CUBA)):
     from .meta_class import api
     from .meta_class.validation import (decode_shape,
                                         check_shape,
@@ -17,6 +17,7 @@ with patch('simphony.core.cuba.CUBA', CUBA),\
 
 @patch('simphony.core.data_container.CUBA', CUBA)
 @patch('simphony.core.cuba.CUBA', CUBA)
+@patch('simphony.core.keywords.KEYWORDS', KEYWORDS)
 class TestValidation(unittest.TestCase):
 
     def test_decode_shape(self):

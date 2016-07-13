@@ -7,12 +7,8 @@ from mock import patch
 import numpy
 import uuid
 
-# We need to patch simphony meta import path.
-from . import meta_class
-
-with patch('simphony.cuds.meta', meta_class):
-    from .cuba import CUBA
-    from .keywords import KEYWORDS
+from .cuba import CUBA
+from .keywords import KEYWORDS
 
 # We need to patch the CUBA values before importing the meta class
 with patch('simphony.core.cuba.CUBA', CUBA),\
