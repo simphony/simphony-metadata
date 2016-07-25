@@ -956,8 +956,8 @@ def meta_class(yaml_file, out_path, overwrite):
 
             # Print to the api.py
             with open(os.path.join(temp_dir, "api.py"), 'ab') as api_file:
-                print('from .{} import {}'.format(key.lower(),
-                                                  to_camel_case(key)),
+                print('from .{} import {}   # noqa'.format(key.lower(),
+                                                           to_camel_case(key)),
                       sep='\n', file=api_file)
 
         # Create an empty __init__.py
