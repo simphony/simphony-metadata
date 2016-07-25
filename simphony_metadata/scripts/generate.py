@@ -5,7 +5,7 @@ import re
 import shutil
 import tempfile
 import warnings
-from collections import OrderedDict
+from collections import OrderedDict, MutableSequence
 from contextlib import contextmanager
 from itertools import chain, count
 
@@ -429,10 +429,12 @@ class CodeGenerator(object):
                 # of the corresponding meta class
                 self.populate_init_body_with_cuba_default(key,
                                                           contents['default'])
-            elif default == []:
+            elif isinstance(default, MutableSequence):
                 # The __init__ signature will replace the default with None
                 self.init_body.extend(('if {key} is None:'.format(key=key),
-                                       '    self.{key} = []'.format(key=key)))
+                                       '    self.{key} = {default!r}'.format(
+                                           key=key,
+                                           default=default)))
             else:
                 # __init__ body
                 self.init_body.append('self.{key} = {key}'.format(key=key))
@@ -832,8 +834,8 @@ class CodeGenerator(object):
             default = content['default']
             if isinstance(default, str) and default.startswith('CUBA.'):
                 kwargs.append('{key}=None'.format(key=key))
-            elif default == []:
-                # Should not use empty list in the signature
+            elif isinstance(default, MutableSequence):
+                # Should not use mutable in the signature
                 kwargs.append('{key}=None'.format(key=key))
             else:
                 kwargs.append('{key}={value}'.format(key=key, value=default))
