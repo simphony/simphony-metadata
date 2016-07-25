@@ -5,6 +5,7 @@ import re
 import shutil
 import tempfile
 import warnings
+import validation
 from collections import OrderedDict, MutableSequence
 from contextlib import contextmanager
 from itertools import chain, count
@@ -28,7 +29,7 @@ IMPORT_PATHS = {
 EXCLUDE_SUPPORTED_PARAMETERS = ('definition', 'models', 'variables', 'data',)
 
 # validation.py for validation codes.
-VALIDATION_PY_PATH = 'simphony_metadata/scripts/validation.py'
+VALIDATION_PY_PATH = os.path.splitext(validation.__file__)[0]+'.py'
 
 # keywords that are excludes from DataContainers
 CUBA_DATA_CONTAINER_EXCLUDE = ['Id', 'Position']
