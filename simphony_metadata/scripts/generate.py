@@ -5,13 +5,15 @@ import re
 import shutil
 import tempfile
 import warnings
-import validation
+
 from collections import OrderedDict, MutableSequence
 from contextlib import contextmanager
 from itertools import chain, count
 
 import click
 import yaml
+
+from . import validation
 
 # May be 'simphony.meta', we can make this as a command-line attribute
 PATH_TO_CLASSES = ''
