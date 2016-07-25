@@ -340,3 +340,9 @@ class TestMetaClass(unittest.TestCase):
         box = meta_class.Box()
         arr = box.vector == numpy.array([[0, 0, 0], [0, 0, 0], [0, 0, 0]])
         self.assertTrue(arr.all())
+
+    def test_not_sharing_mutable(self):
+        box1 = meta_class.Box()
+        box2 = meta_class.Box()
+        box1.vector[0][0] = 1.
+        self.assertNotEqual(box1.vector[0][0], box2.vector[0][0])
