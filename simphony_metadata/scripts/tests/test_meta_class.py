@@ -10,7 +10,6 @@ import uuid
 from .cuba import CUBA
 from .keywords import KEYWORDS
 
-
 # We need to patch the CUBA values before importing the meta class
 with patch('simphony.core.cuba.CUBA', CUBA),\
          patch('simphony.core.data_container.CUBA', CUBA),\
