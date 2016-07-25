@@ -99,7 +99,7 @@ class TestValidation(unittest.TestCase):
                        '{cuba} should be a {type} with shape {shape}')
                 key = cuba_name.upper()
                 if key.startswith('CUBA.'):
-                    key = cuba_name[5:]
+                    key = key[5:]
                 self.fail(msg.format(cuba=cuba_name, value=value,
                                      type=KEYWORDS[key].dtype,
                                      shape=KEYWORDS[key].dtype))
