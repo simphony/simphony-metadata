@@ -5,4 +5,4 @@ flake8
 numpy >= 1.4.1
 enum34 >= 1.0.4
 simphony
-mock
+mock >= 2.0.0

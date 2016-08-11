@@ -536,6 +536,26 @@ CUBA_KEYS:
     shape: [1]
     type: integer
 
+  VECTOR:
+    definition: A vector in 3D geometric space
+    shape: [3]
+    type: double
+
+  POINT:
+    definition: A point in a 3D space system
+    shape: [3]
+    type: double
+
+  FACE:
+    definition: A face of a three dimensional object defined by the nodes
+    shape: [1]
+    type: double
+
+  THERMODYNAMIC_ENSEMBLE:
+    definition: Thermodynamic ensemble
+    shape: [1]
+    type: string
+
   LATTICE_UC_ABC:
     definition: Lattice translation vectors lengths (a, b, c) of an atomic unit cell
     shape: [3]
@@ -590,3 +610,4 @@ CUBA_KEYS:
     definition: Padding width in -X, +X, -Y, +Y, -Z and +Z directions for components with STL shape
     shape: [6]
     type: double
+
