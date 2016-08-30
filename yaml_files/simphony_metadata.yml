@@ -89,8 +89,6 @@ CUDS_KEYS:
   SOLVER_PARAMETER:
     definition: Solver parameter and metadata
     parent: CUBA.CUDS_COMPONENT
-    CUBA.COMPUTATIONAL_METHOD: 
-      default: CUBA.NONE
 
   KS_DFT:
     parent: CUBA.PHYSICS_EQUATION
