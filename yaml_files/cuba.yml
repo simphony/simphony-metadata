@@ -585,4 +585,4 @@ CUBA_KEYS:
   NONE:
     definition: a general none value
     shape: []
-    type: CUBA.NONE
+    type: integer
