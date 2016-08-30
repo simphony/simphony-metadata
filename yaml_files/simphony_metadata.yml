@@ -89,6 +89,8 @@ CUDS_KEYS:
   SOLVER_PARAMETER:
     definition: Solver parameter and metadata
     parent: CUBA.CUDS_COMPONENT
+    CUBA.COMPUTATIONAL_METHOD: 
+      default: CUBA.NONE
 
   KS_DFT:
     parent: CUBA.PHYSICS_EQUATION
@@ -427,6 +429,7 @@ CUDS_KEYS:
     definition: A computational method according to the RoMM
     physics_equation: []
 
+
   DEM:
     parent: CUBA.COMPUTATIONAL_METHOD
     definition: Discrete element method
@@ -437,10 +440,12 @@ CUDS_KEYS:
     definition: Finite volume method
     physics_equation: [CUBA.CFD]
 
+
   FEM:
     parent: CUBA.COMPUTATIONAL_METHOD
     definition: Finite element method
     physics_equation: [CUBA.CFD]
+    
 
   SPH:
     parent: CUBA.COMPUTATIONAL_METHOD
@@ -452,6 +457,29 @@ CUDS_KEYS:
     definition: Newtonian dynamics integration using verlet algorithm
     physics_equation: [CUBA.MOLECULAR_DYNAMICS]
 
+
+
+  INTEGRATION_TIME:
+    parent: CUBA.COMPUTATIONAL_METHOD
+    definition: the current time, time step, and final time for a simulation stored on each cuds (a specific state). 
+    CUBA.CURRENT: 
+      default: 0.0 
+    CUBA.SIZE:
+      default: 0.0 
+    CUBA.FINAL:
+      default: 0.0 
+
+  
+  INTEGRATION_STEP:
+    CUBA.CURRENT: 
+      default: 0
+    CUBA.SIZE: 
+      defaut: 0
+    CUBA.FINAL: 
+      defaut: 0
+
+   
+        
   COMPRESSIBILITY_MODEL:
     parent: CUBA.PHYSICS_EQUATION
     definition: Compressibility model
