@@ -573,12 +573,12 @@ CUBA_KEYS:
 
   CRYSTAL_ORIENTATION_1:
     definition: Crystallographic orientation defined by Miller Index of the reference surface
-    shape: [3, 3]
+    shape: [2, 3]
     type: double
 
   CRYSTAL_ORIENTATION_2:
     definition: Crystallographic orientation defined by Miller Index of the non-reference surface
-    shape: [3, 3]
+    shape: [2, 3]
     type: double
 
   SHAPE_ORIENTATION_1:
@@ -611,3 +611,7 @@ CUBA_KEYS:
     shape: [6]
     type: double
 
+  NANOTUBE_WALLS:
+    definition: n,m pairs defining the nanotube walls of a nanotube structure
+    shape: []
+    type: integer
