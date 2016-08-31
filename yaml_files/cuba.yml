@@ -81,16 +81,6 @@ CUBA_KEYS:
     shape: [20]
     type: string
 
-  LATTICE_VECTORS:
-    definition: Lattice vectors of unit cell of the component
-    shape: [3, 3]
-    type: double
-
-  SYMMETRY_LATTICE_VECTORS:
-    definition: Symmetry group
-    shape: [1]
-    type: integer
-
   OCCUPANCY:
     definition: Occupancy of an atomic position
     shape: [1]
@@ -565,3 +555,63 @@ CUBA_KEYS:
     definition: Thermodynamic ensemble
     shape: [1]
     type: string
+
+  LATTICE_UC_ABC:
+    definition: Lattice translation vectors lengths (a, b, c) of an atomic unit cell
+    shape: [3]
+    type: double
+
+  LATTICE_UC_ANGLES:
+    definition: Alpha, Beta and Gamma angles of an atomic unit cell
+    shape: [3]
+    type: double
+
+  SYMMETRY_GROUP:
+    definition: Symmetry group number acording to the Volume A of International Tables for Crystallography
+    shape: [1]
+    type: integer
+
+  CRYSTAL_ORIENTATION_1:
+    definition: Crystallographic orientation defined by Miller Index of the reference surface
+    shape: [2, 3]
+    type: double
+
+  CRYSTAL_ORIENTATION_2:
+    definition: Crystallographic orientation defined by Miller Index of the non-reference surface
+    shape: [2, 3]
+    type: double
+
+  SHAPE_ORIENTATION_1:
+    definition: Real space orientation of a component. Shape-center system reference set to global cartesian system reference.
+    shape: [1, 3]
+    type: double
+
+  SHAPE_ORIENTATION_2:
+    definition: Real space orientation of a component. Shape-center system reference set to global cartesian system reference.
+    shape: [1, 3]
+    type: double
+
+  FILE_STL:
+    definition: Absolute path of a STL file
+    shape: [80]
+    type: string
+
+  STL_MODE:
+    definition: STL cutting process mode. Normal or negative cutting
+    shape: [1]
+    type: integer
+
+  STL_SCALING:
+    definition: Scaling parameter for components with STL shape
+    shape: [1]
+    type: double
+
+  STL_PADDING:
+    definition: Padding width in -X, +X, -Y, +Y, -Z and +Z directions for components with STL shape
+    shape: [6]
+    type: double
+
+  NANOTUBE_WALLS:
+    definition: n,m pairs defining the nanotube walls of a nanotube structure
+    shape: []
+    type: integer
