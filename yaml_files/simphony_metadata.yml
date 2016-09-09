@@ -469,6 +469,8 @@ CUDS_KEYS:
 
   
   INTEGRATION_STEP:
+    parent: CUBA.COMPUTATIONAL_METHOD
+    definition: the current step, integration step, and final number of steps for a simulation stored on each cuds (a specific state). 
     CUBA.CURRENT: 
       default: 0
     CUBA.SIZE: 
@@ -496,8 +498,8 @@ CUDS_KEYS:
     models: [CUBA.CFD, CUBA.MOLECULAR_DYNAMICS, CUBA.DEM]
 
   BASIS:
-    definition: Space basis vectors
     parent: CUBA.CUDS_COMPONENT
+    definition: Space basis vectors
     CUBA.VECTOR:
       shape: (3, 3)
       default: [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
