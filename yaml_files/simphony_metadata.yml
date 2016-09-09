@@ -75,7 +75,7 @@ CUDS_KEYS:
     definition: System boundary
     parent: CUBA.CUDS_COMPONENT
     CUBA.CONDITION:
-      shape (:)
+      shape: (:)
 
   CONDITION:
     definition: Condition on boundaries or model entities
@@ -119,7 +119,7 @@ CUDS_KEYS:
     models: [CUBA.ATOMISTIC, CUBA.MESOSCOPIC]
     CUBA.TEMPERATURE:
       shape: (2)
-      default: (0.0, 0.0)
+      default: [0.0, 0.0]
     CUBA.COUPLING_TIME:
       default: 1.0
 
@@ -129,7 +129,7 @@ CUDS_KEYS:
     models: [CUBA.ATOMISTIC, CUBA.MESOSCOPIC]
     CUBA.TEMPERATURE:
       shape: (2)
-      default: (0.0, 0.0)
+      default: [0.0, 0.0]
     CUBA.COUPLING_TIME:
       default: 0.0001
     
@@ -139,7 +139,7 @@ CUDS_KEYS:
     models: [CUBA.ATOMISTIC, CUBA.MESOSCOPIC]
     CUBA.TEMPERATURE:
       shape: (2)
-      default: (0.0, 0.0)
+      default: [0.0, 0.0]
     CUBA.COUPLING_TIME:
       default: 0.000001
     
