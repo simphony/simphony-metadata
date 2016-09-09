@@ -5,10 +5,10 @@ CUDS: Common Universal Data Structure
 Purpose: CUDS provides a semantic layer for the SimPhoNy metadata schema
 
 Resources:
- CUDS 1.0 (1st Edition): http://simphony.eu/cuds/1.0/ # does not exist
- CUDS Issues Page: https://github.com/simphony/simphony-metadata/issues
- CUDS Mailing List: simphony-ssb@fraunhofer.de
- CUDS Reference Parser: https://github.com/simphony/simphony-metadata/cparser #?
+  CUDS 1.0 (1st Edition): http://simphony.eu/cuds/1.0/ # does not exist
+  CUDS Issues Page: https://github.com/simphony/simphony-metadata/issues
+  CUDS Mailing List: simphony-ssb@fraunhofer.de
+  CUDS Reference Parser: https://github.com/simphony/simphony-metadata/cparser #?
 
 CUDS_KEYS:
 
@@ -108,7 +108,7 @@ CUDS_KEYS:
     models: [CUBA.ATOMISTIC]
     variables: [CUBA.POSITION, CUBA.FORCE]
 
- THERMOSTAT: 
+  THERMOSTAT: 
     definition: A thermostat is a model that describes the thermal interaction of a material with the environment or a heat reservoir
     parent: CUBA.MATERIAL_RELATION
     models: [CUBA.ATOMISTIC, CUBA.MESOSCOPIC]
