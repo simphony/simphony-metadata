@@ -581,6 +581,10 @@ CUBA_KEYS:
     shape: [1]
     type: string
 
+  VARIABLES:
+    definition: a list of physics/chemistry variables in a PE or MR
+    shape: []
+    type: string
 
   NONE:
     definition: a general none value

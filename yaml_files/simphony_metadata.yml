@@ -313,7 +313,7 @@ CUDS_KEYS:
     definition: Neumann boundary condition
     parent: CUBA.CONDITION
     models: [CUBA.CONTINUUM]
-    variables:
+    CUBA.VARIABLES:
       shape: (:)
     CUBA.MATERIAL:
       shape: (:)
@@ -322,7 +322,7 @@ CUDS_KEYS:
     parent: CUBA.CONDITION
     definition: Empty boundary condition
     models: [CUBA.CONTINUUM]
-    variables:
+    CUBA.VARIABLES:
       shape: (:)
     CUBA.MATERIAL:
       shape: (:)
