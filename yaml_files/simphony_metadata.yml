@@ -520,3 +520,4 @@ CUDS_KEYS:
       scope: CUBA.USER
     CUBA.CONDITION:
       shape: (3) 
+      default:
