@@ -304,28 +304,34 @@ CUDS_KEYS:
     definition: Dirichlet boundary condition
     parent: CUBA.CONDITION
     models: [CUBA.CONTINUUM]
-    CUBA.VARIABLES:
+    CUBA.VARIABLE:
       shape: (:)
+      default: []
     CUBA.MATERIAL:
       shape: (:)
+      default: []
 
   NEUMANN:
     definition: Neumann boundary condition
     parent: CUBA.CONDITION
     models: [CUBA.CONTINUUM]
-    CUBA.VARIABLES:
+    CUBA.VARIABLE:
       shape: (:)
+      default: []
     CUBA.MATERIAL:
       shape: (:)
+      default: []
 
   EMPTY:
     parent: CUBA.CONDITION
     definition: Empty boundary condition
     models: [CUBA.CONTINUUM]
-    CUBA.VARIABLES:
+    CUBA.VARIABLE:
       shape: (:)
+      default: []
     CUBA.MATERIAL:
       shape: (:)
+      default: []
 
   FREE:
     parent: CUBA.CONDITION
@@ -427,7 +433,6 @@ CUDS_KEYS:
     definition: A computational method according to the RoMM
     physics_equation: []
 
-
   DEM:
     parent: CUBA.COMPUTATIONAL_METHOD
     definition: Discrete element method
@@ -455,8 +460,6 @@ CUDS_KEYS:
     definition: Newtonian dynamics integration using verlet algorithm
     physics_equation: [CUBA.MOLECULAR_DYNAMICS]
 
-
-
   INTEGRATION_TIME:
     parent: CUBA.COMPUTATIONAL_METHOD
     definition: the current time, time step, and final time for a simulation stored on each cuds (a specific state). 
@@ -467,7 +470,6 @@ CUDS_KEYS:
     CUBA.FINAL:
       default: 0.0 
 
-  
   INTEGRATION_STEP:
     parent: CUBA.COMPUTATIONAL_METHOD
     definition: the current step, integration step, and final number of steps for a simulation stored on each cuds (a specific state). 
@@ -478,8 +480,6 @@ CUDS_KEYS:
     CUBA.FINAL: 
       defaut: 0
 
-   
-        
   COMPRESSIBILITY_MODEL:
     parent: CUBA.PHYSICS_EQUATION
     definition: Compressibility model
