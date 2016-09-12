@@ -336,12 +336,12 @@ CUDS_KEYS:
   FREE:
     parent: CUBA.CONDITION
     definition: Free boundary condition
-    models: [CUBA.ELECTROIC, CUBA.ATOMISTIC, CUBA.MESOSCOPIC, CUBA.CONTINUUM]
+    models: [CUBA.ELECTRONIC, CUBA.ATOMISTIC, CUBA.MESOSCOPIC, CUBA.CONTINUUM]
 
   PERIODIC:
     parent: CUBA.CONDITION
     definition: Periodic boundary condition (PBC)
-    models: [CUBA.ELECTROIC, CUBA.ATOMISTIC, CUBA.MESOSCOPIC, CUBA.CONTINUUM]
+    models: [CUBA.ELECTRONIC, CUBA.ATOMISTIC, CUBA.MESOSCOPIC, CUBA.CONTINUUM]
 
   INTERATOMIC_POTENTIAL:
     definition: Interatomic Potentials Category
