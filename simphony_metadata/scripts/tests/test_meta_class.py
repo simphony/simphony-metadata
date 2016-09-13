@@ -7,6 +7,7 @@ from mock import patch
 import numpy
 import uuid
 
+from simphony.core.data_container import create_data_container
 from .cuba import CUBA
 from .keywords import KEYWORDS
 
@@ -320,12 +321,6 @@ class TestMetaClass(unittest.TestCase):
         actual = gravity_model.acceleration
         numpy.testing.assert_allclose(actual, expected)
 
-    def test_assign_data_with_unsupported_parameters(self):
-        ''' Test for assigning unsupported CUBA keys to data '''
-
-        with self.assertRaises(ValueError):
-            meta_class.Material(data={CUBA.SIZE: 1})
-
     def test_Basis(self):
         basis = meta_class.Basis()
         arr = basis.vector == numpy.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
@@ -346,3 +341,14 @@ class TestMetaClass(unittest.TestCase):
         box2 = meta_class.Box()
         box1.vector[0][0] = 1.
         self.assertNotEqual(box1.vector[0][0], box2.vector[0][0])
+
+    def test_assign_data_with_unsupported_parameters(self):
+        ''' Test for assigning unsupported CUBA keys to data '''
+        RDC = create_data_container(meta_class.Material.supported_parameters())
+        rdc = RDC()
+        rdc[CUBA.NAME] = 'test_material'
+        rdc[CUBA.DESCRIPTION] = 'Just another material'
+        mat = meta_class.Material(data=rdc)
+
+        with self.assertRaises(ValueError):
+            mat.data[CUBA.SIZE] = 1
