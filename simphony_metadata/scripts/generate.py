@@ -364,20 +364,7 @@ class CodeGenerator(object):
 
     def populate_module_variables(self):
         ''' Populate module-level variables '''
-
-        supported_parameters = self.supported_parameters
-        if not supported_parameters:
-            supported_parameters = 'CUBA'
-
-        self.module_variables.append(
-            transform_cuba_string(
-                '_RestrictedDataContainer = '
-                'create_data_container(\n'
-                '{indent}{supported_parameters},\n'
-                '{indent}class_name="_RestrictedDataContainer")'.format(
-                    supported_parameters=supported_parameters,
-                    indent=' '*4))
-        )
+        pass
 
     def populate_class_variables(self):
         ''' Populate class variables
@@ -643,7 +630,7 @@ class CodeGenerator(object):
                        "Given: {}")
             warnings.warn(message.format(contents))
 
-        self.imports.append(IMPORT_PATHS['create_data_container'])
+        self.imports.append(IMPORT_PATHS['DataContainer'])
 
         self.init_body.append('''if data:
             self.data = data''')
@@ -654,23 +641,23 @@ class CodeGenerator(object):
         try:
             data_container = self._data
         except AttributeError:
-            self._data = _RestrictedDataContainer()
+            self._data = DataContainer()
             return self._data
         else:
             # One more check in case the
             # property setter is by-passed
-            if not isinstance(data_container, _RestrictedDataContainer):
-                raise TypeError("data is not a RestrictedDataContainer. "
+            if not isinstance(data_container, DataContainer):
+                raise TypeError("data is not a DataContainer. "
                                 "data.setter is by-passed.")
             return data_container''')
 
         self.methods.append('''
     @data.setter
     def data(self, new_data):
-        if isinstance(new_data, _RestrictedDataContainer):
+        if isinstance(new_data, DataContainer):
             self._data = new_data
         else:
-            self._data = _RestrictedDataContainer(new_data)''')
+            self._data = DataContainer(new_data)''')
 
     def collect_parents_to_mro(self, generators):
         ''' Recursively collect all the inherited into CodeGenerator.mro
@@ -762,9 +749,10 @@ class CodeGenerator(object):
         ----------
         file_out : file object
         '''
-        print("", file=file_out)
-        print(*self.module_variables,
-              sep="\n", file=file_out)
+        if self.module_variables and len(self.module_variables) > 0:
+            print("", file=file_out)
+            print(*self.module_variables,
+                  sep="\n", file=file_out)
 
     def generate_class_header(self, file_out):
         ''' Print class definition to the file output
