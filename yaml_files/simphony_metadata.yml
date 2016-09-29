@@ -500,7 +500,7 @@ CUDS_KEYS:
 
   BASIS:
     parent: CUBA.CUDS_COMPONENT
-    definition: Space basis vectors
+    definition: Space basis vectors (row wise)
     CUBA.VECTOR:
       shape: (3, 3)
       default: [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
