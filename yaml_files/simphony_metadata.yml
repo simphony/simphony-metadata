@@ -5,10 +5,10 @@ CUDS: Common Universal Data Structure
 Purpose: CUDS provides a semantic layer for the SimPhoNy metadata schema
 
 Resources:
- CUDS 1.0 (1st Edition): http://simphony.eu/cuds/1.0/ # does not exist
- CUDS Issues Page: https://github.com/simphony/simphony-metadata/issues
- CUDS Mailing List: simphony-ssb@fraunhofer.de
- CUDS Reference Parser: https://github.com/simphony/simphony-metadata/cparser #?
+  CUDS 1.0 (1st Edition): http://simphony.eu/cuds/1.0/ # does not exist
+  CUDS Issues Page: https://github.com/simphony/simphony-metadata/issues
+  CUDS Mailing List: simphony-ssb@fraunhofer.de
+  CUDS Reference Parser: https://github.com/simphony/simphony-metadata/cparser #?
 
 CUDS_KEYS:
 
@@ -75,6 +75,8 @@ CUDS_KEYS:
   BOUNDARY:
     definition: System boundary
     parent: CUBA.CUDS_COMPONENT
+    CUBA.CONDITION:
+      shape: (:)
 
   CONDITION:
     definition: Condition on boundaries or model entities
@@ -107,6 +109,41 @@ CUDS_KEYS:
     models: [CUBA.ATOMISTIC]
     variables: [CUBA.POSITION, CUBA.FORCE]
 
+  THERMOSTAT: 
+    definition: A thermostat is a model that describes the thermal interaction of a material with the environment or a heat reservoir
+    parent: CUBA.MATERIAL_RELATION
+    models: [CUBA.ATOMISTIC, CUBA.MESOSCOPIC]
+
+  NOSE_HOOVER: 
+    definition: Add an extra term to the equation of motion to model the interaction with an external heat bath. The coupling time specifies how rapidly the temperature should be coupled to the bath. 
+    parent: CUBA.THERMOSTAT
+    models: [CUBA.ATOMISTIC, CUBA.MESOSCOPIC]
+    CUBA.TEMPERATURE:
+      shape: (2)
+      default: [0.0, 0.0]
+    CUBA.COUPLING_TIME:
+      default: 1.0
+
+  BERENDSEN: 
+    definition: The Berendsen thermostat model for temperature rescaling of all particles. The coupling time specifies how rapidly the temperature should be relaxed or coupled to the bath. 
+    parent: CUBA.THERMOSTAT
+    models: [CUBA.ATOMISTIC, CUBA.MESOSCOPIC]
+    CUBA.TEMPERATURE:
+      shape: (2)
+      default: [0.0, 0.0]
+    CUBA.COUPLING_TIME:
+      default: 0.0001
+    
+  TEMPERATURE_RESCALING:
+    definition: A simple temperature rescaling thermostat. The coupling time specifies how offen the temperature should be relaxed or coupled to the bath.  
+    parent: CUBA.THERMOSTAT
+    models: [CUBA.ATOMISTIC, CUBA.MESOSCOPIC]
+    CUBA.TEMPERATURE:
+      shape: (2)
+      default: [0.0, 0.0]
+    CUBA.COUPLING_TIME:
+      default: 0.000001
+    
   GRANULAR_DYNAMICS:
     definition: Granular dynamics of spherical particles using DEM
     parent: CUBA.PHYSICS_EQUATION
@@ -264,32 +301,48 @@ CUDS_KEYS:
     CUBA.MATERIAL:
       shape: (2)
 
-  DIRICHLET_BOUNDARY_CONDITION:
+  DIRICHLET:
     definition: Dirichlet boundary condition
     parent: CUBA.CONDITION
     models: [CUBA.CONTINUUM]
-    variables:
+    CUBA.VARIABLE:
       shape: (:)
+      default: []
     CUBA.MATERIAL:
       shape: (:)
+      default: []
 
-  NEUMANN_BOUNDARY_CONDITION:
+  NEUMANN:
     definition: Neumann boundary condition
     parent: CUBA.CONDITION
     models: [CUBA.CONTINUUM]
-    variables:
+    CUBA.VARIABLE:
       shape: (:)
+      default: []
     CUBA.MATERIAL:
       shape: (:)
+      default: []
 
-  EMPTY_BOUNDARY_CONDITION:
+  EMPTY:
     parent: CUBA.CONDITION
     definition: Empty boundary condition
     models: [CUBA.CONTINUUM]
-    variables:
+    CUBA.VARIABLE:
       shape: (:)
+      default: []
     CUBA.MATERIAL:
       shape: (:)
+      default: []
+
+  FREE:
+    parent: CUBA.CONDITION
+    definition: Free boundary condition
+    models: [CUBA.ELECTRONIC, CUBA.ATOMISTIC, CUBA.MESOSCOPIC, CUBA.CONTINUUM]
+
+  PERIODIC:
+    parent: CUBA.CONDITION
+    definition: Periodic boundary condition (PBC)
+    models: [CUBA.ELECTRONIC, CUBA.ATOMISTIC, CUBA.MESOSCOPIC, CUBA.CONTINUUM]
 
   INTERATOMIC_POTENTIAL:
     definition: Interatomic Potentials Category
@@ -391,10 +444,12 @@ CUDS_KEYS:
     definition: Finite volume method
     physics_equation: [CUBA.CFD]
 
+
   FEM:
     parent: CUBA.COMPUTATIONAL_METHOD
     definition: Finite element method
     physics_equation: [CUBA.CFD]
+    
 
   SPH:
     parent: CUBA.COMPUTATIONAL_METHOD
@@ -405,6 +460,26 @@ CUDS_KEYS:
     parent: CUBA.COMPUTATIONAL_METHOD
     definition: Newtonian dynamics integration using verlet algorithm
     physics_equation: [CUBA.MOLECULAR_DYNAMICS]
+
+  INTEGRATION_TIME:
+    parent: CUBA.COMPUTATIONAL_METHOD
+    definition: the current time, time step, and final time for a simulation stored on each cuds (a specific state). 
+    CUBA.CURRENT: 
+      default: 0.0 
+    CUBA.SIZE:
+      default: 0.0 
+    CUBA.FINAL:
+      default: 0.0 
+
+  INTEGRATION_STEP:
+    parent: CUBA.COMPUTATIONAL_METHOD
+    definition: the current step, integration step, and final number of steps for a simulation stored on each cuds (a specific state). 
+    CUBA.CURRENT: 
+      default: 0
+    CUBA.SIZE: 
+      defaut: 0
+    CUBA.FINAL: 
+      defaut: 0
 
   COMPRESSIBILITY_MODEL:
     parent: CUBA.PHYSICS_EQUATION
@@ -424,8 +499,8 @@ CUDS_KEYS:
     models: [CUBA.CFD, CUBA.MOLECULAR_DYNAMICS, CUBA.DEM]
 
   BASIS:
-    definition: Space basis vectors
     parent: CUBA.CUDS_COMPONENT
+    definition: Space basis vectors (row wise)
     CUBA.VECTOR:
       shape: (3, 3)
       default: [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
@@ -438,9 +513,12 @@ CUDS_KEYS:
       scope: CUBA.USER
 
   BOX:
-    definition: A simple hexahedron box object
+    definition: A simple hexahedron (with six faces) simulation box defined by the three vectors and three directions. The condition should be specified for each direction (two faces at a time).   
     parent: CUBA.BOUNDARY
     CUBA.VECTOR:
-      shape: (3, 3)
+      shape: (3,3)
       default: [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
       scope: CUBA.USER
+    CUBA.CONDITION:
+      shape: (3) 
+      default:

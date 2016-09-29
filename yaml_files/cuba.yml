@@ -127,8 +127,8 @@ CUBA_KEYS:
     type: double
 
   SIZE:
-    definition: For non-spherical particles
-    shape: [1]
+    definition: size of a parameter or quantity
+    shape: []
     type: double
 
   MASS:
@@ -296,6 +296,16 @@ CUBA_KEYS:
     shape: [3]
     type: double
 
+  CURRENT:
+    definition: current value of a parameter
+    shape: []
+    type: double
+
+  FINAL:
+    definition: final value of a parameter
+    shape: []
+    type: double
+    
   DELTA_DISPLACEMENT:
     definition: Displacement during the last time step
     shape: [3]
@@ -338,6 +348,11 @@ CUBA_KEYS:
 
   VOLUME_FRACTION:
     definition: Volume fraction
+    shape: [1]
+    type: double
+
+  COUPLING_TIME:
+    definition: coupling time
     shape: [1]
     type: double
 
@@ -565,3 +580,13 @@ CUBA_KEYS:
     definition: Thermodynamic ensemble
     shape: [1]
     type: string
+
+  VARIABLE:
+    definition: a list of physics/chemistry variables in a PE or MR
+    shape: []
+    type: string
+
+  NONE:
+    definition: a general none value
+    shape: []
+    type: integer

@@ -227,13 +227,13 @@ class TestMetaClass(unittest.TestCase):
             # The items of the sequence are not instance of Material
             meta_obj.material = [1, 2]
 
-    def test_EmptyBoundaryCondition(self):
+    def test_Empty(self):
         ''' Test for EmptyBoundaryCondition '''
         # It can accept any number of materials
         for num_materials in range(5):
             materials = tuple(meta_class.Material()
                               for _ in range(num_materials))
-            meta_obj = meta_class.EmptyBoundaryCondition(materials)
+            meta_obj = meta_class.Empty(material=materials)
 
         self.check_cuds_item(meta_obj)
         self.check_cuds_component(meta_obj)
@@ -272,8 +272,8 @@ class TestMetaClass(unittest.TestCase):
         meta_class.CoulombFrictionForce(
             material=(meta_class.Material(), meta_class.Material()))
 
-    def test_DirichletBoundaryCondition(self):
-        meta_class.DirichletBoundaryCondition(
+    def test_Dirichlet(self):
+        meta_class.Dirichlet(
             material=(meta_class.Material(), meta_class.Material()))
 
     def test_DissipationForce(self):
@@ -288,8 +288,8 @@ class TestMetaClass(unittest.TestCase):
         meta_class.MaterialRelation(
             material=(meta_class.Material(), meta_class.Material()))
 
-    def test_NeumannBoundaryCondition(self):
-        meta_class.NeumannBoundaryCondition(
+    def test_Neumann(self):
+        meta_class.Neumann(
             material=(meta_class.Material(), meta_class.Material(),
                       meta_class.Material()))
 
