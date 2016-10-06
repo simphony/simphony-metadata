@@ -7,20 +7,24 @@ from mock import patch
 import numpy
 import uuid
 
-from simphony.core.data_container import create_data_container
+
 from .cuba import CUBA
 from .keywords import KEYWORDS
 
 # We need to patch the CUBA values before importing the meta class
 with patch('simphony.core.cuba.CUBA', CUBA),\
-         patch('simphony.core.data_container.CUBA', CUBA),\
-         patch('simphony.core.keywords.KEYWORDS', KEYWORDS):
+     patch('simphony.core.data_container.CUBA', CUBA),\
+     patch('simphony.core.keywords.KEYWORDS', KEYWORDS),\
+     patch('simphony.core.data_container.DataContainer.restricted_keys', frozenset(CUBA)),\
+     patch('simphony.core.data_container.DataContainer._restricted_mapping', CUBA.__members__):
     from .meta_class import api as meta_class
+    from simphony.core.data_container import create_data_container
 
-
+@patch('simphony.core.data_container.DataContainer.restricted_keys', frozenset(CUBA))
+@patch('simphony.core.data_container.DataContainer._restricted_mapping', CUBA.__members__)
 @patch('simphony.core.data_container.CUBA', CUBA)
-@patch('simphony.core.cuba.CUBA', CUBA)
 @patch('simphony.core.keywords.KEYWORDS', KEYWORDS)
+@patch('simphony.core.cuba.CUBA', CUBA)
 class TestMetaClass(unittest.TestCase):
 
     @classmethod
