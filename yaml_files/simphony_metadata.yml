@@ -109,13 +109,13 @@ CUDS_KEYS:
     models: [CUBA.ATOMISTIC]
     variables: [CUBA.POSITION, CUBA.FORCE]
 
-  THERMOSTAT: 
+  THERMOSTAT:
     definition: A thermostat is a model that describes the thermal interaction of a material with the environment or a heat reservoir
     parent: CUBA.MATERIAL_RELATION
     models: [CUBA.ATOMISTIC, CUBA.MESOSCOPIC]
 
-  NOSE_HOOVER: 
-    definition: Add an extra term to the equation of motion to model the interaction with an external heat bath. The coupling time specifies how rapidly the temperature should be coupled to the bath. 
+  NOSE_HOOVER:
+    definition: Add an extra term to the equation of motion to model the interaction with an external heat bath. The coupling time specifies how rapidly the temperature should be coupled to the bath.
     parent: CUBA.THERMOSTAT
     models: [CUBA.ATOMISTIC, CUBA.MESOSCOPIC]
     CUBA.TEMPERATURE:
@@ -124,8 +124,8 @@ CUDS_KEYS:
     CUBA.COUPLING_TIME:
       default: 1.0
 
-  BERENDSEN: 
-    definition: The Berendsen thermostat model for temperature rescaling of all particles. The coupling time specifies how rapidly the temperature should be relaxed or coupled to the bath. 
+  BERENDSEN:
+    definition: The Berendsen thermostat model for temperature rescaling of all particles. The coupling time specifies how rapidly the temperature should be relaxed or coupled to the bath.
     parent: CUBA.THERMOSTAT
     models: [CUBA.ATOMISTIC, CUBA.MESOSCOPIC]
     CUBA.TEMPERATURE:
@@ -133,9 +133,9 @@ CUDS_KEYS:
       default: [0.0, 0.0]
     CUBA.COUPLING_TIME:
       default: 0.0001
-    
+
   TEMPERATURE_RESCALING:
-    definition: A simple temperature rescaling thermostat. The coupling time specifies how offen the temperature should be relaxed or coupled to the bath.  
+    definition: A simple temperature rescaling thermostat. The coupling time specifies how offen the temperature should be relaxed or coupled to the bath.
     parent: CUBA.THERMOSTAT
     models: [CUBA.ATOMISTIC, CUBA.MESOSCOPIC]
     CUBA.TEMPERATURE:
@@ -143,7 +143,7 @@ CUDS_KEYS:
       default: [0.0, 0.0]
     CUBA.COUPLING_TIME:
       default: 0.000001
-    
+
   GRANULAR_DYNAMICS:
     definition: Granular dynamics of spherical particles using DEM
     parent: CUBA.PHYSICS_EQUATION
@@ -170,6 +170,7 @@ CUDS_KEYS:
     CUBA.RHEOLOGY_MODEL:
       default: CUBA.NEWTONIAN_FLUID_MODEL
     CUBA.GRAVITY_MODEL:
+      scope: CUBA.USER
     CUBA.ELECTROSTATIC_MODEL:
       default: CUBA.CONSTANT_ELECTROSTATIC_FIELD_MODEL
 
@@ -449,7 +450,7 @@ CUDS_KEYS:
     parent: CUBA.COMPUTATIONAL_METHOD
     definition: Finite element method
     physics_equation: [CUBA.CFD]
-    
+
 
   SPH:
     parent: CUBA.COMPUTATIONAL_METHOD
@@ -463,22 +464,22 @@ CUDS_KEYS:
 
   INTEGRATION_TIME:
     parent: CUBA.COMPUTATIONAL_METHOD
-    definition: the current time, time step, and final time for a simulation stored on each cuds (a specific state). 
-    CUBA.CURRENT: 
-      default: 0.0 
+    definition: the current time, time step, and final time for a simulation stored on each cuds (a specific state).
+    CUBA.CURRENT:
+      default: 0.0
     CUBA.SIZE:
-      default: 0.0 
+      default: 0.0
     CUBA.FINAL:
-      default: 0.0 
+      default: 0.0
 
   INTEGRATION_STEP:
     parent: CUBA.COMPUTATIONAL_METHOD
-    definition: the current step, integration step, and final number of steps for a simulation stored on each cuds (a specific state). 
-    CUBA.CURRENT: 
+    definition: the current step, integration step, and final number of steps for a simulation stored on each cuds (a specific state).
+    CUBA.CURRENT:
       default: 0
-    CUBA.SIZE: 
+    CUBA.SIZE:
       defaut: 0
-    CUBA.FINAL: 
+    CUBA.FINAL:
       defaut: 0
 
   COMPRESSIBILITY_MODEL:
@@ -513,12 +514,12 @@ CUDS_KEYS:
       scope: CUBA.USER
 
   BOX:
-    definition: A simple hexahedron (with six faces) simulation box defined by the three vectors and three directions. The condition should be specified for each direction (two faces at a time).   
+    definition: A simple hexahedron (with six faces) simulation box defined by the three vectors and three directions. The condition should be specified for each direction (two faces at a time).
     parent: CUBA.BOUNDARY
     CUBA.VECTOR:
       shape: (3,3)
       default: [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
       scope: CUBA.USER
     CUBA.CONDITION:
-      shape: (3) 
+      shape: (3)
       default:
