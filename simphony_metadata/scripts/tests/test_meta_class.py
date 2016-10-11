@@ -175,7 +175,7 @@ class TestMetaClass(unittest.TestCase):
         ''' Test for Cfd '''
         gravity_model = meta_class.GravityModel()
 
-        meta_obj = meta_class.Cfd(gravity_model)
+        meta_obj = meta_class.Cfd(gravity_model=gravity_model)
 
         # Test setting the attribute on init
         self.assertEqual(meta_obj.gravity_model, gravity_model)
