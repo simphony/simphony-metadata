@@ -468,7 +468,7 @@ CUBA_KEYS:
 
   ELECTROSTATIC_FIELD:
     definition: Electrostatic field
-    shape: []
+    shape: [3]
     type: double
 
   ENERGY:
