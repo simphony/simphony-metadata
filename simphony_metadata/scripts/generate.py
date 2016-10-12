@@ -633,7 +633,7 @@ class CodeGenerator(object):
         self.imports.append(IMPORT_PATHS['DataContainer'])
 
         self.init_body.append('''if data:
-            self.data = data''')
+            self.data.update(data)''')
 
         self.methods.append('''
     @property
