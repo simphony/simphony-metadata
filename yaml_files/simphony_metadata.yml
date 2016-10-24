@@ -532,6 +532,7 @@ CUDS_KEYS:
 
   GEOMETRICAL_ELEMENT:
     definition: Any element in a 3D space system
+    parent: CUBA.CUDS_ITEM
 
   PARTICLE:
     definition: A particle in a 3D space system
