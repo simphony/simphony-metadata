@@ -510,7 +510,7 @@ CUDS_KEYS:
   ORIGIN:
     definition: The origin of a space system
     parent: CUBA.CUDS_COMPONENT
-    CUBA.POINT:
+    CUBA.POSITION:
       default: [0, 0, 0]
       scope: CUBA.USER
 
@@ -524,3 +524,65 @@ CUDS_KEYS:
     CUBA.CONDITION:
       shape: (3)
       default:
+
+  POINT:
+    definition: A point in a 3D space system
+    parent: CUBA.CUDS_ITEM
+    CUBA.POSITION:
+
+  GEOMETRICAL_ELEMENT:
+    definition: Any element in a 3D space system
+
+  PARTICLE:
+    definition: A particle in a 3D space system
+    parent: CUBA.CUDS_ITEM
+    CUBA.POSITION:
+
+  BOND:
+    definition: A bond
+    parent: CUBA.CUDS_ITEM
+    CUBA.PARTICLE:
+      shape: (:)
+
+  EDGE:
+    definition: Element for storing 1D geometrical objects
+    parent: CUBA.CUDS_COMPONENT
+
+  FACE:
+    definition: Element for storing 2D geometrical objects
+    parent: CUBA.CUDS_COMPONENT
+
+  CELL:
+    definition: Element for storing 3D geometrical objects
+    parent: CUBA.CUDS_COMPONENT
+
+  NODE:
+    definition: A lattice node
+    parent: CUBA.CUDS_COMPONENT
+
+  PARTICLES:
+    definition: A collection of particles
+    parent: CUBA.CUDS_COMPONENT
+    PARTICLE:
+      shape: (:)
+    BOND:
+      shape: (:)
+
+  LATTICE:
+    definition: A lattice
+    parent: CUBA.CUDS_COMPONENT
+    SIZE: # Lattice dimentions of shape 3
+    ORIGIN:
+    PRIMITIVE_CELL: # primitive cell specifying the 3D Bravais lattice
+
+  MESH:
+    definition: A mesh
+    parent: CUBA.CUDS_COMPONENT
+    POINT:
+      shape: (:)
+    EDGE:
+      shape: (:)
+    FACE:
+      shape: (:)
+    CELL:
+      shape: (:)
