@@ -1,3 +1,4 @@
+---
 VERSION: 1.0
 
 CUDS: Common Universal Data Structure
@@ -5,10 +6,10 @@ CUDS: Common Universal Data Structure
 Purpose: CUDS provides a semantic layer for the SimPhoNy metadata schema
 
 Resources:
-  CUDS 1.0 (1st Edition): http://simphony.eu/cuds/1.0/ # does not exist
+  CUDS 1.0 (1st Edition): http://simphony.eu/cuds/1.0/  # does not exist
   CUDS Issues Page: https://github.com/simphony/simphony-metadata/issues
   CUDS Mailing List: simphony-ssb@fraunhofer.de
-  CUDS Reference Parser: https://github.com/simphony/simphony-metadata/cparser #?
+  CUDS Reference Parser: https://github.com/simphony/simphony-metadata/cparser  # ?
 
 CUDS_KEYS:
 
@@ -58,11 +59,11 @@ CUDS_KEYS:
     variables: []
 
   PHYSICS_EQUATION:
-   definition: Physics equation
-   parent: CUBA.MODEL_EQUATION
+    definition: Physics equation
+    parent: CUBA.MODEL_EQUATION
 
   MATERIAL_RELATION:
-    definition:  Material relation
+    definition: Material relation
     parent: CUBA.MODEL_EQUATION
     CUBA.MATERIAL:
       scope: CUBA.USER
@@ -156,8 +157,8 @@ CUDS_KEYS:
     models: [CUBA.CONTINUUM]
     variables:
       [CUBA.POSITION, CUBA.VELOCITY, CUBA.MOMENTUM,
-      CUBA.DENSITY, CUBA.VISCOSITY, CUBA.TIME, CUBA.STRESS_TENSOR,
-      CUBA.PRESSURE, CUBA.DYNAMIC_PRESSURE, CUBA.VOLUME_FRACTION]
+       CUBA.DENSITY, CUBA.VISCOSITY, CUBA.TIME, CUBA.STRESS_TENSOR,
+       CUBA.PRESSURE, CUBA.DYNAMIC_PRESSURE, CUBA.VOLUME_FRACTION]
     CUBA.COMPRESSIBILITY_MODEL:
       default: CUBA.INCOMPRESSIBLE_FLUID_MODEL
     CUBA.THERMAL_MODEL:
@@ -171,7 +172,7 @@ CUDS_KEYS:
       default: CUBA.NEWTONIAN_FLUID_MODEL
     CUBA.GRAVITY_MODEL:
       scope: CUBA.USER
-      default: 
+      default:
     CUBA.ELECTROSTATIC_MODEL:
       default: CUBA.CONSTANT_ELECTROSTATIC_FIELD_MODEL
 
