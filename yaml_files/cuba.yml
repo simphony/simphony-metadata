@@ -1,3 +1,4 @@
+---
 VERSION: 1.0
 
 CUBA: Common Unified Base Attributes
@@ -305,7 +306,7 @@ CUBA_KEYS:
     definition: final value of a parameter
     shape: []
     type: double
-    
+
   DELTA_DISPLACEMENT:
     definition: Displacement during the last time step
     shape: [3]
