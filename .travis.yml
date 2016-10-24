@@ -18,4 +18,5 @@ before_install:
 - pip install --upgrade pip
 install:
 - pip install -r dev_requirements.txt
+script:
 - yamllint -c .yamllint yaml_files/
