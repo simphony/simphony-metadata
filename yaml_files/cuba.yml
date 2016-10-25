@@ -567,6 +567,11 @@ CUBA_KEYS:
     shape: [3]
     type: double
 
+  INDEX:
+    definition: An integer vector in 3D geometirc space
+    shape: [3]
+    type: integer
+
   FACE:
     definition: A face of a three dimensional object defined by the nodes
     shape: [1]
