@@ -622,11 +622,11 @@ CUDS_KEYS:
     parent: CUBA.BRAVAIS_LATTICE
 
   FACE_CENTERED_CUBIC_LATTICE:
-    definition: A cubic lattice
+    definition: A face centred cubic lattice
     parent: CUBA.BRAVAIS_LATTICE
 
   RHOMBOHEDRAL_LATTICE:
-    definition: A cubic lattice
+    definition: A rhombohedral lattice
     parent: CUBA.BRAVAIS_LATTICE
 
   TETRAGONAL_LATTICE:
@@ -634,39 +634,37 @@ CUDS_KEYS:
     parent: CUBA.BRAVAIS_LATTICE
 
   BODY_CENTERED_TETRAGONAL_LATTICE:
-    definition: A cubic lattice
+    definition: A body centered tetragonal lattice
     parent: CUBA.BRAVAIS_LATTICE
 
   HEXAGONAL_LATTICE:
-    definition: A cubic lattice
+    definition: A hexagonal lattice
     parent: CUBA.BRAVAIS_LATTICE
 
   ORTHORHOMBIC_LATTICE:
-    definition: A cubic lattice
+    definition: An orthorhombic lattice
     parent: CUBA.BRAVAIS_LATTICE
 
   BODY_CENTERED_ORTHORHOMBIC_LATTICE:
-    definition: A cubic lattice
+    definition: A body centered orthorhombic lattice
     parent: CUBA.BRAVAIS_LATTICE
 
   FACE_CENTERED_ORTHORHOMBIC_LATTICE:
-    definition: A cubic lattice
+    definition: A face centered orthorhombic lattice
     parent: CUBA.BRAVAIS_LATTICE
 
   BASE_CENTERED_ORTHORHOMBIC_LATTICE:
-    definition: A cubic lattice
+    definition: A base centered orthorhombic lattice
     parent: CUBA.BRAVAIS_LATTICE
 
   MONOCLINIC_LATTICE:
-    definition: A cubic lattice
+    definition: A monoclinic lattice
     parent: CUBA.BRAVAIS_LATTICE
 
   BASE_CENTERED_MONOCLINIC_LATTICE:
-    definition: A cubic lattice
+    definition: A base centered monoclinic lattice
     parent: CUBA.BRAVAIS_LATTICE
 
   TRICLINIC_LATTICE:
-    definition: A cubic lattice
+    definition: A triclinic lattice
     parent: CUBA.BRAVAIS_LATTICE
-
-
