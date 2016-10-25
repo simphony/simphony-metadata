@@ -530,37 +530,51 @@ CUDS_KEYS:
     definition: A point in a 3D space system
     parent: CUBA.CUDS_ITEM
     CUBA.POSITION:
+      default: [0, 0, 0]
 
-  GEOMETRICAL_ELEMENT:
-    definition: Any element in a 3D space system
-    parent: CUBA.CUDS_ITEM
+  NODE:
+    definition: A node on a structured grid like lattice
+    parent: CUBA.CUDS_COMPONENT
+    CUBA.INDEX:
 
   PARTICLE:
     definition: A particle in a 3D space system
-    parent: CUBA.CUDS_ITEM
-    CUBA.POSITION:
+    parent: CUBA.POINT
+
+  ATOM:
+    definition: An atom
+    parent: CUBA.PARTICLE
+    CUBA.MASS:
+      default: 1.0
 
   BOND:
-    definition: A bond
+    definition: A bond between two or more atoms or particles
     parent: CUBA.CUDS_ITEM
     CUBA.PARTICLE:
       shape: (:)
 
+  MESH_ELEMENT:
+    definition: An element for storing geometrical objects
+    CUBA.POINT:
+      shape: (:)
+
   EDGE:
     definition: Element for storing 1D geometrical objects
-    parent: CUBA.CUDS_COMPONENT
+    parent: CUBA.MESH_ELEMENT
 
   FACE:
     definition: Element for storing 2D geometrical objects
-    parent: CUBA.CUDS_COMPONENT
+    parent: CUBA.MESH_ELEMENT
 
   CELL:
     definition: Element for storing 3D geometrical objects
-    parent: CUBA.CUDS_COMPONENT
+    parent: CUBA.MESH_ELEMENT
 
-  NODE:
-    definition: A lattice node
+  PRIMITIVE_CELL:
+    definition: A lattice primitive cell
     parent: CUBA.CUDS_COMPONENT
+    CUBA.LATTICE_VECTORS:
+      default: [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
 
   PARTICLES:
     definition: A collection of particles
@@ -569,13 +583,6 @@ CUDS_KEYS:
       shape: (:)
     BOND:
       shape: (:)
-
-  LATTICE:
-    definition: A lattice
-    parent: CUBA.CUDS_COMPONENT
-    SIZE: # Lattice dimentions of shape 3
-    ORIGIN:
-    PRIMITIVE_CELL: # primitive cell specifying the 3D Bravais lattice
 
   MESH:
     definition: A mesh
@@ -588,3 +595,78 @@ CUDS_KEYS:
       shape: (:)
     CELL:
       shape: (:)
+
+  LATTICE:
+    definition: A lattice
+    parent: CUBA.CUDS_COMPONENT
+
+  BRAVAIS_LATTICE:
+    definition: A Bravais lattice
+    parent: CUBA.LATTICE
+    SIZE:
+      shape: (3)
+      default: [1, 1, 1]
+    ORIGIN:
+    CUBA.PRIMITIVE_CELL:
+      default: [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
+    CUBA.LATTICE_PARAMETER:
+      shape: (3)
+      default: [1.0, 1.0, 1.0]
+
+  CUBIC_LATTICE:
+    definition: A cubic lattice
+    parent: CUBA.TETRAGONAL_LATTICE
+
+  BODY_CENTERED_CUBIC_LATTICE:
+    definition: A body centred cubic lattice
+    parent: CUBA.BRAVAIS_LATTICE
+
+  FACE_CENTERED_CUBIC_LATTICE:
+    definition: A cubic lattice
+    parent: CUBA.BRAVAIS_LATTICE
+
+  RHOMBOHEDRAL_LATTICE:
+    definition: A cubic lattice
+    parent: CUBA.BRAVAIS_LATTICE
+
+  TETRAGONAL_LATTICE:
+    definition: A tetragonal lattice
+    parent: CUBA.BRAVAIS_LATTICE
+
+  BODY_CENTERED_TETRAGONAL_LATTICE:
+    definition: A cubic lattice
+    parent: CUBA.BRAVAIS_LATTICE
+
+  HEXAGONAL_LATTICE:
+    definition: A cubic lattice
+    parent: CUBA.BRAVAIS_LATTICE
+
+  ORTHORHOMBIC_LATTICE:
+    definition: A cubic lattice
+    parent: CUBA.BRAVAIS_LATTICE
+
+  BODY_CENTERED_ORTHORHOMBIC_LATTICE:
+    definition: A cubic lattice
+    parent: CUBA.BRAVAIS_LATTICE
+
+  FACE_CENTERED_ORTHORHOMBIC_LATTICE:
+    definition: A cubic lattice
+    parent: CUBA.BRAVAIS_LATTICE
+
+  BASE_CENTERED_ORTHORHOMBIC_LATTICE:
+    definition: A cubic lattice
+    parent: CUBA.BRAVAIS_LATTICE
+
+  MONOCLINIC_LATTICE:
+    definition: A cubic lattice
+    parent: CUBA.BRAVAIS_LATTICE
+
+  BASE_CENTERED_MONOCLINIC_LATTICE:
+    definition: A cubic lattice
+    parent: CUBA.BRAVAIS_LATTICE
+
+  TRICLINIC_LATTICE:
+    definition: A cubic lattice
+    parent: CUBA.BRAVAIS_LATTICE
+
+
