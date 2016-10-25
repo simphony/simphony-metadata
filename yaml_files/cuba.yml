@@ -568,7 +568,7 @@ CUBA_KEYS:
     type: double
 
   INDEX:
-    definition: An integer vector in 3D geometirc space
+    definition: An integer vector in 3D geometric space
     shape: [3]
     type: integer
 
