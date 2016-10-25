@@ -567,10 +567,10 @@ CUBA_KEYS:
     shape: [3]
     type: double
 
-  POINT:
-    definition: A point in a 3D space system
+  INDEX:
+    definition: An integer vector in 3D geometric space
     shape: [3]
-    type: double
+    type: integer
 
   FACE:
     definition: A face of a three dimensional object defined by the nodes
