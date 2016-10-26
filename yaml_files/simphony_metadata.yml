@@ -555,6 +555,7 @@ CUDS_KEYS:
 
   MESH_ELEMENT:
     definition: An element for storing geometrical objects
+    parent: CUBA.CUDS_ITEM
     CUBA.POINT:
       shape: (:)
 
