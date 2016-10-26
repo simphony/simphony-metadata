@@ -129,7 +129,7 @@ CUBA_KEYS:
 
   SIZE:
     definition: size of a parameter or quantity
-    shape: []
+    shape: [1]
     type: double
 
   MASS:
@@ -299,12 +299,12 @@ CUBA_KEYS:
 
   CURRENT:
     definition: current value of a parameter
-    shape: []
+    shape: [1]
     type: double
 
   FINAL:
     definition: final value of a parameter
-    shape: []
+    shape: [1]
     type: double
 
   DELTA_DISPLACEMENT:
@@ -449,7 +449,7 @@ CUBA_KEYS:
 
   CHARGE_DENSITY:
     definition: Charge density
-    shape: []
+    shape: [1]
     type: double
 
   DESCRIPTION:
@@ -459,7 +459,7 @@ CUBA_KEYS:
 
   ELECTRIC_FIELD:
     definition: Electric field
-    shape: []
+    shape: [1]
     type: double
 
   ELECTRON_MASS:
@@ -474,7 +474,7 @@ CUBA_KEYS:
 
   ENERGY:
     definition: Energy
-    shape: []
+    shape: [1]
     type: double
 
   HEAT_CONDUCTIVITY:
@@ -504,17 +504,17 @@ CUBA_KEYS:
 
   MOMENTUM:
     definition: Momentum
-    shape: []
+    shape: [1]
     type: double
 
   MOMENT_INERTIA:
     definition: Moment inertia
-    shape: []
+    shape: [1]
     type: double
 
   POTENTIAL_ENERGY:
     definition: Potential energy
-    shape: []
+    shape: [1]
     type: double
 
   POWER_LAW_INDEX:
@@ -584,10 +584,10 @@ CUBA_KEYS:
 
   VARIABLE:
     definition: a list of physics/chemistry variables in a PE or MR
-    shape: []
+    shape: [1]
     type: string
 
   NONE:
     definition: a general none value
-    shape: []
+    shape: [1]
     type: integer
