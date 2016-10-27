@@ -609,7 +609,6 @@ CUDS_KEYS:
       default: [1, 1, 1]
     ORIGIN:
     CUBA.PRIMITIVE_CELL:
-      default: [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
     CUBA.LATTICE_PARAMETER:
       shape: (3)
       default: [1.0, 1.0, 1.0]
