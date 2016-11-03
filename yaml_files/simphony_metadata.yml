@@ -26,10 +26,10 @@ CUDS_KEYS:
     definition: Base data type for the CUDS components
     parent: CUBA.CUDS_ITEM
     CUBA.DESCRIPTION:
-      default:
+      default: ""
       scope: CUBA.USER
     CUBA.NAME:
-      default:
+      default: ""
       scope: CUBA.USER
 
   COMPUTATIONAL_MODEL:
