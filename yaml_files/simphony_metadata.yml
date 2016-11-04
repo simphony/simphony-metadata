@@ -18,9 +18,6 @@ CUDS_KEYS:
     parent:
     CUBA.UUID:
       scope: CUBA.SYSTEM
-    data:
-      default:
-      scope: CUBA.USER
 
   CUDS_COMPONENT:
     definition: Base data type for the CUDS components
