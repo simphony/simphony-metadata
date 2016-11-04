@@ -244,11 +244,11 @@ CUDS_KEYS:
     parent: CUBA.RHEOLOGY_MODEL
     models: [CUBA.CONTINUUM]
     CUBA.MAXIMUM_VISCOSITY:
-      default: 1e-3
+      default: 1.0e-3
     CUBA.MINIMUM_VISCOSITY:
-      default: 1e-5
+      default: 1.0e-5
     CUBA.LINEAR_CONSTANT:
-      default: 1e-5
+      default: 1.0e-5
     CUBA.POWER_LAW_INDEX:
       default: 1.0
 
@@ -257,11 +257,11 @@ CUDS_KEYS:
     parent: CUBA.RHEOLOGY_MODEL
     models: [CUBA.CONTINUUM]
     CUBA.INITIAL_VISCOSITY:
-      default: 1e-3
+      default: 1.0e-3
     CUBA.RELAXATION_TIME:
       default: 1.0
     CUBA.LINEAR_CONSTANT:
-      default: 1e-5
+      default: 1.0e-5
     CUBA.POWER_LAW_INDEX:
       default: 1.0
 
@@ -270,9 +270,9 @@ CUDS_KEYS:
     parent: CUBA.RHEOLOGY_MODEL
     models: [CUBA.CONTINUUM]
     CUBA.INITIAL_VISCOSITY:
-      default: 1e-3
+      default: 1.0e-3
     CUBA.MAXIMUM_VISCOSITY:
-      default: 1e-5   # nu_infinity
+      default: 1.0e-5   # nu_infinity
     CUBA.LINEAR_CONSTANT:
       default: 1.0
     CUBA.POWER_LAW_INDEX:
@@ -283,9 +283,9 @@ CUDS_KEYS:
     parent: CUBA.RHEOLOGY_MODEL
     models: [CUBA.CONTINUUM]
     CUBA.INITIAL_VISCOSITY:
-      default: 1e-3
+      default: 1.0e-3
     CUBA.MAXIMUM_VISCOSITY:
-      default: 1e-5
+      default: 1.0e-5
     CUBA.LINEAR_CONSTANT:
       default: 1.0
     CUBA.POWER_LAW_INDEX:
