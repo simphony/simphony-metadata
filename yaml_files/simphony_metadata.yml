@@ -290,7 +290,7 @@ CUDS_KEYS:
     models: [CUBA.CFD, CUBA.MOLECULAR_DYNAMICS, CUBA.DEM]
 
 ###############################################################
-# Material Relations 
+# Material Relations
 ###############################################################
   INTERATOMIC_POTENTIAL:
     definition: Interatomic Potentials Category
@@ -391,7 +391,7 @@ CUDS_KEYS:
       shape: (2)
 
 ######################################################
-# Conditions on Boundaries 
+# Conditions on Boundaries
 ######################################################
   DIRICHLET:
     definition: Dirichlet boundary condition, specify the value the solutions takes on the boundary of the domain
@@ -694,4 +694,3 @@ CUDS_KEYS:
     CUBA.MAJOR:
     CUBA.PATCH:
     CUBA.FULL:
-
