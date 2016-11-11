@@ -572,21 +572,21 @@ CUDS_KEYS:
   PARTICLES:
     definition: A collection of particles
     parent: CUBA.CUDS_COMPONENT
-    PARTICLE:
+    CUBA.PARTICLE:
       shape: (:)
-    BOND:
+    CUBA.BOND:
       shape: (:)
 
   MESH:
     definition: A mesh
     parent: CUBA.CUDS_COMPONENT
-    POINT:
+    CUBA.POINT:
       shape: (:)
-    EDGE:
+    CUBA.EDGE:
       shape: (:)
-    FACE:
+    CUBA.FACE:
       shape: (:)
-    CELL:
+    CUBA.CELL:
       shape: (:)
 
   LATTICE:
@@ -596,10 +596,10 @@ CUDS_KEYS:
   BRAVAIS_LATTICE:
     definition: A Bravais lattice
     parent: CUBA.LATTICE
-    SIZE:
+    CUBA.SIZE:
       shape: (3)
       default: [1, 1, 1]
-    ORIGIN:
+    CUBA.ORIGIN:
     CUBA.PRIMITIVE_CELL:
     CUBA.LATTICE_PARAMETER:
       shape: (3)
