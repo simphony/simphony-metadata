@@ -115,7 +115,7 @@ CUDS_KEYS:
     definition: Classical atomistic molecular dynamics using Newtons equations of motion
     parent: CUBA.PHYSICS_EQUATION
     models: [CUBA.ATOMISTIC]
-    variables: [CUBA.POSITION, CUBA.VELOCITY, CUBA.MOMENETUM, CUBA.ACCELERATION, CUBA.FORCE]
+    variables: [CUBA.POSITION, CUBA.VELOCITY, CUBA.MOMENTUM, CUBA.ACCELERATION, CUBA.FORCE]
 
   MOLECULAR_STATICS:
     definition: Classical atomistic static molecular model
