@@ -20,7 +20,7 @@ CUDS_KEYS:
       scope: CUBA.SYSTEM
     data:
       default:
-      scope: CUBA.USER
+      scope: CUBA.SYSTEM
 
   CUDS_COMPONENT:
     definition: Base data type for the CUDS components
