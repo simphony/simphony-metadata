@@ -32,10 +32,14 @@ CUDS_KEYS:
       default: ""
       scope: CUBA.USER
 
+######################################################
+# define the terminology used for computational models
+######################################################
+
   COMPUTATIONAL_MODEL:
     definition: Model category according to the RoMM
     parent: CUBA.CUDS_COMPONENT
-
+# There are only four categories:
   ELECTRONIC:
     definition: Electronic model category according to the RoMM
     parent: CUBA.COMPUTATIONAL_MODEL
@@ -52,6 +56,10 @@ CUDS_KEYS:
     definition: Continuum model category according to the RoMM
     parent: CUBA.COMPUTATIONAL_MODEL
 
+#####################################
+# define the components of each CUDS
+#####################################
+# each model equation has information on the models it supports
   MODEL_EQUATION:
     definition: The model equations are represented by all physics equations and material relations according to the RoMM
     models: []
@@ -62,19 +70,20 @@ CUDS_KEYS:
     definition: Physics equation
     parent: CUBA.MODEL_EQUATION
 
+# each material relation has to have a reference to the Material in its properties (i.e., data)
   MATERIAL_RELATION:
-    definition: Material relation
+    definition: Material relation which together with the Physics equation gives the model equation
     parent: CUBA.MODEL_EQUATION
     CUBA.MATERIAL:
       scope: CUBA.USER
       shape: (:)
 
   MATERIAL:
-    definition: Definition of a material and its parameters
+    definition: Definition of a material and its properties in the data container
     parent: CUBA.CUDS_COMPONENT
 
   BOUNDARY:
-    definition: System boundary
+    definition: A computational boundary in the system, it includes translated physical boundaries to computational boundaries.
     parent: CUBA.CUDS_COMPONENT
     CUBA.CONDITION:
       shape: (:)
@@ -84,13 +93,17 @@ CUDS_KEYS:
     parent: CUBA.CUDS_COMPONENT
 
   DATA_SET:
-    definition: Data set
+    definition: A representation of the computational entities of the model equations
     parent: CUBA.CUDS_COMPONENT
     models: []
 
   SOLVER_PARAMETER:
     definition: Solver parameter and metadata
     parent: CUBA.CUDS_COMPONENT
+
+##############################################
+# Physics equations
+##############################################
 
   KS_DFT:
     parent: CUBA.PHYSICS_EQUATION
@@ -102,48 +115,13 @@ CUDS_KEYS:
     definition: Classical atomistic molecular dynamics using Newtons equations of motion
     parent: CUBA.PHYSICS_EQUATION
     models: [CUBA.ATOMISTIC]
-    variables: [CUBA.POSITION, CUBA.VELOCITY, CUBA.MOMENTUM, CUBA.ACCELERATION, CUBA.FORCE]
+    variables: [CUBA.POSITION, CUBA.VELOCITY, CUBA.MOMENETUM, CUBA.ACCELERATION, CUBA.FORCE]
 
   MOLECULAR_STATICS:
     definition: Classical atomistic static molecular model
     parent: CUBA.PHYSICS_EQUATION
     models: [CUBA.ATOMISTIC]
     variables: [CUBA.POSITION, CUBA.FORCE]
-
-  THERMOSTAT:
-    definition: A thermostat is a model that describes the thermal interaction of a material with the environment or a heat reservoir
-    parent: CUBA.MATERIAL_RELATION
-    models: [CUBA.ATOMISTIC, CUBA.MESOSCOPIC]
-
-  NOSE_HOOVER:
-    definition: Add an extra term to the equation of motion to model the interaction with an external heat bath. The coupling time specifies how rapidly the temperature should be coupled to the bath.
-    parent: CUBA.THERMOSTAT
-    models: [CUBA.ATOMISTIC, CUBA.MESOSCOPIC]
-    CUBA.TEMPERATURE:
-      shape: (2)
-      default: [0.0, 0.0]
-    CUBA.COUPLING_TIME:
-      default: 1.0
-
-  BERENDSEN:
-    definition: The Berendsen thermostat model for temperature rescaling of all particles. The coupling time specifies how rapidly the temperature should be relaxed or coupled to the bath.
-    parent: CUBA.THERMOSTAT
-    models: [CUBA.ATOMISTIC, CUBA.MESOSCOPIC]
-    CUBA.TEMPERATURE:
-      shape: (2)
-      default: [0.0, 0.0]
-    CUBA.COUPLING_TIME:
-      default: 0.0001
-
-  TEMPERATURE_RESCALING:
-    definition: A simple temperature rescaling thermostat. The coupling time specifies how offen the temperature should be relaxed or coupled to the bath.
-    parent: CUBA.THERMOSTAT
-    models: [CUBA.ATOMISTIC, CUBA.MESOSCOPIC]
-    CUBA.TEMPERATURE:
-      shape: (2)
-      default: [0.0, 0.0]
-    CUBA.COUPLING_TIME:
-      default: 0.000001
 
   GRANULAR_DYNAMICS:
     definition: Granular dynamics of spherical particles using DEM
@@ -175,14 +153,6 @@ CUDS_KEYS:
       default:
     CUBA.ELECTROSTATIC_MODEL:
       default: CUBA.CONSTANT_ELECTROSTATIC_FIELD_MODEL
-
-  GRAVITY_MODEL:
-    definition: A simple gravity model
-    parent: CUBA.PHYSICS_EQUATION
-    models: [CUBA.MESOSCOPIC, CUBA.CONTINUUM]
-    variables: [CUBA.ACCELERATION]
-    CUBA.ACCELERATION:
-      default: [0., 0., 0.]
 
   CONSTANT_ELECTROSTATIC_FIELD_MODEL:
     definition: A constant electrostatic field model
@@ -294,59 +264,34 @@ CUDS_KEYS:
     CUBA.POWER_LAW_INDEX:
       default: 0.5
 
-  SURFACE_TENSION_RELATION:
-    parent: CUBA.MATERIAL_RELATION
-    definition: Surface tension relation between two fluids
-    models: [CUBA.CONTINUUM]
-    CUBA.SURFACE_TENSION:
-      default: 0.07
-      scope: CUBA.USER
-    CUBA.MATERIAL:
-      shape: (2)
+  GRAVITY_MODEL:
+    definition: A simple gravity model
+    parent: CUBA.PHYSICS_EQUATION
+    models: [CUBA.MESOSCOPIC, CUBA.CONTINUUM]
+    variables: [CUBA.ACCELERATION]
+    CUBA.ACCELERATION:
+      default: [0., 0., 0.]
 
-  DIRICHLET:
-    definition: Dirichlet boundary condition
-    parent: CUBA.CONDITION
-    models: [CUBA.CONTINUUM]
-    CUBA.VARIABLE:
-      shape: (:)
-      default: []
-    CUBA.MATERIAL:
-      shape: (:)
-      default: []
+  COMPRESSIBILITY_MODEL:
+    parent: CUBA.PHYSICS_EQUATION
+    definition: Compressibility model
 
-  NEUMANN:
-    definition: Neumann boundary condition
-    parent: CUBA.CONDITION
-    models: [CUBA.CONTINUUM]
-    CUBA.VARIABLE:
-      shape: (:)
-      default: []
-    CUBA.MATERIAL:
-      shape: (:)
-      default: []
+  TURBULENCE_MODEL:
+    parent: CUBA.PHYSICS_EQUATION
+    definition: Turbulence model
 
-  EMPTY:
-    parent: CUBA.CONDITION
-    definition: Empty boundary condition
-    models: [CUBA.CONTINUUM]
-    CUBA.VARIABLE:
-      shape: (:)
-      default: []
-    CUBA.MATERIAL:
-      shape: (:)
-      default: []
+  MULTIPHASE_MODEL:
+    parent: CUBA.PHYSICS_EQUATION
+    definition: Multiphase model
 
-  FREE:
-    parent: CUBA.CONDITION
-    definition: Free boundary condition
-    models: [CUBA.ELECTRONIC, CUBA.ATOMISTIC, CUBA.MESOSCOPIC, CUBA.CONTINUUM]
+  ELECTROSTATIC_MODEL:
+    definition: Electrostatic model
+    parent: CUBA.PHYSICS_EQUATION
+    models: [CUBA.CFD, CUBA.MOLECULAR_DYNAMICS, CUBA.DEM]
 
-  PERIODIC:
-    parent: CUBA.CONDITION
-    definition: Periodic boundary condition (PBC)
-    models: [CUBA.ELECTRONIC, CUBA.ATOMISTIC, CUBA.MESOSCOPIC, CUBA.CONTINUUM]
-
+###############################################################
+# Material Relations
+###############################################################
   INTERATOMIC_POTENTIAL:
     definition: Interatomic Potentials Category
     parent: CUBA.MATERIAL_RELATION
@@ -400,37 +345,100 @@ CUDS_KEYS:
     models: [CUBA.ATOMISTIC]
     CUBA.COHESION_ENERGY_DENSITY:
       default: 0.0
+  THERMOSTAT:
+    definition: A thermostat is a model that describes the thermal interaction of a material with the environment or a heat reservoir
+    parent: CUBA.MATERIAL_RELATION
+    models: [CUBA.ATOMISTIC, CUBA.MESOSCOPIC]
 
-  SOFTWARE_TOOL:
-    parent: CUBA.CUDS_ITEM
-    definition: Represents a software tool which is used to solve the model or in pre/post processing
-    CUBA.VERSION:
-      default:
+  NOSE_HOOVER:
+    definition: Add an extra term to the equation of motion to model the interaction with an external heat bath. The coupling time specifies how rapidly the temperature should be coupled to the bath.
+    parent: CUBA.THERMOSTAT
+    models: [CUBA.ATOMISTIC, CUBA.MESOSCOPIC]
+    CUBA.TEMPERATURE:
+      shape: (2)
+      default: [0.0, 0.0]
+    CUBA.COUPLING_TIME:
+      default: 1.0
 
-  ENGINE:
-    parent: CUBA.SOFTWARE_TOOL
-    definition: Represents a software tool which is used to solve the physics equation
-    CUBA.ENGINE_FEATURE:
+  BERENDSEN:
+    definition: The Berendsen thermostat model for temperature rescaling of all particles. The coupling time specifies how rapidly the temperature should be relaxed or coupled to the bath.
+    parent: CUBA.THERMOSTAT
+    models: [CUBA.ATOMISTIC, CUBA.MESOSCOPIC]
+    CUBA.TEMPERATURE:
+      shape: (2)
+      default: [0.0, 0.0]
+    CUBA.COUPLING_TIME:
+      default: 0.0001
+
+  TEMPERATURE_RESCALING:
+    definition: A simple temperature rescaling thermostat. The coupling time specifies how offen the temperature should be relaxed or coupled to the bath.
+    parent: CUBA.THERMOSTAT
+    models: [CUBA.ATOMISTIC, CUBA.MESOSCOPIC]
+    CUBA.TEMPERATURE:
+      shape: (2)
+      default: [0.0, 0.0]
+    CUBA.COUPLING_TIME:
+      default: 0.000001
+
+  SURFACE_TENSION_RELATION:
+    parent: CUBA.MATERIAL_RELATION
+    definition: Surface tension relation between two fluids
+    models: [CUBA.CONTINUUM]
+    CUBA.SURFACE_TENSION:
+      default: 0.07
+      scope: CUBA.USER
+    CUBA.MATERIAL:
+      shape: (2)
+
+######################################################
+# Conditions on Boundaries
+######################################################
+  DIRICHLET:
+    definition: Dirichlet boundary condition, specify the value the solutions takes on the boundary of the domain
+    parent: CUBA.CONDITION
+    models: [CUBA.CONTINUUM]
+    CUBA.VARIABLE:
       shape: (:)
-      scope: CUBA.SYSTEM
-
-  ENGINE_FEATURE:
-    parent: CUBA.CUDS_ITEM
-    definition: Provides a physics equation and methods that engines provides to solve them
-    CUBA.PHYSICS_EQUATION:
-      shape: (1)
-      scope: CUBA.SYSTEM
-    CUBA.COMPUTATIONAL_METHOD:
+      default: []
+    CUBA.MATERIAL:
       shape: (:)
-      scope: CUBA.SYSTEM
+      default: []
 
-  VERSION:
-    parent: CUBA.CUDS_ITEM
-    definition: Version of a software tool used in a simulation
-    CUBA.MINOR:
-    CUBA.MAJOR:
-    CUBA.PATCH:
-    CUBA.FULL:
+  NEUMANN:
+    definition: Neumann boundary condition, it specifies the values that the derivative of a solution is to take on the boundary of the domain.
+    parent: CUBA.CONDITION
+    models: [CUBA.CONTINUUM]
+    CUBA.VARIABLE:
+      shape: (:)
+      default: []
+    CUBA.MATERIAL:
+      shape: (:)
+      default: []
+
+  EMPTY:
+    parent: CUBA.CONDITION
+    definition: Empty boundary condition
+    models: [CUBA.CONTINUUM]
+    CUBA.VARIABLE:
+      shape: (:)
+      default: []
+    CUBA.MATERIAL:
+      shape: (:)
+      default: []
+
+  FREE:
+    parent: CUBA.CONDITION
+    definition: Free boundary condition
+    models: [CUBA.ELECTRONIC, CUBA.ATOMISTIC, CUBA.MESOSCOPIC, CUBA.CONTINUUM]
+
+  PERIODIC:
+    parent: CUBA.CONDITION
+    definition: Periodic boundary condition (PBC)
+    models: [CUBA.ELECTRONIC, CUBA.ATOMISTIC, CUBA.MESOSCOPIC, CUBA.CONTINUUM]
+
+###################################################
+# SOLVER & PARAMETERS (the computational method)
+##################################################
 
   COMPUTATIONAL_METHOD:
     parent: CUBA.CUDS_COMPONENT
@@ -447,12 +455,10 @@ CUDS_KEYS:
     definition: Finite volume method
     physics_equation: [CUBA.CFD]
 
-
   FEM:
     parent: CUBA.COMPUTATIONAL_METHOD
     definition: Finite element method
     physics_equation: [CUBA.CFD]
-
 
   SPH:
     parent: CUBA.COMPUTATIONAL_METHOD
@@ -484,23 +490,9 @@ CUDS_KEYS:
     CUBA.FINAL:
       defaut: 0
 
-  COMPRESSIBILITY_MODEL:
-    parent: CUBA.PHYSICS_EQUATION
-    definition: Compressibility model
-
-  TURBULENCE_MODEL:
-    parent: CUBA.PHYSICS_EQUATION
-    definition: Turbulence model
-
-  MULTIPHASE_MODEL:
-    parent: CUBA.PHYSICS_EQUATION
-    definition: Multiphase model
-
-  ELECTROSTATIC_MODEL:
-    definition: Electrostatic model
-    parent: CUBA.PHYSICS_EQUATION
-    models: [CUBA.CFD, CUBA.MOLECULAR_DYNAMICS, CUBA.DEM]
-
+##############################################
+## Data Sets Metadata
+##############################################
   BASIS:
     parent: CUBA.CUDS_COMPONENT
     definition: Space basis vectors (row wise)
@@ -668,3 +660,37 @@ CUDS_KEYS:
   TRICLINIC_LATTICE:
     definition: A triclinic lattice
     parent: CUBA.BRAVAIS_LATTICE
+
+###########################################
+# Wrapper and Engine Specific Metadata
+###########################################
+  SOFTWARE_TOOL:
+    parent: CUBA.CUDS_ITEM
+    definition: Represents a software tool which is used to solve the model or in pre/post processing
+    CUBA.VERSION:
+      default:
+
+  ENGINE:
+    parent: CUBA.SOFTWARE_TOOL
+    definition: Represents a software tool which is used to solve the physics equation
+    CUBA.ENGINE_FEATURE:
+      shape: (:)
+      scope: CUBA.SYSTEM
+
+  ENGINE_FEATURE:
+    parent: CUBA.CUDS_ITEM
+    definition: Provides a physics equation and methods that engines provides to solve them
+    CUBA.PHYSICS_EQUATION:
+      shape: (1)
+      scope: CUBA.SYSTEM
+    CUBA.COMPUTATIONAL_METHOD:
+      shape: (:)
+      scope: CUBA.SYSTEM
+
+  VERSION:
+    parent: CUBA.CUDS_ITEM
+    definition: Version of a software tool used in a simulation
+    CUBA.MINOR:
+    CUBA.MAJOR:
+    CUBA.PATCH:
+    CUBA.FULL:
