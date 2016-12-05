@@ -441,7 +441,7 @@ CUDS_KEYS:
 ##################################################
 
   COMPUTATIONAL_METHOD:
-    parent: CUBA.CUDS_COMPONENT
+    parent: CUBA.SOLVER_PARAMETER
     definition: A computational method according to the RoMM
     physics_equation: []
 
@@ -471,7 +471,7 @@ CUDS_KEYS:
     physics_equation: [CUBA.MOLECULAR_DYNAMICS]
 
   INTEGRATION_TIME:
-    parent: CUBA.COMPUTATIONAL_METHOD
+    parent: CUBA.SOLVER_PARAMETER
     definition: the current time, time step, and final time for a simulation stored on each cuds (a specific state).
     CUBA.CURRENT:
       default: 0.0
@@ -481,7 +481,7 @@ CUDS_KEYS:
       default: 0.0
 
   INTEGRATION_STEP:
-    parent: CUBA.COMPUTATIONAL_METHOD
+    parent: CUBA.SOLVER_PARAMETER
     definition: the current step, integration step, and final number of steps for a simulation stored on each cuds (a specific state).
     CUBA.CURRENT:
       default: 0
@@ -508,11 +508,11 @@ CUDS_KEYS:
       scope: CUBA.USER
 
   BOX:
-    definition: A simple hexahedron (with six faces) simulation box defined by the three vectors and three directions. The condition should be specified for each direction (two faces at a time).
+    definition: A simple hexahedron simulation box defining six boundary faces that are defined by three box vectors. The same boundary condition should be specified for each direction (two faces at a time).
     parent: CUBA.BOUNDARY
     CUBA.VECTOR:
       shape: (3,3)
-      default: [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+      default: [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
       scope: CUBA.USER
     CUBA.CONDITION:
       shape: (3)
