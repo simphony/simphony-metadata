@@ -492,6 +492,11 @@ CUBA_KEYS:
     shape: [1]
     type: double
 
+  MAXIMUM_COURANT_NUMBER:
+    definition: Maximum Courant number
+    shape: [1]
+    type: double
+
   MAXIMUM_VISCOSITY:
     definition: Maximum viscosity
     shape: [1]
@@ -591,3 +596,23 @@ CUBA_KEYS:
     definition: a general none value
     shape: [1]
     type: integer
+
+  DISPERSE:
+    definition: disperse material uid
+    shape: [1]
+    type: string
+
+  NUMBER_OF_CORES:
+    definition: Number of cpu cores to use
+    shape: [1]
+    type: integer
+
+  MAGNITUDE:
+    definition: Magnitude of vector variable
+    shape: [1]
+    type: double
+
+  STEADY_STATE:
+    definition: Use steady state solver
+    shape: [1]
+    type: boolean

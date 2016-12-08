@@ -201,6 +201,7 @@ CUDS_KEYS:
     definition: Mixture (drift flux) model
     parent: CUBA.PHYSICS_EQUATION
     models: [CUBA.CONTINUUM]
+    variables: [CUBA.DISPERSE]
 
   RHEOLOGY_MODEL:
     definition: Rheology model of a CFD fluid
@@ -264,6 +265,19 @@ CUDS_KEYS:
     CUBA.POWER_LAW_INDEX:
       default: 0.5
 
+  BINGHAM_PLASTIC_MODEL:
+    definition: Bingham plastic viscosity model (only in mixture model)
+    parent: CUBA.RHEOLOGY_MODEL
+    models: [CUBA.CONTINUUM]
+    CUBA.LINEAR_CONSTANT:
+      shape: (2)
+      default: [0.0, 0.0]
+    CUBA.POWER_LAW_INDEX:
+      shape: (2)
+      default: [1.0, 1.0]
+    CUBA.MAXIMUM_VISCOSITY:
+      default: 1.0e-3
+
   GRAVITY_MODEL:
     definition: A simple gravity model
     parent: CUBA.PHYSICS_EQUATION
@@ -283,6 +297,40 @@ CUDS_KEYS:
   MULTIPHASE_MODEL:
     parent: CUBA.PHYSICS_EQUATION
     definition: Multiphase model
+
+  RELATIVE_VELOCITY_MODEL:
+    parent: CUBA.PHYSICS_EQUATION
+    definition: Relative velocity model to use in mixture model
+    models: [CUBA.CONTINUUM]
+
+  MESO_SCOPIC_RELATIVE_VELOCITY_MODEL:
+    parent: CUBA.RELATIVE_VELOCITY_MODEL
+    definition: Relative velocity taken from meso scopic model
+    models: [CUBA.CONTINUUM]
+
+  SIMPLE_RELATIVE_VELOCITY_MODEL:
+    parent: CUBA.RELATIVE_VELOCITY_MODEL
+    definition: Simple relative velocity model to use in mixture model
+    models: [CUBA.CONTINUUM]
+    CUBA.DIFFUSION_VELOCITY:
+      default: [0, 0, 0]
+    CUBA.LINEAR_CONSTANT:
+      default: 0.0
+
+  STRESS_MODEL:
+    parent: CUBA.PHYSICS_EQUATION
+    definition: Stress model to use in mixture model
+    models: [CUBA.CONTINUUM]
+
+  STANDARD_STRESS_MODEL:
+    parent: CUBA.STRESS_MODEL
+    definition: Standard stress model (to use in mixture model)
+    models: [CUBA.CONTINUUM]
+
+  MESO_SCOPIC_STRESS_MODEL:
+    parent: CUBA.STRESS_MODEL
+    definition: Stress model from meso scopic to use in mixture model
+    models: [CUBA.CONTINUUM]
 
   ELECTROSTATIC_MODEL:
     definition: Electrostatic model
@@ -435,6 +483,50 @@ CUDS_KEYS:
     parent: CUBA.CONDITION
     definition: Periodic boundary condition (PBC)
     models: [CUBA.ELECTRONIC, CUBA.ATOMISTIC, CUBA.MESOSCOPIC, CUBA.CONTINUUM]
+
+  SHEAR_STRESS_POWER_LAW_SLIP_VELOCITY:
+    parent: CUBA.CONDITION
+    definition: Shear stress power law dependant slip velocity boundary condition
+    models: [CUBA.CONTINUUM]
+    CUBA.VARIABLE:
+      shape: (:)
+      default: []
+    CUBA.DENSITY:
+      default: 1000.0
+    CUBA.LINEAR_CONSTANT:
+      default: 1.0
+    CUBA.POWER_LAW_INDEX:
+      default: 1.0
+  
+  INLET_OUTLET:
+    definition: Inlet outlet boundary condition (outlet condition is zero gradient and inlet given variable value)
+    parent: CUBA.CONDITION
+    models: [CUBA.CONTINUUM]
+    CUBA.VARIABLE:
+      shape: (:)
+      default: []
+    CUBA.MATERIAL:
+      shape: (:)
+      default: []
+
+  WETTING_ANGLE:
+    parent: CUBA.CONDITION
+    definition: Volume fraction wall boundary condition with specified contatc angle
+    models: [CUBA.CONTINUUM]
+    CUBA.VARIABLE:
+      shape: (:)
+      default: [CUBA.VOLUME_FRACTION]
+    CUBA.CONTACT_ANGLE:
+      default: 45.0
+
+  SLIP_VELOCITY:
+    parent: CUBA.CONDITION
+    definition: Wall free slip velocity boundary condition
+    models: [CUBA.CONTINUUM]
+    CUBA.VARIABLE:
+      shape: (:)
+      default: []
+
 
 ###################################################
 # SOLVER & PARAMETERS (the computational method)
