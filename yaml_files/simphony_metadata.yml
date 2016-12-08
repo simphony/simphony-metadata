@@ -497,7 +497,7 @@ CUDS_KEYS:
       default: 1.0
     CUBA.POWER_LAW_INDEX:
       default: 1.0
-  
+
   INLET_OUTLET:
     definition: Inlet outlet boundary condition (outlet condition is zero gradient and inlet given variable value)
     parent: CUBA.CONDITION
