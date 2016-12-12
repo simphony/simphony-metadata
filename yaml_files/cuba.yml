@@ -572,11 +572,6 @@ CUBA_KEYS:
     shape: [3]
     type: integer
 
-  FACE:
-    definition: A face of a three dimensional object defined by the nodes
-    shape: [1]
-    type: double
-
   THERMODYNAMIC_ENSEMBLE:
     definition: Thermodynamic ensemble
     shape: [1]
