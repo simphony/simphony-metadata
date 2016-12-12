@@ -579,7 +579,7 @@ CUDS_KEYS:
 
   MESH:
     definition: A mesh
-    parent: CUBA.DATS_SET
+    parent: CUBA.DATA_SET
     CUBA.POINT:
       shape: (:)
     CUBA.EDGE:
