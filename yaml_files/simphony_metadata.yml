@@ -25,6 +25,7 @@ CUDS_KEYS:
   CUDS_COMPONENT:
     definition: Base data type for the CUDS components
     parent: CUBA.CUDS_ITEM
+    models: [CUBA.ELECTRONIC, CUBA.ATOMISTIC, CUBA.MESOSCOPIC, CUBA.CONTINUUM]
     CUBA.DESCRIPTION:
       default: ""
       scope: CUBA.USER
@@ -62,7 +63,6 @@ CUDS_KEYS:
 # each model equation has information on the models it supports
   MODEL_EQUATION:
     definition: The model equations are represented by all physics equations and material relations according to the RoMM
-    models: []
     parent: CUBA.CUDS_COMPONENT
     variables: []
 
@@ -95,7 +95,6 @@ CUDS_KEYS:
   DATA_SET:
     definition: A representation of the computational entities of the model equations
     parent: CUBA.CUDS_COMPONENT
-    models: []
 
   SOLVER_PARAMETER:
     definition: Solver parameter and metadata
@@ -287,7 +286,6 @@ CUDS_KEYS:
   ELECTROSTATIC_MODEL:
     definition: Electrostatic model
     parent: CUBA.PHYSICS_EQUATION
-    models: [CUBA.CFD, CUBA.MOLECULAR_DYNAMICS, CUBA.DEM]
 
 ###############################################################
 # Material Relations
