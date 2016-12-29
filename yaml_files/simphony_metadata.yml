@@ -486,9 +486,7 @@ CUDS_KEYS:
 
   SHEAR_STRESS_POWER_LAW_SLIP_VELOCITY:
     parent: CUBA.CONDITION
-    definition: Shear stress power law dependant slip velocity boundary condition. Nonlinear boundary condition for wall tangential velocity of the form
-v_s = CUBA.LINEAR_CONSTANT * S^CUBA.POWER_LAW_INDEX
-where v_s is the slip velocity (tangential velocity on the wall) and S is the wall shear stress
+    definition: Shear stress power law dependant slip velocity boundary condition. Nonlinear boundary condition for wall tangential velocity of the form v_s = CUBA.LINEAR_CONSTANT * S^CUBA.POWER_LAW_INDEX where v_s is the slip velocity (tangential velocity on the wall) and S is the wall shear stress
     models: [CUBA.CONTINUUM]
     CUBA.VARIABLE:
       shape: (:)
