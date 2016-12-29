@@ -31,15 +31,35 @@ The format is defined two files in yaml format:
 
 The keys described in this format specification MUST be interpreted as case sensitive.
 
-Terms
------
+Terminology
+-----------
 
+The following terms are used in relation to the SimPhoNy metadata description:
+
+    - ``concept``: an abstract, "discourse" entity we want to describe in our ontology. 
+      Example: the Lennard Jones potential, a vector, etc.
+    - ``CUBA data type``: a concrete (as in "formalized for our objectives") entity we define to 
+      represent a ``concept`` that has no dependencies toward other ``concepts``, and it is defined 
+      only by its expected data type and dimensionality (e.g. a Vector type).
+      The ``CUBA data type`` has the following characteristics:
+        - a unique vocabulary term (in ``CUBA key`` format) defining its type (e.g. VECTOR)
+        - characteristics of shape and data type.
+    - ``CUDS item``: a concrete entity we define to represent a ``concept`` that has relationships
+      with other concepts.  The ``CUDS item`` has the following characteristics:
+        - a unique vocabulary term defining its type (e.g. LENNARD_JONES_6_12)
+        - a unique identifier (e.g. a UUID which is going to be different for two distinct Lennard Jones potentials)
+          to be able to distinguish specific instances of the ``CUDS item``.
+        - a set of properties that are expressed as relations to other ``concepts``. Two types of properties exist:
+           - ``Fixed properties``: Properties that depend only on the CUDS Item type. 
+           - ``Variable properties``: Properties that depend on the specific instance of the CUDS Item.
+       
 The following terms are used in the remainder of this document and are prescriptive:
 
-    - ``CUBA name``: a fully capitalized, underscored name (e.g. COMPUTATIONAL_MODEL).
-    - ``qualified CUBA name``: a CUBA name prefixed with the ``CUBA.`` string (e.g. CUBA.COMPUTATIONAL_MODEL)
-    - ``CUBA entity``: an entry defined in the cuba.yml file under CUBA_KEYS
-    - ``CUDS entity``: an entry defined in the simphony_remote.yml file under CUDS_KEYS.
+    - ``CUBA key``: a fully capitalized, underscored name to refer to a CUDS item or CUBA data type 
+       (e.g. COMPUTATIONAL_MODEL).
+    - ``qualified CUBA key``: a CUBA key prefixed with the ``CUBA.`` string (e.g. CUBA.COMPUTATIONAL_MODEL)
+    - ``CUBA entry``: an entry defined in the cuba.yml file under CUBA_KEYS that represents a CUBA data type
+    - ``CUDS entry``: an entry defined in the simphony_remote.yml file under CUDS_KEYS that represents a CUDS item.
 
 cuba.yml
 --------
@@ -48,15 +68,16 @@ The format MUST have a root mapping with the following keys:
 
     - ``VERSION``: string 
       Contains semantic version Major.minor in format M.m with M and m positive integers.
-      minor MUST be incremented when extending, e.g. adding new entities to the
-      format (NOT the CUDS). Major MUST be incremented when removing or
-      altering existing entities, or changing the format overall.
+      minor MUST be incremented when backward compatibility in the format is preserved. 
+      Major MUST be incremented when backward compatibility is removed.
+      Due to the strict nature of the format, a change in minor is unlikely.
       **NOTE** that this is the version of the file format, _NOT_ of the described information (CUDS).
-      the addition of new CUDS entities will not require a version change, as
+      the addition of new CUDS entries will not require a version change, as
       long as the layout of the file complies with the standard 
 
     - ``CUBA``: string
-      Defines the type of file. The content is a free format string whose value has no meaning.
+      Defines the type of file. The content is a free format string whose value has no 
+      semantic meaning. It can be used as a comment.
 
     - ``CUBA_KEYS``: mapping 
       contains a mapping describing the declared **CUBA entries**.
@@ -93,12 +114,12 @@ It MAY also contain:
     ``description``: string 
         For human consumption. Free form description of the semantic carried by the data type.
 
-    ``shape``: inline sequence
-        The represented CUBA entity is an array, rather than a scalar. 
+    ``shape``: inline sequence of positive integers
+        The represented CUBA data is an array, rather than a scalar. 
         `shape` defines the shape of this array. MUST be a list of positive integers. 
 
     ``length``: integer
-        This entity MAY be present if the type is ``string``. It MUST NOT be present otherwise.
+        This key MAY be present if the type is ``string``. It MUST NOT be present otherwise.
         If present, it constraints the length of the string to the specified amount.
         If not present, the string can have arbitrary length.
 
@@ -112,7 +133,7 @@ The format MUST have a root level mapping with the following keys:
     - ``CUDS``: As in cuba.yml ``CUBA`` entry
 
     - ``CUDS_KEYS``: as in cuba.yml
-        Contains individual declarations for CUDS entries. 
+        Contains individual declarations for CUDS Items, in the form of CUDS entries. 
 
 it MAY contain the following entries
 
@@ -122,12 +143,14 @@ it MAY contain the following entries
     - ``Resources``: string
       As in cuba.yml
 
-CUDS entities format
-~~~~~~~~~~~~~~~~~~~~
+CUDS entries format
+~~~~~~~~~~~~~~~~~~~
 
-Each ``CUDS_KEYS`` entry MUST contain a mapping with the following keys:
+Each ``CUDS entry`` MUST contain a mapping.  The keys of the mapping represent properties of the ``CUDS Item``. 
+``Fixed properties`` use simple, lowercase names as keys. ``Variable properties`` use ``qualified CUBA key`` as keys.
+The following ``Fixed properties`` keys are defined:
     
-    ``parent``: qualified CUBA name or empty string
+    ``parent``: ``qualified CUBA key`` or empty string
         The parent CUDS of a inheritance (is-a) hierarchy. MUST be either:
 
             - a string referring to another entry. r example:
@@ -136,26 +159,25 @@ Each ``CUDS_KEYS`` entry MUST contain a mapping with the following keys:
 
             - or, an empty string, for the start of the hierarchy (parentless).
 
-It MAY contain the following non-CUBA properties:
+The entry MAY contain the following Fixed properties keys:
 
     ``description``: string 
         For human consumption. Free form description of the carried semantics.
 
-    ``models``: sequence of qualified CUBA names.
-        Describes the computational models this entity is relevant for.
+    ``models``: sequence of ``qualified CUBA key``.
+        Describes the computational models this ``CUDS Item`` is relevant for.
         Each entry MUST be fully qualified with the ``CUBA.`` prefix. 
         See ``Semantic rules`` for additional requirements of this entry.
     
-    ``physics_equations``: sequence of qualified CUBA names.
+    ``physics_equations``: sequence of ``qualified CUBA keys``.
         Describes the physics equations associated to this computational method.
         Each entry MUST be qualified with the ``CUBA.`` prefix.
         See ``Semantic rules`` for additional requirements of this entry.
 
-    ``variables``: sequence of qualified CUBA names.
-        Defines metainformation of required data for this entity to be valuable.
-        This entry is just presented as metadata on the associated class. It is
-        up to the client code to interpret it appropriately.
-        The concrete, "hard numbers" data is stored somewhere else.
+    ``variables``: sequence of ``qualified CUBA keys``.
+        Defines metainformation of required data for this ``CUDS Item`` to be valuable.
+        This entry is just presented as metadata. It is up to the client code to interpret 
+        it appropriately.  The concrete, "hard numbers" data is stored somewhere else.
         See ``Semantic rules`` for additional requirements of this entry.
 
     ``data``: mapping
@@ -167,14 +189,18 @@ It MAY contain the following non-CUBA properties:
         "Property entries format":
             - ``default``: MUST be empty
             - ``scope``: MUST be ``CUBA.SYSTEM``.
-            
-Finally, it MAY contain CUBA properties in the form:
 
-    **CUBA name**: mapping
-        Describe the existence of a relation toward a specified CUBA or CUDS entity.
-        each key MUST be a qualified CUBA name, and MUST be defined in either file.
+            
+The entry MAY contain Variable properties in the form:
+
+    **qualified CUBA key**: mapping
+        Describe the existence of a relation toward a specified ``CUBA data type`` 
+        or ``CUDS Item``. Each key MUST be a ``qualified CUBA key``, and MUST be defined 
+        in one of the files.
 
       Each value of the mapping is a mapping whose format is detailed in "Property entries format".
+
+All the CUBA properties are variable properties
 
 Property entries format
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -206,7 +232,7 @@ Each Property entry of a given property is a mapping that MAY have the following
             - ``(:)`` : an arbitrary size vector.
 
     - ``default``: 
-        Indicates the default value for the property once the entity has 
+        Indicates the default value for the property once the ``CUDS Item`` has 
         been instantiated.
         The default MUST be type compatible with the property entry key 
         (eg. integers if the data is an integer)
@@ -215,9 +241,10 @@ Each Property entry of a given property is a mapping that MAY have the following
         itself. 
     
     
-Examples:
+Examples
+~~~~~~~~
 
-The following entry specifies that BASIS links against 3 VECTOR objects, where VECTOR is a CUBA entity. 
+The following entry specifies that BASIS links against 3 VECTOR objects, where VECTOR is a ``CUBA data type``. 
 Each VECTOR has shape 3, so the required default is 3x3 
 
 ```
@@ -229,9 +256,8 @@ BASIS:
     default: [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
 ```
 
-The following example specifies that the NEUMANN CUDS entity refers to an unlimited list of 
-MATERIAL entities (where MATERIAL is a CUDS entity). The default is to refer to no MATERIAL
-object.
+The following example specifies that the NEUMANN ``CUDS Item`` refers to an unlimited list of 
+MATERIAL (where MATERIAL is a ``CUDS Item``). The default is to refer to no MATERIAL object.
 
 ```
 NEUMANN:
@@ -241,9 +267,11 @@ NEUMANN:
     default: []
 ```
 
+Semantic format
+---------------
 
 Semantic rules
---------------
+~~~~~~~~~~~~~~
 
 This section details additional requirements that go beyond the low level file format, but should be considered by
 the parser to validate the final format.
@@ -253,7 +281,7 @@ the parser to validate the final format.
         - There MUST NOT be loops in the hierarchy.
 
     - ``CUDS models``: The strings contained in this list MUST refer to
-      entities that are children of CUBA.COMPUTATIONAL_MODEL. 
+      CUDS Items that are children of CUBA.COMPUTATIONAL_MODEL. 
 
     - ``CUDS variables``: entries must refer to data types as defined in the cuba.yml file.
  
