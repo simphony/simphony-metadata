@@ -586,3 +586,8 @@ CUBA_KEYS:
     definition: a general none value
     shape: [1]
     type: integer
+
+  LATTICE_PARAMETER:
+    definition: A lattice parameter to define a Bravais Lattice
+    shape: [1]
+    type: double
