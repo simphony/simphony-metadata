@@ -303,7 +303,7 @@ CUDS_KEYS:
     definition: Relative velocity model to use in mixture model
     models: [CUBA.CONTINUUM]
 
-  MESO_SCOPIC_RELATIVE_VELOCITY_MODEL:
+  MESOSCOPIC_RELATIVE_VELOCITY_MODEL:
     parent: CUBA.RELATIVE_VELOCITY_MODEL
     definition: Relative velocity taken from meso scopic model
     models: [CUBA.CONTINUUM]
@@ -327,7 +327,7 @@ CUDS_KEYS:
     definition: Standard stress model (to use in mixture model)
     models: [CUBA.CONTINUUM]
 
-  MESO_SCOPIC_STRESS_MODEL:
+  MESOSCOPIC_STRESS_MODEL:
     parent: CUBA.STRESS_MODEL
     definition: Stress model from meso scopic to use in mixture model
     models: [CUBA.CONTINUUM]
@@ -486,7 +486,9 @@ CUDS_KEYS:
 
   SHEAR_STRESS_POWER_LAW_SLIP_VELOCITY:
     parent: CUBA.CONDITION
-    definition: Shear stress power law dependant slip velocity boundary condition
+    definition: Shear stress power law dependant slip velocity boundary condition. Nonlinear boundary condition for wall tangential velocity of the form
+v_s = CUBA.LINEAR_CONSTANT * S^CUBA.POWER_LAW_INDEX
+where v_s is the slip velocity (tangential velocity on the wall) and S is the wall shear stress
     models: [CUBA.CONTINUUM]
     CUBA.VARIABLE:
       shape: (:)
