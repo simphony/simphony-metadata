@@ -217,8 +217,9 @@ Each Property entry of a given property is a mapping that MAY have the following
     
 Examples:
 
-The following entry specifies that BASIS links against 3 VECTOR objects, where VECTOR is a CUBA_KEYS entity. 
+The following entry specifies that BASIS links against 3 VECTOR objects, where VECTOR is a CUBA entity. 
 Each VECTOR has shape 3, so the required default is 3x3 
+
 ```
 BASIS:
   parent: CUBA.CUDS_COMPONENT
@@ -228,8 +229,8 @@ BASIS:
     default: [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
 ```
 
-The following example specifies that the NEUMANN CUDS_KEYS entity refers to an unlimited list of 
-MATERIAL entities (where material is a CUDS_KEYS entity). The default is to refer to no MATERIAL
+The following example specifies that the NEUMANN CUDS entity refers to an unlimited list of 
+MATERIAL entities (where MATERIAL is a CUDS entity). The default is to refer to no MATERIAL
 object.
 
 ```
@@ -245,8 +246,7 @@ Semantic rules
 --------------
 
 This section details additional requirements that go beyond the low level file format, but should be considered by
-the parser.
-
+the parser to validate the final format.
 
     - ``CUDS parent``: 
         - The file MUST contain one and only one parentless entry.
@@ -264,15 +264,32 @@ the parser.
           An error MUST be raised if found under any other keyword.
 
     - ``CUDS properties defaults``:
-        When specifying a CUDS property default and the default is non-trivial (e.g. None)
+        When specifying a CUDS property (e.g. CLASS_A) default and the default is non-trivial (e.g. None)
+        it MUST refer to a subclass (e.g. CLASS_A1) of the property type. In other words:
+
+        CLASS_A: 
+            parent: CUBA.SOMETHING
+        
+        CLASS_A1:
+            parent: CUBA.CLASS_A
+
+        CLASS_A2:
+            parent: CUBA.CLASS_A
+
+        CLASS_C:
+            parent: CUBA.SOMETHING_ELSE
+            CLASS_A:
+                default: CLASS_A1
+        
 
 Parser behavior
 ---------------
 
 An error MUST be reported, and parsing stopped when the following circumstances occur:
 
-    - non-compliance with the specified format
-    - Unrecognized keys by parsers
+    - non-compliance with the yaml format
+    - non-compliance with the format described in this specification.
+    - Unrecognized keys 
     - Duplicated keys
     - Violation of semantic rules.
 
