@@ -486,9 +486,9 @@ CUDS_KEYS:
     CUBA.CURRENT:
       default: 0
     CUBA.SIZE:
-      defaut: 0
+      default: 0
     CUBA.FINAL:
-      defaut: 0
+      default: 0
 
 ##############################################
 ## Data Sets Metadata
