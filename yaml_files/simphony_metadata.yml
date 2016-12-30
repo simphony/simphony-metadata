@@ -497,7 +497,7 @@ CUDS_KEYS:
     parent: CUBA.CUDS_COMPONENT
     definition: Space basis vectors (row wise)
     CUBA.VECTOR:
-      shape: (3, 3)
+      shape: (3)
       default: [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
 
   ORIGIN:
@@ -511,7 +511,7 @@ CUDS_KEYS:
     definition: A simple hexahedron simulation box defining six boundary faces that are defined by three box vectors. The same boundary condition should be specified for each direction (two faces at a time).
     parent: CUBA.BOUNDARY
     CUBA.VECTOR:
-      shape: (3,3)
+      shape: (3)
       default: [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
       scope: CUBA.USER
     CUBA.CONDITION:
