@@ -9,12 +9,12 @@ CUBA_KEYS:
 
   UUID:
     definition: Universal unique id represented as a hex string size 32
-    shape: [32]
+    length: [32]
     type: string
 
   NAME:
     definition: Naming of high-level objects (e.g. solver models)
-    shape: [20]
+    length: [20]
     type: string
 
   POSITION:
@@ -39,7 +39,7 @@ CUBA_KEYS:
 
   CHEMICAL_SPECIE:
     definition: Chemical specie
-    shape: [20]
+    length: [20]
     type: string
 
   MATERIAL_TYPE:
@@ -74,12 +74,12 @@ CUBA_KEYS:
 
   CRYSTAL_STORAGE:
     definition: Additional information for visualization
-    shape: [20]
+    length: [20]
     type: string
 
   NAME_UC:
     definition: Name of the unit cell of the component
-    shape: [20]
+    length: [20]
     type: string
 
   LATTICE_VECTORS:
@@ -99,7 +99,7 @@ CUBA_KEYS:
 
   BOND_LABEL:
     definition: Unique ID of atoms
-    shape: [20]
+    length: [20]
     type: string
 
   BOND_TYPE:
@@ -424,22 +424,22 @@ CUBA_KEYS:
 
   MAJOR:
     definition: Major attribute of an entity.
-    shape: [8]
+    length: [8]
     type: string
 
   MINOR:
     definition: Minor attribute of an entity.
-    shape: [8]
+    length: [8]
     type: string
 
   PATCH:
     definition: Patch attribute of an entity.
-    shape: [8]
+    length: [8]
     type: string
 
   FULL:
     definition: Full attribute of an entity.
-    shape: [128]
+    length: [128]
     type: string
 
   CHARGE:
@@ -454,7 +454,7 @@ CUBA_KEYS:
 
   DESCRIPTION:
     definition: Description text
-    shape: [20]
+    length: [20]
     type: string
 
   ELECTRIC_FIELD:
