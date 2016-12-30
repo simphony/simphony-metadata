@@ -287,7 +287,7 @@ CUDS_KEYS:
   ELECTROSTATIC_MODEL:
     definition: Electrostatic model
     parent: CUBA.PHYSICS_EQUATION
-    models: [CUBA.CFD, CUBA.MOLECULAR_DYNAMICS, CUBA.DEM]
+    models: []
 
 ###############################################################
 # Material Relations
