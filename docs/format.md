@@ -111,7 +111,7 @@ Each CUBA_KEYS entry MUST contain a mapping with the following keys:
 
 It MAY also contain:
 
-    ``description``: string 
+    ``definition``: string 
         For human consumption. Free form description of the semantic carried by the data type.
 
     ``shape``: inline sequence of positive integers
@@ -161,7 +161,7 @@ The following ``Fixed properties`` keys are defined:
 
 The entry MAY contain the following Fixed properties keys:
 
-    ``description``: string 
+    ``definition``: string 
         For human consumption. Free form description of the carried semantics.
 
     ``models``: sequence of ``qualified CUBA key``.
