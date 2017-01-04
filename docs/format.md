@@ -308,7 +308,9 @@ the parser to validate the final format.
             parent: CUBA.SOMETHING_ELSE
             CLASS_A:
                 default: CLASS_A1
-        
+  
+    - ``cuba keys``:
+        CUBA keys, when converted to lowercase, MUST NOT be equal to a ``fixed property`` key.
 
 Parser behavior
 ---------------
