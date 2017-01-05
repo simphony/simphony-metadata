@@ -285,8 +285,8 @@ the parser to validate the final format.
 
     - ``CUDS variables``: entries must refer to data types as defined in the cuba.yml file.
  
-    - ``CUDS physics_equation``:
-        - The strings contained in this list MUST refer to a child of PHYSICS_EQUATION.
+    - ``CUDS physics_equations``:
+        - The entries contained in this list MUST refer to a child of PHYSICS_EQUATION.
 
         - The entry is only valid for ``COMPUTATIONAL_METHOD`` and its children.
           An error MUST be raised if found under any other keyword.
