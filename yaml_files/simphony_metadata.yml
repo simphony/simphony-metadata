@@ -297,7 +297,7 @@ CUDS_KEYS:
     parent: CUBA.INTERATOMIC_POTENTIAL
     models: [CUBA.ATOMISTIC]
     CUBA.MATERIAL:
-      shape: (2)
+      shape: [2]
 
   LENNARD_JONES_6_12:
     parent: CUBA.PAIR_POTENTIAL
@@ -350,7 +350,7 @@ CUDS_KEYS:
     parent: CUBA.THERMOSTAT
     models: [CUBA.ATOMISTIC, CUBA.MESOSCOPIC]
     CUBA.TEMPERATURE:
-      shape: (2)
+      shape: [2]
       default: [0.0, 0.0]
     CUBA.COUPLING_TIME:
       default: 1.0
@@ -360,7 +360,7 @@ CUDS_KEYS:
     parent: CUBA.THERMOSTAT
     models: [CUBA.ATOMISTIC, CUBA.MESOSCOPIC]
     CUBA.TEMPERATURE:
-      shape: (2)
+      shape: [2]
       default: [0.0, 0.0]
     CUBA.COUPLING_TIME:
       default: 0.0001
@@ -370,7 +370,7 @@ CUDS_KEYS:
     parent: CUBA.THERMOSTAT
     models: [CUBA.ATOMISTIC, CUBA.MESOSCOPIC]
     CUBA.TEMPERATURE:
-      shape: (2)
+      shape: [2]
       default: [0.0, 0.0]
     CUBA.COUPLING_TIME:
       default: 0.000001
@@ -382,7 +382,7 @@ CUDS_KEYS:
     CUBA.SURFACE_TENSION:
       default: 0.07
     CUBA.MATERIAL:
-      shape: (2)
+      shape: [2]
 
 ######################################################
 # Conditions on Boundaries
@@ -491,7 +491,7 @@ CUDS_KEYS:
     parent: CUBA.CUDS_COMPONENT
     definition: Space basis vectors (row wise)
     CUBA.VECTOR:
-      shape: (3)
+      shape: [3]
       default: [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
 
   ORIGIN:
@@ -504,10 +504,10 @@ CUDS_KEYS:
     definition: A simple hexahedron simulation box defining six boundary faces that are defined by three box vectors. The same boundary condition should be specified for each direction (two faces at a time).
     parent: CUBA.BOUNDARY
     CUBA.VECTOR:
-      shape: (3)
+      shape: [3]
       default: [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
     CUBA.CONDITION:
-      shape: (3)
+      shape: [3]
       default:
 
   POINT:
@@ -589,12 +589,12 @@ CUDS_KEYS:
     definition: A Bravais lattice
     parent: CUBA.LATTICE
     CUBA.SIZE:
-      shape: (3)
+      shape: [3]
       default: [1, 1, 1]
     CUBA.ORIGIN:
     CUBA.PRIMITIVE_CELL:
     CUBA.LATTICE_PARAMETER:
-      shape: (3)
+      shape: [3]
       default: [1.0, 1.0, 1.0]
 
   CUBIC_LATTICE:
@@ -673,7 +673,6 @@ CUDS_KEYS:
     parent: CUBA.CUDS_ITEM
     definition: Provides a physics equation and methods that engines provides to solve them
     CUBA.PHYSICS_EQUATION:
-      shape: (1)
       scope: CUBA.SYSTEM
     CUBA.COMPUTATIONAL_METHOD:
       shape: (:)

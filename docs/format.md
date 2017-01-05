@@ -117,6 +117,7 @@ It MAY also contain:
     ``shape``: inline sequence of positive integers
         The represented CUBA data is an array, rather than a scalar. 
         `shape` defines the shape of this array. MUST be a list of positive integers. 
+        If not present, the default is the list ``[1]``
 
     ``length``: integer
         This key MAY be present if the type is ``string``. It MUST NOT be present otherwise.
@@ -215,12 +216,11 @@ Each Property entry of a given property is a mapping that MAY have the following
             - ``CUBA.SYSTEM`: Indicates that this property is not available for 
               setting at construction. its value is set by internal code.
 
-    - ``shape``: positive int, or sequence of positive ints or "colon" notation.
+    - ``shape``: sequence of positive ints or "colon" notation.
         Specifies the shape of the container holding the contained CUBA type. Default is the
-        single positive integer 1. Alternative values:
+        list [1]. Examples:
 
-            - ``3`` : A vector of three entities.
-            - ``[3]`` : equivalent to the above
+            - ``[3]`` : A vector of three entities.
             - ``[3,3]`` : array of 3x3 CUBA entities. 
 
        To define arrays of arbitrary length on one or multiple dimensions, the following "colon"
@@ -252,7 +252,7 @@ BASIS:
   parent: CUBA.CUDS_COMPONENT
   definition: Space basis vectors (row wise)
   CUBA.VECTOR:
-    shape: 3
+    shape: [3]
     default: [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
 ```
 
