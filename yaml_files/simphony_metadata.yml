@@ -437,32 +437,32 @@ CUDS_KEYS:
   COMPUTATIONAL_METHOD:
     parent: CUBA.SOLVER_PARAMETER
     definition: A computational method according to the RoMM
-    physics_equation: []
+    physics_equations: []
 
   DEM:
     parent: CUBA.COMPUTATIONAL_METHOD
     definition: Discrete element method
-    physics_equation: [CUBA.GRANULAR_DYNAMICS]
+    physics_equations: [CUBA.GRANULAR_DYNAMICS]
 
   FVM:
     parent: CUBA.COMPUTATIONAL_METHOD
     definition: Finite volume method
-    physics_equation: [CUBA.CFD]
+    physics_equations: [CUBA.CFD]
 
   FEM:
     parent: CUBA.COMPUTATIONAL_METHOD
     definition: Finite element method
-    physics_equation: [CUBA.CFD]
+    physics_equations: [CUBA.CFD]
 
   SPH:
     parent: CUBA.COMPUTATIONAL_METHOD
     definition: Smooth particle hydrodynamics
-    physics_equation: [CUBA.CFD]
+    physics_equations: [CUBA.CFD]
 
   VERLET:
     parent: CUBA.COMPUTATIONAL_METHOD
     definition: Newtonian dynamics integration using verlet algorithm
-    physics_equation: [CUBA.MOLECULAR_DYNAMICS]
+    physics_equations: [CUBA.MOLECULAR_DYNAMICS]
 
   INTEGRATION_TIME:
     parent: CUBA.SOLVER_PARAMETER
