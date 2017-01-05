@@ -27,10 +27,8 @@ CUDS_KEYS:
     parent: CUBA.CUDS_ITEM
     CUBA.DESCRIPTION:
       default: ""
-      scope: CUBA.USER
     CUBA.NAME:
       default: ""
-      scope: CUBA.USER
 
 ######################################################
 # define the terminology used for computational models
@@ -75,7 +73,6 @@ CUDS_KEYS:
     definition: Material relation which together with the Physics equation gives the model equation
     parent: CUBA.MODEL_EQUATION
     CUBA.MATERIAL:
-      scope: CUBA.USER
       shape: (:)
 
   MATERIAL:
@@ -141,7 +138,6 @@ CUDS_KEYS:
       default: CUBA.INCOMPRESSIBLE_FLUID_MODEL
     CUBA.THERMAL_MODEL:
       default: CUBA.ISOTHERMAL_MODEL
-      scope: CUBA.USER
     CUBA.TURBULENCE_MODEL:
       default: CUBA.LAMINAR_FLOW_MODEL
     CUBA.MULTIPHASE_MODEL:
@@ -149,7 +145,6 @@ CUDS_KEYS:
     CUBA.RHEOLOGY_MODEL:
       default: CUBA.NEWTONIAN_FLUID_MODEL
     CUBA.GRAVITY_MODEL:
-      scope: CUBA.USER
       default:
     CUBA.ELECTROSTATIC_MODEL:
       default: CUBA.CONSTANT_ELECTROSTATIC_FIELD_MODEL
@@ -386,7 +381,6 @@ CUDS_KEYS:
     models: [CUBA.CONTINUUM]
     CUBA.SURFACE_TENSION:
       default: 0.07
-      scope: CUBA.USER
     CUBA.MATERIAL:
       shape: (2)
 
@@ -505,7 +499,6 @@ CUDS_KEYS:
     parent: CUBA.CUDS_COMPONENT
     CUBA.POSITION:
       default: [0, 0, 0]
-      scope: CUBA.USER
 
   BOX:
     definition: A simple hexahedron simulation box defining six boundary faces that are defined by three box vectors. The same boundary condition should be specified for each direction (two faces at a time).
@@ -513,7 +506,6 @@ CUDS_KEYS:
     CUBA.VECTOR:
       shape: (3)
       default: [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
-      scope: CUBA.USER
     CUBA.CONDITION:
       shape: (3)
       default:
