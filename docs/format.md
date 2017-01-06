@@ -120,9 +120,8 @@ It MAY also contain:
         If not present, the default is the list ``[1]``
 
     ``length``: integer
-        This key MAY be present if the type is ``string``. It MUST NOT be present otherwise.
-        If present, it constraints the length of the string to the specified amount.
-        If not present, the string can have arbitrary length.
+        This key MUST be present if the type is ``string``. It MUST NOT be present otherwise.
+        It constraints the length of the string to the specified amount.
 
 simphony_metadata.yml
 ---------------------

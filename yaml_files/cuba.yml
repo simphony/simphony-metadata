@@ -502,10 +502,12 @@ CUBA_KEYS:
   THERMODYNAMIC_ENSEMBLE:
     definition: Thermodynamic ensemble
     type: string
+    length: 4096
 
   VARIABLE:
     definition: a list of physics/chemistry variables in a PE or MR
     type: string
+    length: 4096
 
   NONE:
     definition: a general none value
