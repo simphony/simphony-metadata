@@ -74,6 +74,7 @@ CUDS_KEYS:
     parent: CUBA.MODEL_EQUATION
     CUBA.MATERIAL:
       shape: (:)
+      default: []
 
   MATERIAL:
     definition: Definition of a material and its properties in the data container
@@ -84,6 +85,7 @@ CUDS_KEYS:
     parent: CUBA.CUDS_COMPONENT
     CUBA.CONDITION:
       shape: (:)
+      default: []
 
   CONDITION:
     definition: Condition on boundaries or model entities
@@ -340,6 +342,7 @@ CUDS_KEYS:
     models: [CUBA.ATOMISTIC]
     CUBA.COHESION_ENERGY_DENSITY:
       default: 0.0
+
   THERMOSTAT:
     definition: A thermostat is a model that describes the thermal interaction of a material with the environment or a heat reservoir
     parent: CUBA.MATERIAL_RELATION
@@ -508,7 +511,6 @@ CUDS_KEYS:
       default: [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
     CUBA.CONDITION:
       shape: [3]
-      default:
 
   POINT:
     definition: A point in a 3D space system
