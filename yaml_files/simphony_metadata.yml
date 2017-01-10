@@ -663,7 +663,7 @@ CUDS_KEYS:
     parent: CUBA.CUDS_ITEM
     definition: Represents a software tool which is used to solve the model or in pre/post processing
     CUBA.VERSION:
-      default:
+      default: CUBA.VERSION
 
   ENGINE:
     parent: CUBA.SOFTWARE_TOOL
