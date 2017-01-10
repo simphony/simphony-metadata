@@ -511,6 +511,7 @@ CUDS_KEYS:
       default: [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
     CUBA.CONDITION:
       shape: [3]
+      default: [CUBA.EMPTY, CUBA.EMPTY, CUBA.EMPTY]
 
   POINT:
     definition: A point in a 3D space system
