@@ -16,7 +16,7 @@ CUDS_KEYS:
   CUDS_ITEM:
     definition: Root of all CUDS types
     parent:
-    CUBA.UUID:
+    CUBA.UID:
       scope: CUBA.SYSTEM
     data:
       default:

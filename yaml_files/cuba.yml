@@ -7,7 +7,7 @@ Purpose: CUBA provides the most primitive definitions used in the SimPhoNy metad
 
 CUBA_KEYS:
 
-  UUID:
+  UID:
     definition: Universal unique id represented as a hex string size 32
     length: 32
     type: string
