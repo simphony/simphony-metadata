@@ -30,6 +30,10 @@ CUDS_KEYS:
     CUBA.NAME:
       default: ""
 
+  CUDS:
+    definition: CUDS Container
+    parent: CUBA.CUDS_COMPONENT
+
 ######################################################
 # define the terminology used for computational models
 ######################################################
