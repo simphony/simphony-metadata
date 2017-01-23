@@ -55,7 +55,7 @@ The following terms are used in relation to the SimPhoNy metadata description:
        
 The following terms are used in the remainder of this document and are prescriptive:
 
-    - ``CUBA key``: a fully capitalized, underscored name to refer to a CUDS item or CUBA data type 
+    - ``(non-qualified) CUBA key``: a fully capitalized, underscored name to refer to a CUDS item or CUBA data type 
        (e.g. COMPUTATIONAL_MODEL).
     - ``qualified CUBA key``: a CUBA key prefixed with the ``CUBA.`` string (e.g. CUBA.COMPUTATIONAL_MODEL)
     - ``CUBA entry``: an entry defined in the cuba.yml file under CUBA_KEYS that represents a CUBA data type
@@ -147,8 +147,11 @@ CUDS entries format
 ~~~~~~~~~~~~~~~~~~~
 
 Each ``CUDS entry`` MUST contain a mapping.  The keys of the mapping represent properties of the ``CUDS Item``. 
-``Fixed properties`` use simple, lowercase names as keys. ``Variable properties`` use ``qualified CUBA key`` as keys.
-The following ``Fixed properties`` keys are defined:
+
+    - ``Fixed properties`` use simple, lowercase names as keys. 
+    - ``Variable properties`` use ``qualified CUBA key`` as keys.
+
+The following ``Fixed properties`` keys MUST be present:
     
     ``parent``: ``qualified CUBA key`` or empty string
         The parent CUDS of a inheritance (is-a) hierarchy. MUST be either:
@@ -159,7 +162,10 @@ The following ``Fixed properties`` keys are defined:
 
             - or, an empty string, for the start of the hierarchy (parentless).
 
-The entry MAY contain the following Fixed properties keys:
+Apart from the above keys, other Fixed properties keys MAY be present, and their 
+content is free choice. They represents properties whose value is fixed and hardcoded 
+(as specified inline). Some Fixed properties keys have however particular
+semantic meaning and are commonly used:
 
     ``definition``: string 
         For human consumption. Free form description of the carried semantics.
@@ -195,10 +201,14 @@ The entry MAY contain Variable properties in the form:
 
     **qualified CUBA key**: mapping
         Describe the existence of a relation toward a specified ``CUBA data type`` 
-        or ``CUDS Item``. Each key MUST be a ``qualified CUBA key``, and MUST be defined 
-        in one of the files.
+        or ``CUDS Item``. Each key:
+            - MUST be a ``qualified CUBA key``
+            - MUST have already been defined in one of the files.
+            - SHOULD be specified only once in the ``CUDS entry`` (by nature of the mapping, only the last entry will be used)
+            - when converted to non-qualified lowercase, MUST NOT be equal to a ``fixed property`` key.
 
       Each value of the mapping is a mapping whose format is detailed in "Property entries format".
+
 
 All the CUBA properties are variable properties
 
@@ -237,7 +247,7 @@ Each Property entry of a given property is a mapping that MAY have the following
         (eg. integers if the data is an integer)
         If the key refers to a CUBA data, the default must match shape, type and length 
         requirements specified for the CUBA data, keeping into account the shape of the CUBA data 
-        itself. 
+         itself. 
     
     
 Examples
@@ -308,9 +318,6 @@ the parser to validate the final format.
             CLASS_A:
                 default: CLASS_A1
   
-    - ``cuba keys``:
-        CUBA keys, when converted to lowercase, MUST NOT be equal to a ``fixed property`` key.
-
 Parser behavior
 ---------------
 
