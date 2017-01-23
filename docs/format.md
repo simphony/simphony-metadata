@@ -227,7 +227,8 @@ Each Property entry of a given property is a mapping that MAY have the following
               and its value is set by internal code. If this key is present, 
               the ``default`` key MUST NOT be present. The generator will use
               the associated Property key to produce the appropriate 
-              initialization code.
+              initialization code. Examples of these properties are the 
+              Fixed property ``data`` and the Variable property CUBA.UID.
 
     - ``shape``: sequence of positive ints or "colon" notation.
         Specifies the shape of the container holding the contained CUBA type. Default is the
@@ -251,7 +252,7 @@ Each Property entry of a given property is a mapping that MAY have the following
         (eg. integers if the data is an integer)
         If the key refers to a CUBA data, the default must match shape, type and length 
         requirements specified for the CUBA data, keeping into account the shape of the CUBA data 
-         itself. 
+        itself. 
     
     
 Examples
