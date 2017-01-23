@@ -222,8 +222,12 @@ Each Property entry of a given property is a mapping that MAY have the following
             - ``CUBA.USER``: Default if not specified. Indicates that this
               property is available for setting at construction. Its initial 
               value is the appropriate default.
-            - ``CUBA.SYSTEM`: Indicates that this property is not available for 
-              setting at construction. its value is set by internal code.
+            - ``CUBA.SYSTEM`: Indicates that this property cannot be specified 
+              by the user (i.e. is not available for setting at construction)
+              and its value is set by internal code. If this key is present, 
+              the ``default`` key MUST NOT be present. The generator will use
+              the associated Property key to produce the appropriate 
+              initialization code.
 
     - ``shape``: sequence of positive ints or "colon" notation.
         Specifies the shape of the container holding the contained CUBA type. Default is the
