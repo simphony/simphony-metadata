@@ -19,7 +19,6 @@ CUDS_KEYS:
     CUBA.UID:
       scope: CUBA.SYSTEM
     data:
-      default:
       scope: CUBA.SYSTEM
 
   CUDS_COMPONENT:

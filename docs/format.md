@@ -363,9 +363,8 @@ Semantically defined fixed property keys and their contents:
         (i.e. user defineable) data.
         This entry MUST be present only on the root object (parent is empty). 
         It MUST NOT be present anywhere else.
-        Its mapping MUST contain two and only two keys out of the 
-        "Property entries format":
-            - ``default``: MUST be empty
+        Its mapping MUST contain:
+
             - ``scope``: MUST be ``CUBA.SYSTEM``.
   
 Parser behavior
