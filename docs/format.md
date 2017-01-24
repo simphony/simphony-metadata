@@ -66,7 +66,7 @@ cuba.yml
 
 The format MUST have a root mapping with the following keys:
 
-    - ``VERSION``: string 
+    - ``VERSION``: string
       Contains semantic version Major.minor in format M.m with M and m positive integers.
       minor MUST be incremented when backward compatibility in the format is preserved. 
       Major MUST be incremented when backward compatibility is removed.
@@ -74,6 +74,8 @@ The format MUST have a root mapping with the following keys:
       **NOTE** that this is the version of the file format, _NOT_ of the described information (CUDS).
       the addition of new CUDS entries will not require a version change, as
       long as the layout of the file complies with the standard 
+      **NOTE**: The value must be explicitly quoted, as it would otherwise be interpreted
+      by the yaml parser as a floating point value
 
     - ``CUBA``: string
       Defines the type of file. The content is a free format string whose value has no 
@@ -81,7 +83,7 @@ The format MUST have a root mapping with the following keys:
 
     - ``CUBA_KEYS``: mapping 
       contains a mapping describing the declared **CUBA entries**.
-      Each key of the mapping is the name of a CUBA entry.  The Key MUST be all
+      Each key of the mapping is the non-qualified name of a CUBA entry.  The Key MUST be all
       uppercase, with underscore as separation. Numbers are allowed but not in first
       position. Valid Examples: ``FACE``, ``ANGULAR_ACCELERATION``, ``POSITION_3D``
       Each value of the mapping is a mapping whose format is detailed in the
@@ -92,9 +94,9 @@ The root mapping MAY contain the following keys:
     - ``Purpose``: string
       For human consumption. Free format string to describe the contents of the file.
 
-    - ``Resources``: string
-      For human consumption. A free form description of the available resources, 
-      such as links to specs
+    - ``Resources``: mapping
+      For human consumption. A mapping between a user meaninfgul entity and a string
+      describing that entity, for example a link to a spec or an email address.
 
 CUBA entries format
 ~~~~~~~~~~~~~~~~~~~
@@ -134,6 +136,10 @@ The format MUST have a root level mapping with the following keys:
 
     - ``CUDS_KEYS``: as in cuba.yml
         Contains individual declarations for CUDS Items, in the form of CUDS entries. 
+        Each key of the mapping is the name of a CUDS entry.  The Key MUST be all
+        uppercase, with underscore as separation. Numbers are allowed but not in first
+        position. Each value of the mapping is a mapping whose format is detailed in the
+        "CUDS entries format" section.
 
 it MAY contain the following entries
 
@@ -163,40 +169,12 @@ The following ``Fixed properties`` keys MUST be present:
             - or, an empty string, for the start of the hierarchy (parentless).
 
 Apart from the above keys, other Fixed properties keys MAY be present, and their 
-content is free choice. They represents properties whose value is fixed and hardcoded 
-(as specified inline). Some Fixed properties keys have however particular
-semantic meaning and are commonly used:
+content is specified in "Fixed Properties entries format". They represents properties 
+whose value is fixed and hardcoded. 
 
-    ``definition``: string 
-        For human consumption. Free form description of the carried semantics.
+Some Fixed properties keys have however particular semantic meaning and are commonly used.
+Refer to "Semantic rules" for additional information.
 
-    ``models``: sequence of ``qualified CUBA key``.
-        Describes the computational models this ``CUDS Item`` is relevant for.
-        Each entry MUST be fully qualified with the ``CUBA.`` prefix. 
-        See ``Semantic rules`` for additional requirements of this entry.
-    
-    ``physics_equations``: sequence of ``qualified CUBA keys``.
-        Describes the physics equations associated to this computational method.
-        Each entry MUST be qualified with the ``CUBA.`` prefix.
-        See ``Semantic rules`` for additional requirements of this entry.
-
-    ``variables``: sequence of ``qualified CUBA keys``.
-        Defines metainformation of required data for this ``CUDS Item`` to be valuable.
-        This entry is just presented as metadata. It is up to the client code to interpret 
-        it appropriately.  The concrete, "hard numbers" data is stored somewhere else.
-        See ``Semantic rules`` for additional requirements of this entry.
-
-    ``data``: mapping
-        Defines the presence of a "data" property which collects all the transient
-        (i.e. user defineable) data.
-        This entry MUST be present only on the root object (parent is empty). 
-        It MUST NOT be present anywhere else.
-        Its mapping MUST contain two and only two keys out of the 
-        "Property entries format":
-            - ``default``: MUST be empty
-            - ``scope``: MUST be ``CUBA.SYSTEM``.
-
-            
 The entry MAY contain Variable properties in the form:
 
     **qualified CUBA key**: mapping
@@ -207,15 +185,15 @@ The entry MAY contain Variable properties in the form:
             - SHOULD be specified only once in the ``CUDS entry`` (by nature of the mapping, only the last entry will be used)
             - when converted to non-qualified lowercase, MUST NOT be equal to a ``fixed property`` key.
 
-      Each value of the mapping is a mapping whose format is detailed in "Property entries format".
 
 
 All the CUBA properties are variable properties
 
-Property entries format
-~~~~~~~~~~~~~~~~~~~~~~~
+Fixed Property entries format
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Each Property entry of a given property is a mapping that MAY have the following keys:
+The content of a fixed property can be either a mapping, or some other entity. In the case 
+of a mapping the following keys MAY be present
 
     - ``scope``: string
         Controlled dictionary. Allowed strings:
@@ -229,6 +207,41 @@ Each Property entry of a given property is a mapping that MAY have the following
               the associated Property key to produce the appropriate 
               initialization code. Examples of these properties are the 
               Fixed property ``data`` and the Variable property CUBA.UID.
+    - ``default``: any
+        Indicates the hardcoded value for the property.
+        The value is used as specified. 
+        If ``scope`` is ``CUBA.SYSTEM``, this entry MUST NOT be present 
+        If ``scope`` is ``CUBA.USER``, this entry MUST be present 
+
+If the content is not a mapping (e.g. string, list, numerical value), it is interpreted 
+as equivalent to a mapping-type specification where 
+
+    - ``default`` is the specified entity
+    - ``scope`` is ``CUBA.USER``
+
+
+For example, these two writings of definition are equivalent
+
+```
+BASIS:
+  parent: CUBA.CUDS_COMPONENT
+  definition: Space basis vectors (row wise)
+
+BASIS:
+  parent: CUBA.CUDS_COMPONENT
+  definition: 
+    scope: CUBA.USER
+    default: Space basis vectors (row wise)
+```
+
+            
+Variable Property entries format
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Each Property entry of a given property is a mapping that MAY have the following keys:
+
+    - ``scope``: string
+        as in Fixed properties entries
 
     - ``shape``: sequence of positive ints or "colon" notation.
         Specifies the shape of the container holding the contained CUBA type. Default is the
@@ -253,6 +266,7 @@ Each Property entry of a given property is a mapping that MAY have the following
         If the key refers to a CUBA data, the default must match shape, type and length 
         requirements specified for the CUBA data, keeping into account the shape of the CUBA data 
         itself. 
+        if the ``scope`` is ``CUBA.SYSTEM``, this key MUST NOT be present
     
     
 Examples
@@ -322,6 +336,36 @@ the parser to validate the final format.
             parent: CUBA.SOMETHING_ELSE
             CLASS_A:
                 default: CLASS_A1
+
+Semantically defined fixed property keys and their contents:
+
+    - ``definition``: string 
+        For human consumption. Free form description of the carried semantics.
+
+    - ``models``: sequence of ``qualified CUBA key``.
+        Describes the computational models this ``CUDS Item`` is relevant for.
+        Each entry MUST be fully qualified with the ``CUBA.`` prefix. 
+        See ``Semantic rules`` for additional requirements of this entry.
+    
+    - ``physics_equations``: sequence of ``qualified CUBA keys``.
+        Describes the physics equations associated to this computational method.
+        Each entry MUST be qualified with the ``CUBA.`` prefix.
+        See ``Semantic rules`` for additional requirements of this entry.
+
+    - ``variables``: sequence of ``qualified CUBA keys``.
+        Defines metainformation of required data for this ``CUDS Item`` to be valuable.
+        This entry is just presented as metadata. It is up to the client code to interpret 
+        it appropriately.  The concrete, "hard numbers" data is stored somewhere else.
+        See ``Semantic rules`` for additional requirements of this entry.
+
+    - ``data``: mapping
+        Defines the presence of a "data" property which collects all the transient
+        (i.e. user defineable) data.
+        This entry MUST be present only on the root object (parent is empty). 
+        It MUST NOT be present anywhere else.
+        Its mapping MUST contain:
+
+            - ``scope``: MUST be ``CUBA.SYSTEM``.
   
 Parser behavior
 ---------------
