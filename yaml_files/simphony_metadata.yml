@@ -30,7 +30,7 @@ CUDS_KEYS:
       default: ""
 
   CUDS:
-    definition: CUDS Container
+    definition: CUDS Container, a knowledge-based container of semantic concepts used to agglomerate relevant data and information.
     parent: CUBA.CUDS_COMPONENT
 
 ######################################################
