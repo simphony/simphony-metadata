@@ -159,14 +159,14 @@ Each ``CUDS entry`` MUST contain a mapping.  The keys of the mapping represent p
 
 The following ``Fixed properties`` keys MUST be present:
     
-    ``parent``: ``qualified CUBA key`` or empty string
+    ``parent``: ``qualified CUBA key`` or empty (None) 
         The parent CUDS of a inheritance (is-a) hierarchy. MUST be either:
 
             - a string referring to another entry. r example:
 
                 parent: CUBA.PAIR_POTENTIAL
 
-            - or, an empty string, for the start of the hierarchy (parentless).
+            - or, an empty entry (yaml meaning: None), for the start of the hierarchy (parentless).
 
 Apart from the above keys, other Fixed properties keys MAY be present, and their 
 content is specified in "Fixed Properties entries format". They represents properties 
