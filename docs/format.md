@@ -178,10 +178,10 @@ Refer to "Semantic rules" for additional information.
 The entry MAY contain Variable properties in the form:
 
     **qualified CUBA key**: mapping
-        Describe the existence of a relation toward a specified ``CUBA data type`` 
+        Describe the existence of a relation toward a specified ``CUBA data type``
         or ``CUDS Item``. Each key:
             - MUST be a ``qualified CUBA key``
-            - MUST have already been defined in one of the files.
+            - MUST have been defined in one of the files.
             - SHOULD be specified only once in the ``CUDS entry`` (by nature of the mapping, only the last entry will be used)
             - when converted to non-qualified lowercase, MUST NOT be equal to a ``fixed property`` key.
 
