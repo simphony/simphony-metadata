@@ -266,6 +266,8 @@ Each Property entry of a given property is a mapping that MAY have the following
         If the key refers to a CUBA data, the default must match shape, type and length 
         requirements specified for the CUBA data, keeping into account the shape of the CUBA data 
         itself. 
+        If the key refers to a CUDS item, the default must belong to the hierarchy defined by
+        the CUDS item designated in the key.
         if the ``scope`` is ``CUBA.SYSTEM``, this key MUST NOT be present
     
     
