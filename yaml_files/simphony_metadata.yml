@@ -33,14 +33,15 @@ CUDS_KEYS:
     definition: CUDS Container, a knowledge-based container of semantic concepts used to agglomerate relevant data and information.
     parent: CUBA.CUDS_COMPONENT
 
-######################################################
-# define the terminology used for computational models
-######################################################
+  ######################################################
+  # define the terminology used for computational models
+  ######################################################
 
   COMPUTATIONAL_MODEL:
     definition: Model category according to the RoMM
     parent: CUBA.CUDS_COMPONENT
-# There are only four categories:
+  # There are only four categories:
+
   ELECTRONIC:
     definition: Electronic model category according to the RoMM
     parent: CUBA.COMPUTATIONAL_MODEL
@@ -57,10 +58,10 @@ CUDS_KEYS:
     definition: Continuum model category according to the RoMM
     parent: CUBA.COMPUTATIONAL_MODEL
 
-#####################################
-# define the components of each CUDS
-#####################################
-# each model equation has information on the models it supports
+  #####################################
+  # define the components of each CUDS
+  #####################################
+  # each model equation has information on the models it supports
   MODEL_EQUATION:
     definition: The model equations are represented by all physics equations and material relations according to the RoMM
     models: []
@@ -71,7 +72,7 @@ CUDS_KEYS:
     definition: Physics equation
     parent: CUBA.MODEL_EQUATION
 
-# each material relation has to have a reference to the Material in its properties (i.e., data)
+  # each material relation has to have a reference to the Material in its properties (i.e., data)
   MATERIAL_RELATION:
     definition: Material relation which together with the Physics equation gives the model equation
     parent: CUBA.MODEL_EQUATION
@@ -103,9 +104,9 @@ CUDS_KEYS:
     definition: Solver parameter and metadata
     parent: CUBA.CUDS_COMPONENT
 
-##############################################
-# Physics equations
-##############################################
+  ##############################################
+  # Physics equations
+  ##############################################
 
   KS_DFT:
     parent: CUBA.PHYSICS_EQUATION
@@ -161,6 +162,7 @@ CUDS_KEYS:
     variables: [CUBA.ELECTRIC_FIELD, CUBA.CHARGE]
     CUBA.ELECTROSTATIC_FIELD:
       default: [0., 0., 0.]
+
   # note:GRAVITY and CUBA.ELECTROSTATIC_FIELD are defined in cuba.yml.
 
   ISOTHERMAL_MODEL:
@@ -289,9 +291,10 @@ CUDS_KEYS:
     parent: CUBA.PHYSICS_EQUATION
     models: []
 
-###############################################################
-# Material Relations
-###############################################################
+  ###############################################################
+  # Material Relations
+  ###############################################################
+
   INTERATOMIC_POTENTIAL:
     definition: Interatomic Potentials Category
     parent: CUBA.MATERIAL_RELATION
@@ -390,9 +393,9 @@ CUDS_KEYS:
     CUBA.MATERIAL:
       shape: [2]
 
-######################################################
-# Conditions on Boundaries
-######################################################
+  ######################################################
+  # Conditions on Boundaries
+  ######################################################
   DIRICHLET:
     definition: Dirichlet boundary condition, specify the value the solutions takes on the boundary of the domain
     parent: CUBA.CONDITION
@@ -436,9 +439,9 @@ CUDS_KEYS:
     definition: Periodic boundary condition (PBC)
     models: [CUBA.ELECTRONIC, CUBA.ATOMISTIC, CUBA.MESOSCOPIC, CUBA.CONTINUUM]
 
-###################################################
-# SOLVER & PARAMETERS (the computational method)
-##################################################
+  ###################################################
+  # SOLVER & PARAMETERS (the computational method)
+  ##################################################
 
   COMPUTATIONAL_METHOD:
     parent: CUBA.SOLVER_PARAMETER
@@ -490,9 +493,9 @@ CUDS_KEYS:
     CUBA.FINAL:
       default: 0
 
-##############################################
-## Data Sets Metadata
-##############################################
+  ##############################################
+  ## Data Sets Metadata
+  ##############################################
   BASIS:
     parent: CUBA.CUDS_COMPONENT
     definition: Space basis vectors (row wise)
@@ -659,9 +662,9 @@ CUDS_KEYS:
     definition: A triclinic lattice
     parent: CUBA.BRAVAIS_LATTICE
 
-###########################################
-# Wrapper and Engine Specific Metadata
-###########################################
+  ###########################################
+  # Wrapper and Engine Specific Metadata
+  ###########################################
   SOFTWARE_TOOL:
     parent: CUBA.CUDS_ITEM
     definition: Represents a software tool which is used to solve the model or in pre/post processing
