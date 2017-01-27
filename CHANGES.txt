@@ -1,0 +1,16 @@
+SimPhoNy metadata CHANGELOG
+===========================
+
+Release 0.6.0
+-------------
+
+* Added CUDS class (#111, #114)
+* Format specs: 
+   * Clarified the meaning of CUBA.SYSTEM (#112)
+   * Clarified format of fixed property entries (#112)
+   * Changed format of header (#113)
+   * Changed acceptance of default values when CUBA.SYSTEM is specified (#113)
+   * Specified lack of entry is None, not empty string (#115)
+   * Clarified lack of ordering in keys (#116)
+   * Specified dependency over CUBA hierarchy when a variable 
+     property refers to a CUBA object (#117)
