@@ -271,10 +271,10 @@ CUDS_KEYS:
     parent: CUBA.RHEOLOGY_MODEL
     models: [CUBA.CONTINUUM]
     CUBA.LINEAR_CONSTANT:
-      shape: (2)
+      shape: [2]
       default: [0.0, 0.0]
     CUBA.POWER_LAW_INDEX:
-      shape: (2)
+      shape: [2]
       default: [1.0, 1.0]
     CUBA.MAXIMUM_VISCOSITY:
       default: 1.0e-3
@@ -514,7 +514,7 @@ CUDS_KEYS:
 
   WETTING_ANGLE:
     parent: CUBA.CONDITION
-    definition: Volume fraction wall boundary condition with specified contatc angle
+    definition: Volume fraction wall boundary condition with specified contact angle
     models: [CUBA.CONTINUUM]
     CUBA.VARIABLE:
       shape: (:)

@@ -523,15 +523,12 @@ CUBA_KEYS:
 
   MAXIMUM_COURANT_NUMBER:
     definition: Maximum Courant number
-    shape: [1]
     type: double
 
   NUMBER_OF_CORES:
     definition: Number of cpu cores to use
-    shape: [1]
     type: integer
 
   MAGNITUDE:
     definition: Magnitude of vector variable
-    shape: [1]
     type: double
