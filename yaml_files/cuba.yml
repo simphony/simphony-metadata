@@ -516,3 +516,22 @@ CUBA_KEYS:
   LATTICE_PARAMETER:
     definition: A lattice parameter to define a Bravais Lattice
     type: double
+
+  STEADY_STATE:
+    definition: Use steady state solver
+    type: boolean
+
+  MAXIMUM_COURANT_NUMBER:
+    definition: Maximum Courant number
+    shape: [1]
+    type: double
+
+  NUMBER_OF_CORES:
+    definition: Number of cpu cores to use
+    shape: [1]
+    type: integer
+
+  MAGNITUDE:
+    definition: Magnitude of vector variable
+    shape: [1]
+    type: double
