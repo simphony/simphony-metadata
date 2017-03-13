@@ -459,7 +459,7 @@ CUDS_KEYS:
       default: []
 
 
-    
+
   DIRICHLET:
     definition: Dirichlet boundary condition to specify the value the solutions takes on the boundary of the domain.
     parent: CUBA.VALUE_CONDITION
@@ -504,14 +504,14 @@ CUDS_KEYS:
     definition: Volume fraction wall boundary condition with specified contact angle
     models: [CUBA.CONTINUUM]
     variable: CUBA.VOLUME_FRACTION
-    
+
   SLIP_VELOCITY:
     parent: CUBA.VALUE_CONDITION
     definition: Wall free slip velocity boundary condition
     models: [CUBA.CONTINUUM]
     variable: CUBA.VELOCITY
-    
-    
+
+
   ###################################################
   # SOLVER & PARAMETERS (the computational method)
   ##################################################
