@@ -1,4 +1,4 @@
----
+--
 VERSION: "1.0"
 
 CUDS: Common Universal Data Structure
@@ -506,7 +506,10 @@ CUDS_KEYS:
     parent: CUBA.VALUE_CONDITION
     definition: Wall free slip velocity boundary condition
     models: [CUBA.CONTINUUM]
-    variable: CUBA.VELOCITY
+    CUBA.VARIABLE:
+      default: CUBA.VELOCITY
+      scope: CUBA.SYSTEM 
+    
 
 
   ###################################################
