@@ -445,20 +445,17 @@ CUDS_KEYS:
   # Conditions on Boundaries
   ######################################################
   VALUE_CONDITION:
-    definition: Boundary condition encountered in the solution of partial differential equations
+    definition: Boundary condition encountered in the solution of partial differential equations (both Direchlet or Neumann)
     parent: CUBA.CONDITION
     models: [CUBA.CONTINUUM]
     CUBA.VARIABLE:
-      shape: [1]
-      default: []
+      default: CUBA.NONE
     CUBA.VALUE:
       shape: (:)
-      default: 0.0
+      default: [0.0]
     CUBA.MATERIAL:
-      shape: [1]
+      shape: (:)
       default: []
-
-
 
   DIRICHLET:
     definition: Dirichlet boundary condition to specify the value the solutions takes on the boundary of the domain.
