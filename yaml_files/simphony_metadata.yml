@@ -85,7 +85,7 @@ CUDS_KEYS:
     parent: CUBA.CUDS_COMPONENT
 
   BOUNDARY:
-    definition: A computational boundary in the system, it includes translated physical boundaries to computational boundaries.
+    definition: A computational boundary in the system, it includes translated physical boundaries to computational boundaries and a list of conditions operating on it.
     parent: CUBA.CUDS_COMPONENT
     CUBA.CONDITION:
       shape: (:)
@@ -468,7 +468,10 @@ CUDS_KEYS:
 
   EMPTY:
     definition: an entity to represent that no boundary condition is applied on that domain
-    parent: CUBA.FIELD_CONDITION
+    parent: CUBA.CONDITION
+    CUBA.VALUE:
+      default: CUBA.NONE
+      scope: CUBA.SYSTEM
 
   FREE:
     parent: CUBA.CONDITION
