@@ -444,26 +444,27 @@ CUDS_KEYS:
   ######################################################
   # Conditions on Boundaries
   ######################################################
-  VALUE_CONDITION:
-    definition: Boundary condition encountered in the solution of partial differential equations (both Direchlet or Neumann)
+  DIFFERENTIAL_EQUATION_CONDITION:
+    definition: Condition on (field) variables at domain boundaries encountered in the solution of partial differential equations (Direchlet, Neumann, Robin, etc)
     parent: CUBA.CONDITION
     models: [CUBA.CONTINUUM]
     CUBA.VARIABLE:
-      default: CUBA.NONE
-    CUBA.VALUE:
-      shape: (:)
-      default: [0.0]
-    CUBA.MATERIAL:
-      shape: (:)
-      default: []
+    CUBA.VALUE:      # this can be a vector?
+    CUBA.MATERIAL:   # only one material specified per instance
 
   DIRICHLET:
     definition: Dirichlet boundary condition to specify the value the solutions takes on the boundary of the domain.
-    parent: CUBA.VALUE_CONDITION
+    parent: DIFFERENTIAL_EQUATION_CONDITION
 
   NEUMANN:
     definition: Neumann boundary condition, it specifies the values that the derivative of a solution with respect to the variable is to take on the boundary of the domain.
-    parent: CUBA.VALUE_CONDITION
+    parent: DIFFERENTIAL_EQUATION_CONDITION
+
+  ROBIN:
+    parent: DIFFERENTIAL_EQUATION_CONDITION
+    definition: A mixed boundary condition $\alpha \Phi (x) + \beta (x) \partial {\Phi} / \partial {\bf{n}} (x) = h(x)$, with $h$ is the value (CUBA.VALUE).
+    CUBA.DIRECHLET:
+    CUBA.NEUMANN:
 
   EMPTY:
     definition: Empty boundary condition
@@ -500,7 +501,8 @@ CUDS_KEYS:
     parent: CUBA.VALUE_CONDITION
     definition: Volume fraction wall boundary condition with specified contact angle
     models: [CUBA.CONTINUUM]
-    variable: CUBA.VOLUME_FRACTION
+    CUBA.VARIABLE:
+      default: CUBA.VOLUME_FRACTION
 
   SLIP_VELOCITY:
     parent: CUBA.VALUE_CONDITION
@@ -508,9 +510,6 @@ CUDS_KEYS:
     models: [CUBA.CONTINUUM]
     CUBA.VARIABLE:
       default: CUBA.VELOCITY
-      scope: CUBA.SYSTEM 
-    
-
 
   ###################################################
   # SOLVER & PARAMETERS (the computational method)
