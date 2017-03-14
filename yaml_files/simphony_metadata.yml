@@ -454,22 +454,21 @@ CUDS_KEYS:
 
   DIRICHLET:
     definition: Dirichlet boundary condition to specify the value the solutions takes on the boundary of the domain.
-    parent: DIFFERENTIAL_EQUATION_CONDITION
+    parent: FIELD_CONDITION
 
   NEUMANN:
     definition: Neumann boundary condition, it specifies the values that the derivative of a solution with respect to the variable is to take on the boundary of the domain.
-    parent: DIFFERENTIAL_EQUATION_CONDITION
+    parent: FIELD_CONDITION
 
   ROBIN:
-    parent: DIFFERENTIAL_EQUATION_CONDITION
+    parent: FIELD_CONDITION
     definition: A mixed boundary condition $\alpha \Phi (x) + \beta (x) \partial {\Phi} / \partial {\bf{n}} (x) = h(x)$, with $h$ is the value (CUBA.VALUE).
     CUBA.DIRECHLET:
     CUBA.NEUMANN:
 
   EMPTY:
-    definition: Empty boundary condition
-    parent: CUBA.VALUE_CONDITION
-    value: CUBA.NONE
+    definition: an entity to represent that no boundary condition is applied on that domain
+    parent: CUBA.FIELD_CONDITION
 
   FREE:
     parent: CUBA.CONDITION
