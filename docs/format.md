@@ -1,7 +1,7 @@
 Description of YAML format
 ==========================
 
-Specification version: 1.0
+Specification version: 1.0 / 1.1
 
 This document describes the format of the metadata description.
 It is not meant to describe the concept of CUBA and CUDS and what they
@@ -110,6 +110,7 @@ Each CUBA_KEYS entry MUST contain a mapping with the following keys:
             - integer
             - double
             - boolean
+            - none (from version 1.1)
 
 It MAY also contain:
 
