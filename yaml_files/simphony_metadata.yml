@@ -444,7 +444,7 @@ CUDS_KEYS:
   ######################################################
   # Conditions on Boundaries
   ######################################################
-  DIFFERENTIAL_EQUATION_CONDITION:
+  FIELD_CONDITION:
     definition: Condition on (field) variables at domain boundaries encountered in the solution of partial differential equations (Direchlet, Neumann, Robin, etc)
     parent: CUBA.CONDITION
     models: [CUBA.CONTINUUM]
