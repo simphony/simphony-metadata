@@ -20,3 +20,6 @@ install:
   - pip install -r dev_requirements.txt
 script:
   - yamllint -s -c .yamllint yaml_files/
+  - mkdir -p simphony/core/
+  - mkdir -p simphony/cuds/meta/
+  - simphony-meta-generate yaml_files simphony --overwrite
