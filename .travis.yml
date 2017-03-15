@@ -20,3 +20,4 @@ install:
   - pip install -r dev_requirements.txt
 script:
   - yamllint -s -c .yamllint yaml_files/
+  - simphony-meta-generate yaml_files simphony
