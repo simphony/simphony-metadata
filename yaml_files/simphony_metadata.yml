@@ -338,7 +338,6 @@ CUDS_KEYS:
     definition: Stress model from meso scopic to use in mixture model
     models: [CUBA.CONTINUUM]
 
-
   ###############################################################
   # Material Relations
   ###############################################################
@@ -449,8 +448,11 @@ CUDS_KEYS:
     parent: CUBA.CONDITION
     models: [CUBA.CONTINUUM]
     CUBA.VARIABLE:
-    CUBA.VALUE:      # this can be a vector?
-    CUBA.MATERIAL:   # only one material specified per instance
+      shape: [1]
+    CUBA.VALUE:
+      default: [0.0, 0.0, 0.0]
+    CUBA.MATERIAL:
+      shape: [1]
 
   DIRICHLET:
     definition: Dirichlet boundary condition to specify the value the solutions takes on the boundary of the domain.
@@ -466,12 +468,9 @@ CUDS_KEYS:
     CUBA.DIRECHLET:
     CUBA.NEUMANN:
 
-  EMPTY:
-    definition: an entity to represent that no boundary condition is applied on that domain
-    parent: CUBA.CONDITION
-    CUBA.VALUE:
-      default: CUBA.NONE
-      scope: CUBA.SYSTEM
+  EMPTY_CONDITION:
+    definition: an entity to represent that no condition is applied on that domain or entitiy(ies)
+    parent: CUBA.FIELD_CONDITION
 
   FREE:
     parent: CUBA.CONDITION
@@ -484,9 +483,10 @@ CUDS_KEYS:
     models: [CUBA.ELECTRONIC, CUBA.ATOMISTIC, CUBA.MESOSCOPIC, CUBA.CONTINUUM]
 
   SHEAR_STRESS_POWER_LAW_SLIP_VELOCITY:
-    parent: CUBA.VALUE_CONDITION
+    parent: CUBA.CONDITION
     definition: Shear stress power law dependant slip velocity boundary condition. Nonlinear boundary condition for wall tangential velocity of the form v_s = CUBA.LINEAR_CONSTANT * S^CUBA.POWER_LAW_INDEX where v_s is the slip velocity (tangential velocity on the wall) and S is the wall shear stress
     models: [CUBA.CONTINUUM]
+    variables: [CUBA.VELOCITY, CUBA.STRESS_TENSOR]
     CUBA.DENSITY:
       default: 1000.0
     CUBA.LINEAR_CONSTANT:
@@ -505,13 +505,15 @@ CUDS_KEYS:
     models: [CUBA.CONTINUUM]
     CUBA.VARIABLE:
       default: CUBA.VOLUME_FRACTION
+      scope: CUBA.SYSTEM
 
   SLIP_VELOCITY:
-    parent: CUBA.VALUE_CONDITION
+    parent: CUBA.FIELD_CONDITION
     definition: Wall free slip velocity boundary condition
     models: [CUBA.CONTINUUM]
     CUBA.VARIABLE:
       default: CUBA.VELOCITY
+      scope: CUBA.SYSTEM
 
   ###################################################
   # SOLVER & PARAMETERS (the computational method)
