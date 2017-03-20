@@ -1,7 +1,7 @@
 Description of YAML format
 ==========================
 
-Specification version: 1.0
+Specification version: 1.0.1
 
 This document describes the format of the metadata description.
 It is not meant to describe the concept of CUBA and CUDS and what they
