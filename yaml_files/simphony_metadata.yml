@@ -338,6 +338,14 @@ CUDS_KEYS:
     definition: Stress model from meso scopic to use in mixture model
     models: [CUBA.CONTINUUM]
 
+  PHASE_VOLUME_FRACTION:
+    definition: volume fractions of a phase (material) on a dataset entity
+    parent: CUBA.CUDS_ITEM
+    CUBA.MATERIAL:
+      shape: [1]
+    CUBA.VOLUME_FRACTION:
+      shape: [1]
+      
   ###############################################################
   # Material Relations
   ###############################################################
