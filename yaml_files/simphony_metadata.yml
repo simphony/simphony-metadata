@@ -505,7 +505,7 @@ CUDS_KEYS:
     CUBA.VOLUME_FRACTION:
       shape: [1]
 
-    ROBIN:
+  ROBIN:
     parent: CONDITION
     definition: A mixed boundary condition $\alpha \Phi (x) + \beta (x) \partial {\Phi} / \partial {\bf{n}} (x) = h(x)$, with $h$ is the value (CUBA.VALUE).
     CUBA.DIRECHLET:
@@ -553,7 +553,7 @@ CUDS_KEYS:
       shape: [2]
 
   SLIP_VELOCITY:
-    parent:   CONSTANT_VELOCITY_CONDITION:
+    parent: CONSTANT_VELOCITY_CONDITION
     definition: Wall free slip velocity boundary condition
 
   ###################################################
