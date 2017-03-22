@@ -541,6 +541,8 @@ CUDS_KEYS:
     CUBA.CONTACT_ANGLE:
       default: CUBA.VOLUME_FRACTION
       scope: CUBA.SYSTEM
+    CUBA.MATERIAL:
+      shape: [2]
 
   SLIP_VELOCITY:
     parent:   CONSTANT_VELOCITY_CONDITION:
