@@ -443,27 +443,62 @@ CUDS_KEYS:
   ######################################################
   # Conditions on Boundaries
   ######################################################
-  FIELD_CONDITION:
-    definition: Condition on (field) variables at domain boundaries encountered in the solution of partial differential equations (Direchlet, Neumann, Robin, etc)
-    parent: CUBA.CONDITION
-    models: [CUBA.CONTINUUM]
-    CUBA.VARIABLE:
-      shape: [1]
-    CUBA.VALUE:
-      default: [0.0, 0.0, 0.0]
+  DIRICHLET:
+    definition: Dirichlet boundary condition to specify the value the solutions takes on the boundary of the domain.
+    parent: CONDITION
     CUBA.MATERIAL:
       shape: [1]
 
-  DIRICHLET:
-    definition: Dirichlet boundary condition to specify the value the solutions takes on the boundary of the domain.
-    parent: FIELD_CONDITION
+  CONSTANT_VELOCITY_CONDITION:
+    definition: Constant velocity condition
+    parent: CUBA.DIRECHLET
+    models: [CUBA.CONTINUUM]
+    CUBA.VELOCITY:
+      shape: [1]
+
+  CONSTANT_PRESSURE_CONDITION:
+    definition: Constant pressure condition
+    parent: CUBA.DIRECHLET
+    models: [CUBA.CONTINUUM]
+    CUBA.PRESSURE:
+      shape: [1]
+
+  CONSTANT_VOLUME_FRACTION_CONDITION:
+    definition: Constant volume fraction condition
+    parent: CUBA.DIRECHLET
+    models: [CUBA.CONTINUUM]
+    CUBA.VOLUME_FRACTION:
+      shape: [1]
 
   NEUMANN:
     definition: Neumann boundary condition, it specifies the values that the derivative of a solution with respect to the variable is to take on the boundary of the domain.
-    parent: FIELD_CONDITION
+    parent: CONDITION
+    CUBA.MATERIAL:
+      shape: [1]
 
-  ROBIN:
-    parent: FIELD_CONDITION
+  ZERO_GRADIENT_VELOCITY_CONDITION:
+    definition: Zero gradient velocity condition
+    parent: CUBA.NEUMANN
+    models: [CUBA.CONTINUUM]
+    CUBA.VELOCITY:
+      shape: [1]
+
+  ZERO_GRADIENT_PRESSURE_CONDITION:
+    definition: Zero gradient pressure condition
+    parent: CUBA.NEUMANN
+    models: [CUBA.CONTINUUM]
+    CUBA.PRESSURE:
+      shape: [1]
+
+  ZERO_GRADIENT_VOLUME_FRACTION_CONDITION:
+    definition: Zero gradient volume fraction condition
+    parent: CUBA.NEUMANN
+    models: [CUBA.CONTINUUM]
+    CUBA.VOLUME_FRACTION:
+      shape: [1]
+
+    ROBIN:
+    parent: CONDITION
     definition: A mixed boundary condition $\alpha \Phi (x) + \beta (x) \partial {\Phi} / \partial {\bf{n}} (x) = h(x)$, with $h$ is the value (CUBA.VALUE).
     CUBA.DIRECHLET:
     CUBA.NEUMANN:
@@ -483,7 +518,7 @@ CUDS_KEYS:
     models: [CUBA.ELECTRONIC, CUBA.ATOMISTIC, CUBA.MESOSCOPIC, CUBA.CONTINUUM]
 
   SHEAR_STRESS_POWER_LAW_SLIP_VELOCITY:
-    parent: CUBA.CONDITION
+    parent: CUBA.DIRECHLET
     definition: Shear stress power law dependant slip velocity boundary condition. Nonlinear boundary condition for wall tangential velocity of the form v_s = CUBA.LINEAR_CONSTANT * S^CUBA.POWER_LAW_INDEX where v_s is the slip velocity (tangential velocity on the wall) and S is the wall shear stress
     models: [CUBA.CONTINUUM]
     variables: [CUBA.VELOCITY, CUBA.STRESS_TENSOR]
@@ -496,24 +531,20 @@ CUDS_KEYS:
 
   INLET_OUTLET:
     definition: Inlet outlet boundary condition (outlet condition is zero gradient and inlet given variable value)
-    parent: CUBA.VALUE_CONDITION
+    parent: CUBA.CONDITION
     models: [CUBA.CONTINUUM]
 
   WETTING_ANGLE:
-    parent: CUBA.VALUE_CONDITION
-    definition: Volume fraction wall boundary condition with specified contact angle
+    parent: CUBA.DIRECHLET
+    definition: Wetting angle Volume fraction wall boundary condition
     models: [CUBA.CONTINUUM]
-    CUBA.VARIABLE:
+    CUBA.CONTACT_ANGLE:
       default: CUBA.VOLUME_FRACTION
       scope: CUBA.SYSTEM
 
   SLIP_VELOCITY:
-    parent: CUBA.FIELD_CONDITION
+    parent:   CONSTANT_VELOCITY_CONDITION:
     definition: Wall free slip velocity boundary condition
-    models: [CUBA.CONTINUUM]
-    CUBA.VARIABLE:
-      default: CUBA.VELOCITY
-      scope: CUBA.SYSTEM
 
   ###################################################
   # SOLVER & PARAMETERS (the computational method)
