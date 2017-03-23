@@ -7,11 +7,6 @@ Purpose: CUBA provides the most primitive definitions used in the SimPhoNy metad
 
 CUBA_KEYS:
 
-  VALUE:
-    definition: a value that a variable or parameter takes, can be scalar or vector, double or integer, etc. The type is usually known from the context specific metadata
-    length:
-    type:
-
   UID:
     definition: Universal unique id represented as a hex string size 32
     length: 32
