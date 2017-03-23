@@ -453,34 +453,34 @@ CUDS_KEYS:
   ######################################################
   DIRICHLET:
     definition: Dirichlet boundary condition to specify the value the solutions takes on the boundary of the domain.
-    parent: CONDITION
+    parent: CUBA.CONDITION
     CUBA.MATERIAL:
       shape: [1]
 
   CONSTANT_VELOCITY_CONDITION:
     definition: Constant velocity condition
-    parent: CUBA.DIRECHLET
+    parent: CUBA.DIRICHLET
     models: [CUBA.CONTINUUM]
     CUBA.VELOCITY:
       shape: [1]
 
   CONSTANT_PRESSURE_CONDITION:
     definition: Constant pressure condition
-    parent: CUBA.DIRECHLET
+    parent: CUBA.DIRICHLET
     models: [CUBA.CONTINUUM]
     CUBA.PRESSURE:
       shape: [1]
 
   CONSTANT_VOLUME_FRACTION_CONDITION:
     definition: Constant volume fraction condition
-    parent: CUBA.DIRECHLET
+    parent: CUBA.DIRICHLET
     models: [CUBA.CONTINUUM]
     CUBA.VOLUME_FRACTION:
       shape: [1]
 
   NEUMANN:
     definition: Neumann boundary condition, it specifies the values that the derivative of a solution with respect to the variable is to take on the boundary of the domain.
-    parent: CONDITION
+    parent: CUBA.CONDITION
     CUBA.MATERIAL:
       shape: [1]
 
@@ -506,14 +506,16 @@ CUDS_KEYS:
       shape: [1]
 
   ROBIN:
-    parent: CONDITION
-    definition: A mixed boundary condition $\alpha \Phi (x) + \beta (x) \partial {\Phi} / \partial {\bf{n}} (x) = h(x)$, with $h$ is the value (CUBA.VALUE).
-    CUBA.DIRECHLET:
+    parent: CUBA.CONDITION
+    definition: A mixed boundary condition $\alpha \Phi (x) + \beta (x) \partial {\Phi} / \partial {\bf{n}} (x) = h(x)$, with $h$ is the value.
+    CUBA.DIRICHLET:
+      default: []
     CUBA.NEUMANN:
+      default: []
 
   EMPTY_CONDITION:
     definition: an entity to represent that no condition is applied on that domain or entitiy(ies)
-    parent: CUBA.FIELD_CONDITION
+    parent: CUBA.CONDITION
 
   FREE:
     parent: CUBA.CONDITION
@@ -526,7 +528,7 @@ CUDS_KEYS:
     models: [CUBA.ELECTRONIC, CUBA.ATOMISTIC, CUBA.MESOSCOPIC, CUBA.CONTINUUM]
 
   SHEAR_STRESS_POWER_LAW_SLIP_VELOCITY:
-    parent: CUBA.DIRECHLET
+    parent: CUBA.DIRICHLET
     definition: Shear stress power law dependant slip velocity boundary condition. Nonlinear boundary condition for wall tangential velocity of the form v_s = CUBA.LINEAR_CONSTANT * S^CUBA.POWER_LAW_INDEX where v_s is the slip velocity (tangential velocity on the wall) and S is the wall shear stress
     models: [CUBA.CONTINUUM]
     variables: [CUBA.VELOCITY, CUBA.STRESS_TENSOR]
@@ -543,17 +545,16 @@ CUDS_KEYS:
     models: [CUBA.CONTINUUM]
 
   WETTING_ANGLE:
-    parent: CUBA.DIRECHLET
+    parent: CUBA.DIRICHLET
     definition: Wetting angle Volume fraction wall boundary condition
     models: [CUBA.CONTINUUM]
     CUBA.CONTACT_ANGLE:
-      default: CUBA.VOLUME_FRACTION
-      scope: CUBA.SYSTEM
+      default: 90.0
     CUBA.MATERIAL:
       shape: [2]
 
   SLIP_VELOCITY:
-    parent: CONSTANT_VELOCITY_CONDITION
+    parent: CUBA.CONSTANT_VELOCITY_CONDITION
     definition: Wall free slip velocity boundary condition
 
   ###################################################
