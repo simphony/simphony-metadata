@@ -349,8 +349,7 @@ CUDS_KEYS:
     parent: CUBA.PHASE_VOLUME_FRACTION
     CUBA.PHASE_VOLUME_FRACTION:
       shape: (:)
-      
-    
+ 
   ###############################################################
   # Material Relations
   ###############################################################
