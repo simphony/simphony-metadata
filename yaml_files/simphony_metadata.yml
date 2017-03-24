@@ -505,9 +505,7 @@ CUDS_KEYS:
     parent: CUBA.CONDITION
     definition: A mixed boundary condition $\alpha \Phi (x) + \beta (x) \partial {\Phi} / \partial {\bf{n}} (x) = h(x)$, with $h$ is the value.
     CUBA.DIRICHLET:
-      default: []
     CUBA.NEUMANN:
-      default: []
 
   EMPTY_CONDITION:
     definition: an entity to represent that no condition is applied on that domain or entitiy(ies)
