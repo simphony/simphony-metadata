@@ -339,13 +339,18 @@ CUDS_KEYS:
     models: [CUBA.CONTINUUM]
 
   PHASE_VOLUME_FRACTION:
-    definition: volume fractions of a phase (material) on a dataset entity
+    definition: volume fraction of a (one) phase (material) on a dataset entity
     parent: CUBA.CUDS_ITEM
     CUBA.MATERIAL:
-      shape: [1]
     CUBA.VOLUME_FRACTION:
-      shape: [1]
 
+  PHASE_VOLUME_FRACTIONS:
+    definition: volume fractions for a number of phases (material) on a dataset entity
+    parent: CUBA.PHASE_VOLUME_FRACTION
+    CUBA.PHASE_VOLUME_FRACTION:
+      shape: (:)
+      
+    
   ###############################################################
   # Material Relations
   ###############################################################
@@ -455,55 +460,47 @@ CUDS_KEYS:
     definition: Dirichlet boundary condition to specify the value the solutions takes on the boundary of the domain.
     parent: CUBA.CONDITION
     CUBA.MATERIAL:
-      shape: [1]
 
   CONSTANT_VELOCITY_CONDITION:
     definition: Constant velocity condition
     parent: CUBA.DIRICHLET
     models: [CUBA.CONTINUUM]
     CUBA.VELOCITY:
-      shape: [1]
 
   CONSTANT_PRESSURE_CONDITION:
     definition: Constant pressure condition
     parent: CUBA.DIRICHLET
     models: [CUBA.CONTINUUM]
     CUBA.PRESSURE:
-      shape: [1]
 
   CONSTANT_VOLUME_FRACTION_CONDITION:
     definition: Constant volume fraction condition
     parent: CUBA.DIRICHLET
     models: [CUBA.CONTINUUM]
     CUBA.VOLUME_FRACTION:
-      shape: [1]
 
   NEUMANN:
     definition: Neumann boundary condition, it specifies the values that the derivative of a solution with respect to the variable is to take on the boundary of the domain.
     parent: CUBA.CONDITION
     CUBA.MATERIAL:
-      shape: [1]
 
   ZERO_GRADIENT_VELOCITY_CONDITION:
     definition: Zero gradient velocity condition
     parent: CUBA.NEUMANN
     models: [CUBA.CONTINUUM]
     CUBA.VELOCITY:
-      shape: [1]
 
   ZERO_GRADIENT_PRESSURE_CONDITION:
     definition: Zero gradient pressure condition
     parent: CUBA.NEUMANN
     models: [CUBA.CONTINUUM]
     CUBA.PRESSURE:
-      shape: [1]
 
   ZERO_GRADIENT_VOLUME_FRACTION_CONDITION:
     definition: Zero gradient volume fraction condition
     parent: CUBA.NEUMANN
     models: [CUBA.CONTINUUM]
     CUBA.VOLUME_FRACTION:
-      shape: [1]
 
   ROBIN:
     parent: CUBA.CONDITION
