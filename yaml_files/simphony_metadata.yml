@@ -464,11 +464,13 @@ CUDS_KEYS:
     definition: Constant velocity condition
     parent: CUBA.DIRICHLET
     models: [CUBA.CONTINUUM]
+    variables: [CUBA.VELOCITY]
     CUBA.VELOCITY:
 
   CONSTANT_PRESSURE_CONDITION:
     definition: Constant pressure condition
     parent: CUBA.DIRICHLET
+    variables: [CUBA.PRESSURE]
     models: [CUBA.CONTINUUM]
     CUBA.PRESSURE:
 
@@ -476,6 +478,7 @@ CUDS_KEYS:
     definition: Constant volume fraction condition
     parent: CUBA.DIRICHLET
     models: [CUBA.CONTINUUM]
+    variables: [CUBA.VOLUME_FRACTION]
     CUBA.VOLUME_FRACTION:
 
   NEUMANN:
@@ -487,18 +490,21 @@ CUDS_KEYS:
     definition: Zero gradient velocity condition
     parent: CUBA.NEUMANN
     models: [CUBA.CONTINUUM]
+    variables: [CUBA.VELOCITY]
     CUBA.VELOCITY:
 
   ZERO_GRADIENT_PRESSURE_CONDITION:
     definition: Zero gradient pressure condition
     parent: CUBA.NEUMANN
     models: [CUBA.CONTINUUM]
+    variables: [CUBA.PRESSURE]
     CUBA.PRESSURE:
 
   ZERO_GRADIENT_VOLUME_FRACTION_CONDITION:
     definition: Zero gradient volume fraction condition
     parent: CUBA.NEUMANN
     models: [CUBA.CONTINUUM]
+    variables: [CUBA.VOLUME_FRACTION]
     CUBA.VOLUME_FRACTION:
 
   ROBIN:
@@ -542,6 +548,7 @@ CUDS_KEYS:
     parent: CUBA.DIRICHLET
     definition: Wetting angle Volume fraction wall boundary condition
     models: [CUBA.CONTINUUM]
+    variables: [CUBA.CONTACT_ANGLE]
     CUBA.CONTACT_ANGLE:
       default: 90.0
     CUBA.MATERIAL:
