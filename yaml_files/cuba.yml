@@ -505,9 +505,9 @@ CUBA_KEYS:
     length: 4096
 
   VARIABLE:
-    definition: a list of physics/chemistry variables in a PE or MR
-    type: string
-    length: 4096
+    definition: a variable, either dependent or independent, of a model equation or a condition
+    shape:[1]
+    type: cubakey
 
   NONE:
     definition: a general none value
