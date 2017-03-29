@@ -453,6 +453,15 @@ CUDS_KEYS:
       shape: [2]
 
   ######################################################
+  # Materials
+  ######################################################
+  MULTIPHASE_MATERIAL:
+    definition: a multiphase material system, specifies the materials composing the mixture, or suspension, or multicrystal, etc.
+    parent: CUBA.MATERIAL
+    CUBA.MATERIAL:
+      shape: (:)
+
+  ######################################################
   # Conditions on Boundaries
   ######################################################
   DIRICHLET:
