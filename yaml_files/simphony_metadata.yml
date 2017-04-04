@@ -496,7 +496,7 @@ CUDS_KEYS:
     CUBA.MATERIAL:
 
   MIXED_CONDITION:
-    definition: general mixed boundary condition 
+    definition: general mixed boundary condition
     parent: CUBA.CONDITION
     CUBA.MATERIAL:
 
