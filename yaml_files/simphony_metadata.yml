@@ -495,6 +495,11 @@ CUDS_KEYS:
     parent: CUBA.CONDITION
     CUBA.MATERIAL:
 
+  MIXED_CONDITION:
+    definition: general mixed boundary condition
+    parent: CUBA.CONDITION
+    CUBA.MATERIAL:
+
   ZERO_GRADIENT_VELOCITY_CONDITION:
     definition: Zero gradient velocity condition
     parent: CUBA.NEUMANN
@@ -517,7 +522,7 @@ CUDS_KEYS:
     CUBA.VOLUME_FRACTION:
 
   ROBIN:
-    parent: CUBA.CONDITION
+    parent: CUBA.MIXED_CONDITION
     definition: A mixed boundary condition $\alpha \Phi (x) + \beta (x) \partial {\Phi} / \partial {\bf{n}} (x) = h(x)$, with $h$ is the value.
     CUBA.DIRICHLET:
     CUBA.NEUMANN:
@@ -548,10 +553,19 @@ CUDS_KEYS:
     CUBA.POWER_LAW_INDEX:
       default: 1.0
 
-  INLET_OUTLET:
+  INLET_OUTLET_VELOCITY:
     definition: Inlet outlet boundary condition (outlet condition is zero gradient and inlet given variable value)
-    parent: CUBA.CONDITION
+    parent: CUBA.MIXED_CONDITION
     models: [CUBA.CONTINUUM]
+    variables: [CUBA.VELOCITY]
+    CUBA.VELOCITY:
+
+  INLET_OUTLET_VOLUME_FRACTION:
+    definition: Inlet outlet boundary condition (outlet condition is zero gradient and inlet given variable value)
+    parent: CUBA.MIXED_CONDITION
+    models: [CUBA.CONTINUUM]
+    variables: [CUBA.VOLUME_FRACTION]
+    CUBA.VOLUME_FRACTION:
 
   WETTING_ANGLE:
     parent: CUBA.DIRICHLET
