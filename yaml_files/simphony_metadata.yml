@@ -580,7 +580,7 @@ CUDS_KEYS:
   FREE_SLIP_VELOCITY:
     parent: CUBA.CONDITION
     definition: Wall free slip velocity boundary condition, normal velocity is zero and tangential velocities are solved for.
-    variables: [CUBA.VARIABLES]
+    variables: [CUBA.VELOCITY]
 
   ###################################################
   # SOLVER & PARAMETERS (the computational method)
