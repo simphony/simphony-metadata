@@ -567,7 +567,7 @@ CUDS_KEYS:
     variables: [CUBA.VOLUME_FRACTION]
     CUBA.VOLUME_FRACTION:
 
-  TOTAL_PRESSURE:
+  TOTAL_PRESSURE_CONDITION:
     definition: Total pressure boundary condition
     parent: CUBA.MIXED_CONDITION
     models: [CUBA.CONTINUUM]
