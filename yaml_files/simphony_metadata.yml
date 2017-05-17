@@ -632,8 +632,6 @@ CUDS_KEYS:
       default: 0.0
     CUBA.FINAL:
       default: 0.0
-    CUBA.NUMBER_OF_STATES:
-      DEFAULT: 1
 
   INTEGRATION_STEP:
     parent: CUBA.SOLVER_PARAMETER
