@@ -567,6 +567,13 @@ CUDS_KEYS:
     variables: [CUBA.VOLUME_FRACTION]
     CUBA.VOLUME_FRACTION:
 
+  TOTAL_PRESSURE_CONDITION:
+    definition: Total pressure boundary condition
+    parent: CUBA.MIXED_CONDITION
+    models: [CUBA.CONTINUUM]
+    variables: [CUBA.DYNAMIC_PRESSURE]
+    CUBA.DYNAMIC_PRESSURE:
+
   WETTING_ANGLE:
     parent: CUBA.DIRICHLET
     definition: Wetting angle Volume fraction wall boundary condition
