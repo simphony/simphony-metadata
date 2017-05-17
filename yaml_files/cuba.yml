@@ -270,6 +270,10 @@ CUBA_KEYS:
     definition: final value of a parameter
     type: double
 
+  NUMBER_OF_STATES:
+    definition: Number of computational representations of the Physics state of the system
+    type: integer
+
   DELTA_DISPLACEMENT:
     definition: Displacement during the last time step
     shape: [3]
