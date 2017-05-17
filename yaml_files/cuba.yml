@@ -536,3 +536,7 @@ CUBA_KEYS:
   MAGNITUDE:
     definition: Magnitude of vector variable
     type: double
+
+  NUMBER_OF_PHYSICS_STATES:
+    definition: Number of solution states to be saved
+    type: integer
