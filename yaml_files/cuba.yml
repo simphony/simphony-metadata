@@ -536,3 +536,7 @@ CUBA_KEYS:
   NUMBER_OF_PHYSICS_STATES:
     definition: Number of solution states to be saved
     type: integer
+
+  COHESIVE_GROUP:
+    definition: Group to define particles that can bond together
+    type: integer
