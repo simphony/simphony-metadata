@@ -1,6 +1,22 @@
 SimPhoNy metadata CHANGELOG
 ===========================
 
+Release 0.7.0
+-------------
+
+* Added cohesive group (#139)
+* Add CFD needed data (#137)
+* Adds variable VELOCITY to FREE_SLIP_VELOCITY (#136)
+* Inlet outlet BC fixing issue #133 (#134)
+* Free slip condition is not constant velocity (#132)
+* Adding a multiphase material metadata (#130)
+* Added variables to allow more semantic query to conditions (#129)
+* Fix EMPTY_CONDITION error (#128)
+* Perform build of meta-classes to "lint" the contents. (#124)
+* Add entries for PDE conditions (#121)
+* added cfd metadata and keys (#120)
+* Fixed yaml file. Stricter linting (#119)
+
 Release 0.6.0
 -------------
 
